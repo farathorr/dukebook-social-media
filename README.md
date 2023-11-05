@@ -2,6 +2,6 @@
 - Abdi-Samad Ahmed
 - Aapo Salminen
 - Nasim Zouneibiri
-- Kasper, Tamm
+- Kasper Tamm
 
 
