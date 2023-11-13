@@ -1,4 +1,5 @@
 {
+	"editor.tabSize": 2,
 	"liveSassCompile.settings.generateMap": true,
 	"liveSassCompile.settings.formats": [
 		{
