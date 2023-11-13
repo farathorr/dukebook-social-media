@@ -1,0 +1,44 @@
+body {
+	margin: 0px;
+}
+
+nav {
+	background-color: red;
+	position: relative;
+	height: 50px;
+	display: flex;
+	gap: 25px;
+	justify-content: center;
+	align-items: center;
+}
+
+.friendlsitContainer {
+	// border: 2px solid black;
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+
+	.profileRow {
+		display: flex;
+		background: grey;
+		height: 50px;
+		align-items: center;
+		gap: 5px;
+
+		.picture {
+			position: relative;
+			width: 30px;
+			height: 30px;
+			background-color: darkgray;
+			border-radius: 50%;
+		}
+
+		.icons {
+			position: relative;
+			width: 10px;
+			height: 10px;
+			background-color: black;
+			border-radius: 2px;
+		}
+	}
+}
