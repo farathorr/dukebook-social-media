@@ -9,7 +9,7 @@
 			"savePathReplaceSegmentsWith": "css"
 		}
 	],
-	"liveSassCompile.settings.showOutputWindowOn": "Error",
+	"liveSassCompile.settings.showOutputWindowOn": "None",
 	"liveSassCompile.settings.watchOnLaunch": true,
 	"[scss]": {
 		"editor.suggest.insertMode": "replace",
