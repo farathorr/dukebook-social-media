@@ -9,7 +9,7 @@ nav {
 	font-size: var(--fs-400);
 }
 button {
-	background-color: var(--clr-secondary-400);
+	background-color: var(--clr-secondary-600);
 	padding: 5px;
 	margin: 5px;
 	border-radius: 5px;
@@ -32,6 +32,9 @@ h1 {
 	}
 
 	textArea {
+		width: 500px;
+		height: 100px;
+		resize: none;
 		background-color: var(--clr-accent-600);
 	}
 
@@ -48,94 +51,131 @@ h1 {
 .main-content {
 	display: grid;
 	place-items: center;
+	font-size: var(--fs-300);
 }
 
-.post {
-	background-color: var(--clr-primary-500);
-	margin: 10px;
-	border-radius: 10px;
+.postContainer {
 	display: grid;
-	max-width: 1000px;
-	font-family: var(--font-family);
+	max-width: fit-content;
 
-	.postHeader {
-		margin: 5px;
-		display: flex;
-		justify-content: start;
-
-		.profilePic {
-			width: 50px;
-			height: 50px;
-			border-radius: 50%;
-			background-color: var(--clr-secondary-500);
-			border: 1px solid var(--clr-accent-600);
-			margin: 5px;
-		}
-		svg {
-			fill: blue;
-		}
-	}
-
-	.postBody {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		gap: 10px;
+	.postData {
 		margin: 10px;
-		border-radius: 5px;
-		padding: 10px;
+		display: grid;
+		background-color: var(--clr-primary-600);
+		border-radius: 10px;
 		border: 1px solid var(--clr-accent-600);
+
+		.postContent {
+			margin: 5px;
+			display: grid;
+
+			.profileContainer {
+				display: flex;
+				gap: 10px;
+				border-radius: 5px;
+				background-color: var(--clr-secondary-400);
+				max-width: fit-content;
+				margin: 5px;
+
+				.timeStamp {
+					padding-right: 5px;
+				}
+
+				.profilePic {
+					width: 50px;
+					height: 50px;
+					border-radius: 50%;
+					background-color: var(--clr-secondary-500);
+					margin: 5px;
+				}
+			}
+
+			.postImage {
+				border-radius: 5px;
+				background-color: var(--clr-secondary-500);
+
+				margin: 5px;
+				margin-inline: auto;
+			}
+
+			.postText {
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+				gap: 10px;
+				margin: 10px;
+				border-radius: 5px;
+				padding: 10px;
+
+				max-width: 700px;
+				max-height: fit-content;
+				background-color: var(--clr-secondary-400);
+			}
+
+			svg {
+				fill: blue;
+			}
+		}
+		.postStats {
+			display: flex;
+			flex-direction: row;
+			gap: 10px;
+			padding: 5px;
+			margin-left: 5px;
+			justify-content: flex-start;
+
+			.statContainer {
+				display: flex;
+				flex-direction: row;
+				gap: 5px;
+				justify-content: center;
+				align-items: center;
+
+				p {
+					font-size: var(--fs-400);
+					padding-right: 5px;
+				}
+
+				.commentButton {
+					svg {
+						fill: var(--clr-accent-400);
+					}
+				}
+				.likeButton {
+					svg {
+						fill: green;
+					}
+				}
+				.dislikeButton {
+					svg {
+						fill: red;
+					}
+				}
+			}
+		}
 	}
 
-	.postFooter {
+	.replies {
 		display: flex;
+		position: relative;
 		flex-direction: column;
 		gap: 10px;
-		padding: 10px;
-
-		.postInfo {
-			border: 1px solid var(--clr-accent-600);
-			display: flex;
-			justify-content: start;
-			margin: 10px;
-			border-radius: 5px;
-			font-size: var(--fs-300);
-			max-width: fit-content;
-			padding: 5px;
-			gap: 10px;
-			align-items: center;
-
-			.comments {
-				fill: var(--clr-accent-400);
-			}
-
-			.likes {
-				fill: green;
-			}
-
-			.dislikes {
-				fill: red;
-			}
-		}
-		.postButtons {
-			justify-content: flex-end;
-			.dislikeButton {
-				svg {
-					fill: red;
-				}
-			}
-
-			.likeButton {
-				svg {
-					fill: green;
-				}
-			}
-			.commentButton {
-				svg {
-					fill: var(--clr-accent-400);
-				}
-			}
-		}
+		margin-left: 50px;
 	}
+	.replyLine {
+		margin-right: 10px;
+		position: absolute;
+		height: 100%;
+		width: 3px;
+		background-color: var(--clr-accent-600);
+	}
+}
+
+.mainReplies {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	// margin-left: 50px;
+	width: 725px;
 }
