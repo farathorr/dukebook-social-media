@@ -97,3 +97,12 @@ button.btb {
 		padding: 0;
 	}
 }
+
+// gallery
+
+.gallery .gallery-item img {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	grid-gap: 30px;
+	margin-top: 30px;
+}
