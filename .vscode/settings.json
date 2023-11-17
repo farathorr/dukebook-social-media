@@ -5,8 +5,6 @@
 		{
 			"format": "compressed", // expanded compressed
 			"extensionName": ".css",
-			"savePathSegmentKeys": ["sass", "scss"],
-			"savePathReplaceSegmentsWith": "css",
 			"savePathReplacementPairs": {
 				"scss": "css",
 				"sass": "css"
