@@ -1,0 +1,1 @@
+.main-content{display:grid;place-items:center;font-size:var(--fs-300)}nav{background-color:var(--clr-primary-500);position:relative;height:50px;display:flex;gap:25px;justify-content:center;align-items:center;font-size:var(--fs-400)}.registerContainer{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:10px}/*# sourceMappingURL=login.css.map */
