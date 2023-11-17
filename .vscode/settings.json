@@ -6,7 +6,11 @@
 			"format": "compressed", // expanded compressed
 			"extensionName": ".css",
 			"savePathSegmentKeys": ["sass", "scss"],
-			"savePathReplaceSegmentsWith": "css"
+			"savePathReplaceSegmentsWith": "css",
+			"savePathReplacementPairs": {
+				"scss": "css",
+				"sass": "css"
+			}
 		}
 	],
 	"liveSassCompile.settings.showOutputWindowOn": "None",
