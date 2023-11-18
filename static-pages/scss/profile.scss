@@ -1,11 +1,18 @@
-nav .nav-content {
+main {
+	display: grid;
+	place-items: center;
+	font-size: var(--fs-300);
+}
+
+nav {
 	background-color: var(--clr-primary-500);
-	font-size: var(--fs-400);
-	max-width: 935px;
-	margin: 0 auto;
-	height: 54px;
+	position: relative;
+	height: 50px;
 	display: flex;
+	gap: 25px;
+	justify-content: center;
 	align-items: center;
+	font-size: var(--fs-400);
 }
 button.btb {
 	color: white;
@@ -32,6 +39,11 @@ button.btb {
 			border: 1px solid hsl(0, 0%, 86%);
 		}
 	}
+}
+.profile-container {
+	border: 1px solid rgb(172, 172, 172);
+	border-radius: 5px;
+	background-color: #7c7c7c;
 }
 
 .profile-info {
