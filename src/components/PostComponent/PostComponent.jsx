@@ -2,7 +2,6 @@ import React from "react";
 import style from "./PostComponent.module.scss";
 
 export default function PostComponent(props) {
-	console.log(style);
 	return (
 		<div className={style["post-container"]}>
 			<div className={style["post-data"]}>
@@ -47,6 +46,12 @@ export default function PostComponent(props) {
 					</div>
 				</div>
 			</div>
+			{props.children ? (
+				<div className={style["replies"]}>
+					<div className={style["reply-line"]} />
+					{props.children}
+				</div>
+			) : null}
 		</div>
 	);
 }

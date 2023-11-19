@@ -1,6 +1,6 @@
 .post-container {
 	display: grid;
-	max-width: fit-content;
+	max-width: 100%;
 
 	.post-data {
 		margin: 10px;
@@ -95,4 +95,20 @@
 			}
 		}
 	}
+}
+
+.replies {
+	display: flex;
+	position: relative;
+	flex-direction: column;
+	gap: 10px;
+	margin-left: 50px;
+}
+
+.reply-line {
+	margin-right: 10px;
+	position: absolute;
+	height: 100%;
+	width: 3px;
+	background-color: var(--clr-accent-600);
 }
