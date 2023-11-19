@@ -1,18 +1,63 @@
-const users = [
-	{
-		id: 1,
-		name: "John Doe",
-		username: "johndoe",
-		likedPosts: [1],
-		dislikedPosts: [2],
-	},
-	{
-		id: 2,
-		name: "vicky pollard",
-		username: "vickypollard",
-		likedPosts: [3],
-		dislikedPosts: [4],
-	},
-];
+const mongoose = require("mongoose");
 
-module.exports = users;
+const userSchema = new mongoose.Schema({
+	username: {
+		type: String,
+		required: true,
+		unique: true,
+		min: 3,
+		max: 20,
+	},
+
+	email: {
+		type: String,
+		required: true,
+		unique: true,
+		max: 50,
+	},
+
+	password: {
+		type: String,
+		required: true,
+		min: 6,
+	},
+
+	profilePicture: {
+		type: String,
+		default: "",
+	},
+
+  profileDescription: {
+    type: String,
+    max: 200,
+  },
+
+	likedPosts: {
+		type: Array,
+		default: [],
+	},
+
+	dislikedPosts: {
+		type: Array,
+		default: [],
+	},
+
+	sharedPosts: {
+		type: Array,
+		default: [],
+	},
+
+	followerIds: {
+		type: Array,
+		default: [],
+	},
+
+	followedIds: {
+		type: Array,
+		default: [],
+	},
+});
+
+const User = mongoose.model("User", userSchema);
+
+module.exports = User;

@@ -1,5 +1,5 @@
-const posts = require("../models/posts");
-const users = require("../models/users");
+const posts = require("../models_old/posts");
+const users = require("../models_old/users");
 
 const getPosts = (req, res) => {
 	res.json(posts);
