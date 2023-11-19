@@ -6,7 +6,7 @@ export default function FriendList(props) {
 		<div className={style["friend-row"]}>
 			<img className={style["profile-pic"]} src={props.image} alt="Profile picture" width={40} height={40} />
 			<div className={style["friend-info-container"]}>
-				<span className={style["user-name"]}>{props.userName}</span>
+				<span className={style["user-name"]}>{props.name}</span>
 				<span className={style["user-last-message"]}>{props.lastMessage}</span>
 			</div>
 		</div>
@@ -15,6 +15,6 @@ export default function FriendList(props) {
 
 FriendList.defaultProps = {
 	image: require("../../../images/Duke3D.png"),
-	userName: "Duke",
+	name: "Duke",
 	lastMessage: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.",
 };

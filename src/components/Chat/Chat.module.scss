@@ -86,41 +86,6 @@ nav {
 				overflow-y: scroll;
 				background-image: url("../../images/background.webp");
 				background-size: cover;
-
-				.message-day-separator {
-					background-color: #00000070;
-					text-align: center;
-					opacity: 0.6;
-					margin-inline: 10px;
-					border-radius: 5px;
-					padding: 2px;
-				}
-
-				.message-row {
-					display: flex;
-					padding: 10px;
-					gap: 5px;
-
-					.message-user-name {
-						font-weight: var(--fw-700);
-					}
-
-					.message-date {
-						opacity: 0.8;
-					}
-
-					.message-content {
-						background: var(--clr-primary-500);
-						padding: 0px 10px 10px 10px;
-						border-radius: 5px;
-						pre {
-							font-family: inherit;
-							font-size: inherit;
-							white-space: pre-wrap;
-							margin: 0px;
-						}
-					}
-				}
 			}
 
 			.chat-input {
