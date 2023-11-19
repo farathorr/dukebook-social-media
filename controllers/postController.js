@@ -22,6 +22,7 @@ const getPostById = async (req, res) => {
 	res.status(200).json(post);
 };
 
+
 // create post
 const createPost = async (req, res) => {
 	const { author: postAuthor, ...post } = req.body;
