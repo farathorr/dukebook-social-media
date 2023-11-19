@@ -3,88 +3,91 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>profile</title>
-		<link rel="stylesheet" href="./css/profile.css" />
+		<title>Profile</title>
 		<link rel="stylesheet" href="./css/index.css" />
+		<link rel="stylesheet" href="./css/profile.css" />
 	</head>
 	<body>
-		<nav>
-			<img src="" alt="pictures" />
-			<a href="feed.html">Feed</a>
-			<a href="profile.html">Profile</a>
-		</nav>
-		<main>
-			<div class="app-container">
-				<div class="profile-pic">
-					<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512">
-						<!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
-						<path
-							d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"
-						/>
-					</svg>
-				</div>
-
-				<div class="profile-info">
-					<div class="title row">
-						<h2>@Matti69</h2>
-						<button class="btb">Follow</button>
+		<div class="app">
+			<nav class="header-nav">
+				<img src="" alt="logo" />
+				<a href="">Lorem.</a><a href="">Facere?</a><a href="">Temporibus.</a>
+			</nav>
+			<div class="profile-page">
+				<div class="profile-container">
+					<div class="right-content">
+						<img src="../public/Duke3D.png" alt="" class="profile-pic" />
+						<div class="buttons">
+							<button class="follow-button">Follow</button>
+							<button class="add-to-friend">Add to friend</button>
+						</div>
 					</div>
-					<div class="details row">
-						<ul>
-							<li><span>1</span>posts</li>
-							<li><span>1</span>follower</li>
-							<li><span>1</span>following</li>
-						</ul>
-					</div>
-					<div class="descriptions">
-						<h1>@Matti Valopää</h1>
-						<span> Everyone has a story to tell!</span>
+					<div class="left-content">
+						<span class="profile-name">Profile name</span><span class="profile-tag">@profile-name</span>
+						<pre class="profile-description">
+Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero sapiente iure illum aliquid omnis sed sunt cum ad eveniet, blanditiis dolor deserunt, culpa molestiae ut cupiditate asperiores error nam minus?</pre
+						>
+						<div class="social-stats">
+							<span>Subs 100</span>
+							<span>Follows 50</span>
+							<span>Joined 10 of April 2020</span>
+						</div>
+						<div class="filter-buttons">
+							<button class="selected">Feed</button>
+							<button>Likes</button>
+							<button>Something</button>
+						</div>
 					</div>
 				</div>
-			</div>
-			<div class="profile-container">
 				<div class="post-container">
-					<div class="post-header">
-						<img src="profile-picture.jpg" alt="Profile Picture" class="profile-picture" />
-						<div class="post-info">
-							<h3 class="username">Username</h3>
-							<div class="pictures-conttainer">
-								<img class="pictures" src="../public/Duke3D.png" alt="Profile picture" width="279" height="279" />
-								<div class="button-container">
-									<button class="like-btn">Like</button>
-									<button class="dislike-btn">Dislike</button>
-									<button class="share-btn">Share</button>
-									<button class="share-btn">Comment</button>
-								</div>
-								<p class="post-date">Posted on November 17, 2023</p>
-								<p class="post-story">#like4like</p>
+					<div class="post-data">
+						<div class="post-content">
+							<img class="profile-pic" src="../public/Duke3D.png" alt="Profile picture" width="100" height="100" />
+							<div class="post-text-container">
+								<span class="post-user-name">Duke</span>
+								<span class="post-user-tag">@author</span>
+								<span class="time-stamp" title="12:54 14/11/2023">2 hours ago</span>
+								<pre class="post-text">
+	Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam quibusdam, voluptatum, quos, voluptatem voluptas quia quaeaspernatur voluptatibus quod doloribus quas. Quisquam quibusdam, voluptatum, quos, voluptatem voluptas quia quae aspernaturvoluptatibus quod doloribus quas.</pre
+								>
+								<img class="post-image" src="../public/background.webp" alt="Picture" width="400" height="300" />
 							</div>
-							<div class="pictures-conttainer">
-								<img class="pictures" src="../public/Duke3D.png" alt="Profile picture" width="279" height="279" />
-								<div class="button-container">
-									<button class="like-btn">Like</button>
-									<button class="dislike-btn">Dislike</button>
-									<button class="share-btn">Share</button>
-									<button class="share-btn">Comment</button>
-								</div>
-								<p class="post-date">Posted on June 13, 2023</p>
-								<p class="post-story">#like4like</p>
+						</div>
+						<div class="post-stats">
+							<div class="stat-container">
+								<button class="like-button">
+									<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512">
+										<path
+											d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 141.2V448c0 17.7 14.3 32 32 32s32-14.3 32-32V141.2L329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"
+										/>
+									</svg>
+									<span>0</span>
+								</button>
 							</div>
-							<div class="pictures-conttainer">
-								<img class="pictures" src="../public/Duke3D.png" alt="Profile picture" width="279" height="279" />
-								<div class="button-container">
-									<button class="like-btn">Like</button>
-									<button class="dislike-btn">Dislike</button>
-									<button class="share-btn">Share</button>
-									<button class="share-btn">Comment</button>
-								</div>
-								<p class="post-date">Posted on May 14, 2024</p>
-								<p class="post-story">#like4like</p>
+							<div class="stat-container">
+								<button class="dislike-button">
+									<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512">
+										<path
+											d="M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"
+										/>
+									</svg>
+									<span>0</span>
+								</button>
+							</div>
+							<div class="stat-container">
+								<button class="comment-button">
+									<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
+										<path
+											d="M512 240c0 114.9-114.6 208-256 208c-37.1 0-72.3-6.4-104.1-17.9c-11.9 8.7-31.3 20.6-54.3 30.6C73.6 471.1 44.7 480 16 480c-6.5 0-12.3-3.9-14.8-9.9c-2.5-6-1.1-12.8 3.4-17.4l0 0 0 0 0 0 0 0 .3-.3c.3-.3 .7-.7 1.3-1.4c1.1-1.2 2.8-3.1 4.9-5.7c4.1-5 9.6-12.4 15.2-21.6c10-16.6 19.5-38.4 21.4-62.9C17.7 326.8 0 285.1 0 240C0 125.1 114.6 32 256 32s256 93.1 256 208z"
+										/>
+									</svg>
+									<span>0</span>
+								</button>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-		</main>
+		</div>
 	</body>
 </html>

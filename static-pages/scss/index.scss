@@ -4,6 +4,8 @@
 	--font-family: system-ui;
 
 	--fw-500: 500;
+	--fw-600: 600;
+	--fw-700: 700;
 
 	--fs-300: clamp(0.94rem, calc(0.92rem + 0.08vw), 0.98rem);
 	--fs-400: clamp(1.13rem, calc(1.06rem + 0.33vw), 1.31rem);
@@ -24,6 +26,7 @@
 	--clr-accent-600: hsl(120, 21%, 35%);
 	--clr-background-500: hsl(270, 22%, 9%);
 	--clr-text-500: hsl(240, 20%, 99%);
+	--clr-dark-500: hsl(0, 0%, 0%);
 }
 
 *,
