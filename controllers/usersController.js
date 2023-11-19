@@ -3,11 +3,15 @@ const User = require("../models/users");
 
 // get all users
 const getUsers = async (req, res) => {
-	const users = await users.find();
-	res.json(users);
+	try {
+		const users = await User.find();
+		res.json(users);
+	} catch (err) {
+		res.status(500).json({ message: err.message });
+	}
 };
 
-// get user by id
+// get user by userTag
 const getUserById = async (req, res) => {
 	const { id } = req.params;
 	if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -32,11 +36,14 @@ const createUser = async (req, res) => {
 // update user by id
 const updateUser = async (req, res) => {
 	const { id } = req.params;
-	const { username, email, password, profilePicture, profileDescription } = req.body;
+	const { username, userTag, email, password, profilePicture, profileDescription } = req.body;
+	if (!username || !userTag || !email || !password) {
+		return res.status(400).json({ message: "Username, userTag, email, and password are required." });
+	}
 	if (!mongoose.Types.ObjectId.isValid(id)) {
 		return res.status(404).send(`No user with id: ${id}`);
 	}
-	const updatedUser = { username, email, password, profilePicture, profileDescription, _id: id };
+	const updatedUser = { username, userTag, email, password, profilePicture, profileDescription, _id: id };
 	await User.findByIdAndUpdate(id, updatedUser, { new: true });
 	res.status(200).json(updatedUser);
 };
@@ -52,45 +59,134 @@ const deleteUser = async (req, res) => {
 	res.status(200).json({ message: "User deleted successfully." });
 };
 
-// follow user by id
-const followUser = async (req, res) => {
-	const { followedId } = req.params;
-	const { followerId } = req.body;
-	if (!mongoose.Types.ObjectId.isValid(followedId)) {
-		return res.status(404).send(`No user with id: ${followedId}`);
+// get followers by userTag
+const getFollowers = async (req, res) => {
+	const { userTag } = req.params;
+	try {
+		const user = await User.findOne({ userTag: userTag });
+		if (!user) return res.status(404).json({ message: `User ${userTag} not found.` });
+		const followers = await User.find({ _id: { $in: user.followerIds } });
+		res.status(200).json(followers);
+	} catch (err) {
+		res.status(404).json({ message: err.message });
 	}
-	if (!mongoose.Types.ObjectId.isValid(followerId)) {
-		return res.status(404).send(`No user with id: ${followerId}`);
-	}
-	const followedUser = await User.findById(followedId);
-	followedUser.followerIds.push(followerId);
-	await followedUser.save();
-	res.status(200).json(followedUser);
 };
 
-// unfollow user by id
+// get following by userTag
+const getFollowing = async (req, res) => {
+	const { userTag } = req.params;
+	try {
+		const user = await User.findOne({ userTag: userTag });
+		if (!user) return res.status(404).json({ message: `User ${userTag} not found.` });
+		const followed = await User.find({ _id: { $in: user.followedIds } });
+		res.status(200).json(followed);
+	} catch (err) {
+		res.status(404).json({ message: err.message });
+	}
+};
+
+// follow user by userTag
+const followUser = async (req, res) => {
+	const { followedUserTag } = req.params;
+	const { followerUserTag } = req.body;
+	try {
+		const followedUser = await User.findOne({ userTag: followedUserTag });
+		const followerUser = await User.findOne({ userTag: followerUserTag });
+
+		if (!followedUser) return res.status(404).json({ message: `User ${followedUserTag} not found.` });
+		if (!followerUser) return res.status(404).json({ message: `User ${followerUserTag} not found.` });
+
+		await followedUser.followerIds.push(followerUser._id);
+		await followedUser.save();
+		res.status(200).json(followedUser);
+	} catch (err) {
+		res.status(404).json({ message: err.message });
+	}
+};
+
+// unfollow user by userTag
 
 const unfollowUser = async (req, res) => {
-	const { followedId } = req.params;
-	const { followerId } = req.body;
-	if (!mongoose.Types.ObjectId.isValid(followedId)) {
-		return res.status(404).send(`No user with id: ${followedId}`);
+	const { followedUserTag } = req.params;
+	const { followerUserTag } = req.body;
+	try {
+		const followedUser = await User.findOne({ userTag: followedUserTag });
+		const followerUser = await User.findOne({ userTag: followerUserTag });
+
+		if (!followedUser) return res.status(404).json({ message: `User ${followedUserTag} not found.` });
+		if (!followerUser) return res.status(404).json({ message: `User ${followerUserTag} not found.` });
+
+		await followedUser.followerIds.delete(followerUser._id);
+		await followedUser.save();
+		res.status(200).json(followedUser);
+	} catch (err) {
+		res.status(404).json({ message: err.message });
 	}
-	if (!mongoose.Types.ObjectId.isValid(followerId)) {
-		return res.status(404).send(`No user with id: ${followerId}`);
-	}
-	const followedUser = await User.findById(followedId);
-	followedUser.followerIds.pull(followerId);
-	await followedUser.save();
-	res.status(200).json(followedUser);
 };
 
-module.exports = {
-  getUsers,
-  getUserById,
-  createUser,
-  updateUser,
-  deleteUser,
-  followUser,
-  unfollowUser,
+//get friends by userTag
+
+const getFriends = async (req, res) => {
+	const { userTag } = req.params;
+	try {
+		const user = await User.findOne({ userTag: userTag });
+		if (!user) return res.status(404).json({ message: `User ${userTag} not found.` });
+		const friends = await User.find({ _id: { $in: user.friendList } });
+		res.status(200).json(friends);
+	} catch (err) {
+		res.status(404).json({ message: err.message });
+	}
+
+	// add friend by userTag
+	const addFriend = async (req, res) => {
+		const { friendUserTag } = req.params;
+		const { userTag } = req.body;
+		try {
+			const friendUser = await User.findOne({ userTag: friendUserTag });
+			const user = await User.findOne({ userTag: userTag });
+
+			if (!friendUser) return res.status(404).json({ message: `User ${friendUser} not found.` });
+			if (!user) return res.status(404).json({ message: `User ${user} not found.` });
+
+			await friendUser.friendList.push(user._id);
+			await friendUser.save();
+			res.status(200).json(friendUser);
+		} catch (err) {
+			res.status(404).json({ message: err.message });
+		}
+	};
+
+	// remove friend by userTag
+	const removeFriend = async (req, res) => {
+		const { friendUserTag } = req.params;
+		const { userTag } = req.body;
+		try {
+			const friendUser = await User.findOne({ userTag: friendUserTag });
+			const user = await User.findOne({ userTag: userTag });
+
+			if (!friendUser) return res.status(404).json({ message: `User ${friendUser} not found.` });
+			if (!user) return res.status(404).json({ message: `User ${user} not found.` });
+
+			await friendUser.friendList.delete(user._id);
+			await friendUser.save();
+			res.status(200).json(friendUser);
+		} catch (err) {
+			res.status(404).json({ message: err.message });
+		}
+	};
+
+	module.exports = {
+		getUsers,
+		getUserById,
+		createUser,
+		updateUser,
+		deleteUser,
+		getFollowers,
+		getFollowing,
+		followUser,
+		unfollowUser,
+		getFriends,
+		addFriend,
+		removeFriend,
+	};
 };

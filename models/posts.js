@@ -6,8 +6,14 @@ const postSchema = new mongoose.Schema({
     required: true,
   },
 
+  author: {
+    type: String,
+    required: true,
+  },
+
   postText: {
     type: String,
+    required: true,
     max: 500,
   },
 
@@ -28,6 +34,14 @@ const postSchema = new mongoose.Schema({
   comments: {
     type: Array,
     default: [],
+  },
+
+  originalReplyParentId: {
+    type: String,
+  },
+
+  replyParentId: {
+    type: String,
   },
 });
 

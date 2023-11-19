@@ -13,6 +13,9 @@ app.get("/", (req, res) => {
 
 //middleware
 app.use(cors());
+
+app.use("/users", require("./routes/usersRouter"));
+
 app.use("/posts", require("./routes/postsRouter"));
 
 app.listen(PORT, () => {

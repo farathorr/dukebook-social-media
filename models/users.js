@@ -9,6 +9,14 @@ const userSchema = new mongoose.Schema({
 		max: 20,
 	},
 
+  userTag: {
+    type: String,
+    required: true,
+    unique: true,
+    min: 3,
+    max: 20,
+  },
+
 	email: {
 		type: String,
 		required: true,
@@ -56,6 +64,11 @@ const userSchema = new mongoose.Schema({
 		type: Array,
 		default: [],
 	},
+
+  friendList : {
+    type: Array,
+    default: [],
+  },
 });
 
 const User = mongoose.model("User", userSchema);
