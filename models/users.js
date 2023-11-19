@@ -9,13 +9,13 @@ const userSchema = new mongoose.Schema({
 		max: 20,
 	},
 
-  userTag: {
-    type: String,
-    required: true,
-    unique: true,
-    min: 3,
-    max: 20,
-  },
+	userTag: {
+		type: String,
+		required: true,
+		unique: true,
+		min: 3,
+		max: 20,
+	},
 
 	email: {
 		type: String,
@@ -35,10 +35,10 @@ const userSchema = new mongoose.Schema({
 		default: "",
 	},
 
-  profileDescription: {
-    type: String,
-    max: 200,
-  },
+	profileDescription: {
+		type: String,
+		max: 200,
+	},
 
 	likedPosts: {
 		type: Array,
@@ -65,10 +65,10 @@ const userSchema = new mongoose.Schema({
 		default: [],
 	},
 
-  friendList : {
-    type: Array,
-    default: [],
-  },
+	friendList: {
+		type: Array,
+		default: [],
+	},
 });
 
 const User = mongoose.model("User", userSchema);

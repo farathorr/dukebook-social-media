@@ -49,7 +49,6 @@ const updateUser = async (req, res) => {
 };
 
 // delete user by id
-
 const deleteUser = async (req, res) => {
 	const { id } = req.params;
 	if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -105,7 +104,6 @@ const followUser = async (req, res) => {
 };
 
 // unfollow user by userTag
-
 const unfollowUser = async (req, res) => {
 	const { followedUserTag } = req.params;
 	const { followerUserTag } = req.body;
@@ -125,7 +123,6 @@ const unfollowUser = async (req, res) => {
 };
 
 //get friends by userTag
-
 const getFriends = async (req, res) => {
 	const { userTag } = req.params;
 	try {
