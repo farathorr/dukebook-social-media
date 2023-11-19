@@ -136,57 +136,57 @@ const getFriends = async (req, res) => {
 	} catch (err) {
 		res.status(404).json({ message: err.message });
 	}
+};
 
-	// add friend by userTag
-	const addFriend = async (req, res) => {
-		const { friendUserTag } = req.params;
-		const { userTag } = req.body;
-		try {
-			const friendUser = await User.findOne({ userTag: friendUserTag });
-			const user = await User.findOne({ userTag: userTag });
+// add friend by userTag
+const addFriend = async (req, res) => {
+	const { friendUserTag } = req.params;
+	const { userTag } = req.body;
+	try {
+		const friendUser = await User.findOne({ userTag: friendUserTag });
+		const user = await User.findOne({ userTag: userTag });
 
-			if (!friendUser) return res.status(404).json({ message: `User ${friendUser} not found.` });
-			if (!user) return res.status(404).json({ message: `User ${user} not found.` });
+		if (!friendUser) return res.status(404).json({ message: `User ${friendUser} not found.` });
+		if (!user) return res.status(404).json({ message: `User ${user} not found.` });
 
-			await friendUser.friendList.push(user._id);
-			await friendUser.save();
-			res.status(200).json(friendUser);
-		} catch (err) {
-			res.status(404).json({ message: err.message });
-		}
-	};
+		await friendUser.friendList.push(user._id);
+		await friendUser.save();
+		res.status(200).json(friendUser);
+	} catch (err) {
+		res.status(404).json({ message: err.message });
+	}
+};
 
-	// remove friend by userTag
-	const removeFriend = async (req, res) => {
-		const { friendUserTag } = req.params;
-		const { userTag } = req.body;
-		try {
-			const friendUser = await User.findOne({ userTag: friendUserTag });
-			const user = await User.findOne({ userTag: userTag });
+// remove friend by userTag
+const removeFriend = async (req, res) => {
+	const { friendUserTag } = req.params;
+	const { userTag } = req.body;
+	try {
+		const friendUser = await User.findOne({ userTag: friendUserTag });
+		const user = await User.findOne({ userTag: userTag });
 
-			if (!friendUser) return res.status(404).json({ message: `User ${friendUser} not found.` });
-			if (!user) return res.status(404).json({ message: `User ${user} not found.` });
+		if (!friendUser) return res.status(404).json({ message: `User ${friendUser} not found.` });
+		if (!user) return res.status(404).json({ message: `User ${user} not found.` });
 
-			await friendUser.friendList.delete(user._id);
-			await friendUser.save();
-			res.status(200).json(friendUser);
-		} catch (err) {
-			res.status(404).json({ message: err.message });
-		}
-	};
+		await friendUser.friendList.delete(user._id);
+		await friendUser.save();
+		res.status(200).json(friendUser);
+	} catch (err) {
+		res.status(404).json({ message: err.message });
+	}
+};
 
-	module.exports = {
-		getUsers,
-		getUserById,
-		createUser,
-		updateUser,
-		deleteUser,
-		getFollowers,
-		getFollowing,
-		followUser,
-		unfollowUser,
-		getFriends,
-		addFriend,
-		removeFriend,
-	};
+module.exports = {
+	getUsers,
+	getUserById,
+	createUser,
+	updateUser,
+	deleteUser,
+	getFollowers,
+	getFollowing,
+	followUser,
+	unfollowUser,
+	getFriends,
+	addFriend,
+	removeFriend,
 };
