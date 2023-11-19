@@ -4,6 +4,7 @@ import Chat from "./components/Chat/Chat";
 import Feed from "./components/Feed/Feed";
 
 import "./App.scss";
+import Profile from "./components/Profile/Profile";
 
 function App() {
 	return (
@@ -11,7 +12,7 @@ function App() {
 			<HeaderNav />
 			<Routes>
 				<Route path="/" element={<div>Home</div>} />
-				<Route path="/profile" element={<div>profile</div>} />
+				<Route path="/profile" element={<Profile />} />
 				<Route path="/feed" element={<Feed />} />
 				<Route path="/login" element={<div>login</div>} />
 				<Route path="/register" element={<div>register</div>} />

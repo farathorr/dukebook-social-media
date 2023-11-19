@@ -1,26 +1,11 @@
-nav {
-	background-color: var(--clr-primary-500);
-	position: relative;
-	height: 50px;
-	display: flex;
-	gap: 25px;
-	justify-content: center;
-	align-items: center;
-	font-size: var(--fs-400);
-}
-button {
-	background-color: var(--clr-secondary-600);
-	padding: 5px;
-	margin: 5px;
-	border-radius: 5px;
-}
-h1 {
+.title {
 	color: var(--clr-primary-100);
 	font-size: var(--fs-500);
 	display: flex;
 	justify-content: center;
 	align-items: center;
 }
+
 .new-post {
 	position: relative;
 	width: 100%;
@@ -41,6 +26,13 @@ h1 {
 	.button-container {
 		display: flex;
 		justify-content: flex-end;
+
+		button {
+			background-color: var(--clr-secondary-600);
+			padding: 5px;
+			margin: 5px;
+			border-radius: 5px;
+		}
 
 		svg {
 			fill: var(--clr-accent-400);
