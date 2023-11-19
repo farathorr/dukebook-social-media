@@ -1,0 +1,31 @@
+.friend-row {
+	height: 50px;
+	border-radius: 5px;
+	margin: 10px;
+	padding: 0px 5px;
+	background-color: rgb(90, 90, 90);
+	display: flex;
+	align-items: center;
+	cursor: pointer;
+
+	.profile-pic {
+		margin: 5px;
+		border-radius: 50%;
+		background-color: rgb(255, 255, 255);
+		object-fit: cover;
+		flex-shrink: 0;
+	}
+
+	.friend-info-container {
+		display: grid;
+		margin-left: 10px;
+		color: rgb(255, 255, 255);
+		text-wrap: nowrap;
+		white-space: nowrap;
+
+		span {
+			text-overflow: ellipsis;
+			overflow: hidden;
+		}
+	}
+}

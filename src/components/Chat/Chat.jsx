@@ -1,6 +1,7 @@
 import React from "react";
 import style from "./Chat.module.scss";
-import image from "../images/Duke3D.png";
+import image from "../../images/Duke3D.png";
+import FriendRow from "./FriendRow/FriendRow";
 
 export default function Chat() {
 	return (
@@ -13,83 +14,25 @@ export default function Chat() {
 			</nav>
 			<main className={style["page-content"]}>
 				<div className={style["friend-list"]}>
-					<div className={style["friend-row"]}>
-						<img className={style["profile-pic"]} src={image} alt="Profile picture" width={40} height={40} />
-						<div className={style["friend-info-container"]}>
-							<span className={style["user-name"]}>Username</span>
-							<span className={style["user-last-message"]}>Lorem ipsum dolor sit amet consectetur adipisicing elit.</span>
-						</div>
-					</div>
-					<div className={style["friend-row"]}>
-						<img className={style["profile-pic"]} src={image} alt="Profile picture" width={40} height={40} />
-						<div className={style["friend-info-container"]}>
-							<span className={style["user-name"]}>Username</span>
-							<span className={style["user-last-message"]}>Lorem ipsum dolor sit amet consectetur adipisicing elit.</span>
-						</div>
-					</div>
-					<div className={style["friend-row"]}>
-						<img className={style["profile-pic"]} src={image} alt="Profile picture" width={40} height={40} />
-						<div className={style["friend-info-container"]}>
-							<span className={style["user-name"]}>Username</span>
-							<span className={style["user-last-message"]}>Lorem ipsum dolor sit amet consectetur adipisicing elit.</span>
-						</div>
-					</div>
-					<div className={style["friend-row"]}>
-						<img className={style["profile-pic"]} src={image} alt="Profile picture" width={40} height={40} />
-						<div className={style["friend-info-container"]}>
-							<span className={style["user-name"]}>Username</span>
-							<span className={style["user-last-message"]}>Lorem ipsum dolor sit amet consectetur adipisicing elit.</span>
-						</div>
-					</div>
-					<div className={style["friend-row"]}>
-						<img className={style["profile-pic"]} src={image} alt="Profile picture" width={40} height={40} />
-						<div className={style["friend-info-container"]}>
-							<span className={style["user-name"]}>Username</span>
-							<span className={style["user-last-message"]}>Lorem ipsum dolor sit amet consectetur adipisicing elit.</span>
-						</div>
-					</div>
-					<div className={style["friend-row"]}>
-						<img className={style["profile-pic"]} src={image} alt="Profile picture" width={40} height={40} />
-						<div className={style["friend-info-container"]}>
-							<span className={style["user-name"]}>Username</span>
-							<span className={style["user-last-message"]}>Lorem ipsum dolor sit amet consectetur adipisicing elit.</span>
-						</div>
-					</div>
-					<div className={style["friend-row"]}>
-						<img className={style["profile-pic"]} src={image} alt="Profile picture" width={40} height={40} />
-						<div className={style["friend-info-container"]}>
-							<span className={style["user-name"]}>Username</span>
-							<span className={style["user-last-message"]}>Lorem ipsum dolor sit amet consectetur adipisicing elit.</span>
-						</div>
-					</div>
-					<div className={style["friend-row"]}>
-						<img className={style["profile-pic"]} src={image} alt="Profile picture" width={40} height={40} />
-						<div className={style["friend-info-container"]}>
-							<span className={style["user-name"]}>Username</span>
-							<span className={style["user-last-message"]}>Lorem ipsum dolor sit amet consectetur adipisicing elit.</span>
-						</div>
-					</div>
-					<div className={style["friend-row"]}>
-						<img className={style["profile-pic"]} src={image} alt="Profile picture" width={40} height={40} />
-						<div className={style["friend-info-container"]}>
-							<span className={style["user-name"]}>Username</span>
-							<span className={style["user-last-message"]}>Lorem ipsum dolor sit amet consectetur adipisicing elit.</span>
-						</div>
-					</div>
-					<div className={style["friend-row"]}>
-						<img className={style["profile-pic"]} src={image} alt="Profile picture" width={40} height={40} />
-						<div className={style["friend-info-container"]}>
-							<span className={style["user-name"]}>Username</span>
-							<span className={style["user-last-message"]}>Lorem ipsum dolor sit amet consectetur adipisicing elit.</span>
-						</div>
-					</div>
-					<div className={style["friend-row"]}>
-						<img className={style["profile-pic"]} src={image} alt="Profile picture" width={40} height={40} />
-						<div className={style["friend-info-container"]}>
-							<span className={style["user-name"]}>Username</span>
-							<span className={style["user-last-message"]}>Lorem ipsum dolor sit amet consectetur adipisicing elit.</span>
-						</div>
-					</div>
+					<FriendRow userName="Duke" lastMessage="asasd" image={image} />
+					<FriendRow userName="Testing long name asdasdasd" lastMessage="asasd" image={image} />
+					<FriendRow userName="Duke 1" lastMessage="asasd" image={image} />
+					<FriendRow userName="Duke 2" lastMessage="asasd" image={image} />
+					<FriendRow userName="Duke 3" image={image} />
+					<FriendRow />
+					<FriendRow />
+					<FriendRow />
+					<FriendRow />
+					<FriendRow />
+					<FriendRow />
+					<FriendRow />
+					<FriendRow />
+					<FriendRow />
+					<FriendRow />
+					<FriendRow />
+					<FriendRow />
+					<FriendRow />
+					<FriendRow />
 				</div>
 				<div className={style["chat-frame"]}>
 					<div className={style["chat-bar"]}>
