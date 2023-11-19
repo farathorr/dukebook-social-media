@@ -8,12 +8,6 @@ import MessageSeparator from "./MessageSeparator/MessageSeparator";
 export default function Chat() {
 	return (
 		<div className={style["chat-page"]}>
-			<nav>
-				<img src="" alt="logo" />
-				<a href="">Lorem.</a>
-				<a href="">Facere?</a>
-				<a href="">Temporibus.</a>
-			</nav>
 			<main className={style["page-content"]}>
 				<div className={style["friend-list"]}>
 					<FriendRow name="Duke" lastMessage="asasd" image={image} />

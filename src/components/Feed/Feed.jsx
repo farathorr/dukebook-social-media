@@ -1,7 +1,5 @@
 import React from "react";
 import style from "./Feed.module.scss";
-import image from "../../images/Duke3D.png";
-import background from "../../images/background.webp";
 
 import PostComponent from "../PostComponent/PostComponent";
 
