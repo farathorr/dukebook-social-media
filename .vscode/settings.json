@@ -11,6 +11,7 @@
 			}
 		}
 	],
+	"liveSassCompile.settings.excludeList": ["/src/**"],
 	"liveSassCompile.settings.showOutputWindowOn": "None",
 	"liveSassCompile.settings.watchOnLaunch": true,
 	"[scss]": {
