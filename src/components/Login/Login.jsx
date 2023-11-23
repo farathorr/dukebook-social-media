@@ -1,8 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { Application } from "@splinetool/runtime";
 import style from "./Login.module.scss";
 import { Link } from "react-router-dom";
 
 export default function Login() {
+	useEffect(() => {
+		const canvas = document.getElementById("canvas3d");
+		const app = new Application(canvas);
+		app.load("https://prod.spline.design/dHhqM-p0znCN587W/scene.splinecode");
+	}, []);
+
 	return (
 		<div className={style["main-content"]}>
 			<h1 className={style["title"]}>Login</h1>
@@ -19,6 +26,7 @@ export default function Login() {
 					<button role="link">Register</button>
 				</Link>
 			</div>
+			<canvas id="canvas3d"></canvas>
 		</div>
 	);
 }
