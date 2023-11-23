@@ -1,143 +1,46 @@
-const posts = require("../models/posts");
-const users = require("../models/users");
+const mongoose = require("mongoose");
+const Post = require("../models/posts");
+const User = require("../models/users");
 
-const getPosts = (req, res) => {
-	res.json(posts);
-};
-
-const getPostById = (req, res) => {
-	const post = posts.find((post) => post.id === parseInt(req.params.id));
-	if (!post) {
-		res.status(404).json({ message: `Post ${req.params.id} not found.` });
-	} else {
-		res.json(post);
+// get all posts
+const getPosts = async (req, res) => {
+	try {
+		const posts = await Post.find();
+		res.json(posts);
+	} catch (err) {
+		res.status(500).json({ message: err.message });
 	}
 };
 
-const createPost = (req, res) => {
-	const basePost = {
-		parentId: null,
-		tags: [],
-		likes: 0,
-		dislikes: 0,
-		replies: [],
-	};
-	const post = req.body;
-	if (!post.body || !post.author) {
-		res.status(400).json({ message: "Body and author are required." });
-	} else {
-		post.id = posts.reduce((acc, post) => Math.max(acc, post.id), 0) + 1;
-		posts.push({ ...basePost, ...post });
-		res.status(201).json(post);
+// get post by id
+const getPostById = async (req, res) => {
+	const { id } = req.params;
+	if (!mongoose.Types.ObjectId.isValid(id)) {
+		return res.status(404).send(`No post with id: ${id}`);
 	}
+	const post = await Post.findById(id);
+	res.status(200).json(post);
 };
 
-const updatePost = (req, res) => {
-	const post = posts.find((post) => post.id === parseInt(req.params.id));
-	if (!post) {
-		res.status(404).json({ message: `Post ${req.params.id} not found.` });
-	} else {
-		const updatedPost = req.body;
-		if (!updatedPost.body) {
-			res.status(400).json({ message: "Body is required." });
-		} else {
-			post.body = updatedPost.body;
-			res.json(post);
+
+// create post
+const createPost = async (req, res) => {
+	const { author: postAuthor, ...post } = req.body;
+	if (!postAuthor || !post.postText) {
+		return res.status(400).json({ message: "Author and text is required." });
+	}
+	try {
+		const user = await User.findOne({ userTag: postAuthor });
+		if (!user) return res.status(400).json({ message: "Author does not exist." });
+		const newPost = new Post({ ...post, userId: user._id, author: postAuthor });
+		try {
+			await newPost.save();
+			res.status(201).json(newPost);
+		} catch (error) {
+			res.status(409).json({ message: error.message });
 		}
-	}
-};
-
-const deletePost = (req, res) => {
-	const post = posts.find((post) => post.id === parseInt(req.params.id));
-	if (!post) {
-		res.status(404).json({ message: `Post ${req.params.id} not found.` });
-	} else {
-		const index = posts.indexOf(post);
-		posts.splice(index, 1);
-		res.json(post);
-	}
-};
-
-const likePost = (req, res) => {
-	if (!req.body.userId) {
-		res.status(400).json({ message: "User ID is required." });
-		return;
-	}
-	const user = users.find((user) => user.id === parseInt(req.body.userId));
-	const post = posts.find((post) => post.id === parseInt(req.params.id));
-	const hasLiked = user.likedPosts.some((id) => id === post.id);
-	if (!user) {
-		res.status(404).json({ message: `User ${req.body.userId} not found.` });
-	} else if (!post) {
-		res.status(404).json({ message: `Post ${req.params.id} not found.` });
-	} else if (!hasLiked) {
-		post.likes++;
-		user.likedPosts.push(post.id);
-		res.json(post);
-	} else {
-		res.status(400).json({ message: `User ${user.id} has already liked post ${post.id}.` });
-	}
-};
-
-const dislikePost = (req, res) => {
-	if (!req.body.userId) {
-		res.status(400).json({ message: "User ID is required." });
-		return;
-	}
-
-	const user = users.find((user) => user.id === parseInt(req.body.userId));
-	const post = posts.find((post) => post.id === parseInt(req.params.id));
-	const hasDisliked = user.dislikedPosts.some((id) => id === post.id);
-	if (!user) {
-		res.status(404).json({ message: `User ${req.body.userId} not found.` });
-	} else if (!post) {
-		res.status(404).json({ message: `Post ${req.params.id} not found.` });
-	} else if (!hasDisliked) {
-		post.dislikes++;
-		user.dislikedPosts.push(post.id);
-		res.json(post);
-	} else {
-		res.status(400).json({ message: `User ${user.id} has already disliked post ${post.id}.` });
-	}
-};
-
-const getReplies = (req, res) => {
-	const post = posts.find((post) => post.id === parseInt(req.params.id));
-	if (!post) {
-		res.status(404).json({ message: `Post ${req.params.id} not found.` });
-	} else {
-		const replies = [];
-		post.replies.forEach((id) => {
-			const reply = posts.find((post) => post.id === id);
-			if (reply) replies.push(reply);
-		});
-
-		res.json(replies);
-	}
-};
-
-const replyToPost = (req, res) => {
-	const post = posts.find((post) => post.id === parseInt(req.params.id));
-	const basePost = {
-		parentId: null,
-		tags: [],
-		likes: 0,
-		dislikes: 0,
-		replies: [],
-	};
-
-	if (!post) {
-		res.status(404).json({ message: `Post ${req.params.id} not found.` });
-		return;
-	}
-
-	if (!req.body.body || !req.body.author) {
-		res.status(400).json({ message: "Body and author are required." });
-	} else {
-		const id = posts.reduce((acc, post) => Math.max(acc, post.id), 0) + 1;
-		post.replies.push(id);
-		posts.push({ ...basePost, ...req.body, id, parentId: post.id });
-		res.status(201).json(post);
+	} catch (err) {
+		res.status(500).json({ message: err.message });
 	}
 };
 
@@ -145,10 +48,4 @@ module.exports = {
 	getPosts,
 	getPostById,
 	createPost,
-	updatePost,
-	deletePost,
-	likePost,
-	dislikePost,
-	getReplies,
-	replyToPost,
 };
