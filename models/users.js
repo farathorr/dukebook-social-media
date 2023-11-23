@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
-	username: {
+	userTag: {
 		type: String,
 		required: true,
 		unique: true,
@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema({
 		max: 20,
 	},
 
-	userTag: {
+	username: {
 		type: String,
 		unique: true,
 		min: 3,
