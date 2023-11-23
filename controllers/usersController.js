@@ -32,13 +32,13 @@ const getUserByUserTag = async (req, res) => {
 // create user
 const createUser = async (req, res) => {
 	const user = req.body;
-	if (!user.username || !user.email || !user.password) {
+	if (!user.userTag || !user.email || !user.password) {
 		return res.status(400).json({ message: "Username, email, and password are required." });
 	}
 
-	const existingUsername = await User.findOne({ username: user.username });
+	const existingUsername = await User.findOne({ username: user.userTag });
 	if (existingUsername) {
-		return res.status(409).json({ message: "Username already exists." });
+		return res.status(409).json({ message: "Usertag already exists." });
 	}
 
 	const existingEmail = await User.findOne({ email: user.email });
@@ -47,7 +47,7 @@ const createUser = async (req, res) => {
 	}
 
 	const salt = await bcrypt.genSalt();
-	user.userTag = user.username.toLowerCase();
+	user.username = user.userTag;
 	user.password = await bcrypt.hash(user.password, salt);
 	const newUser = new User(user);
 
@@ -201,6 +201,21 @@ const removeFriend = async (req, res) => {
 	}
 };
 
+// check password
+const checkPassword = async (req, res) => {
+	const { userTag, password } = req.body;
+	try {
+		const user = await User.findOne({ userTag: userTag });
+		if (!user) return res.status(404).json({ message: `User ${userTag} not found.` });
+
+		const isMatch = await bcrypt.compare(password, user.password);
+		if (!isMatch) return res.status(400).json({ message: "Invalid credentials.", isMatch: false });
+		res.status(200).json({ message: "Login successful." , isMatch: true});
+	} catch (err) {
+		res.status(404).json({ message: err.message });
+	}
+};
+
 module.exports = {
 	getUsers,
 	getUserById,
@@ -215,4 +230,5 @@ module.exports = {
 	addFriend,
 	removeFriend,
 	getUserByUserTag,
+	checkPassword,
 };

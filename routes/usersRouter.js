@@ -18,4 +18,6 @@ router.get("/friends/:userTag", usersController.getFriends);
 router.put("/addFriend/:userTag", usersController.addFriend);
 router.put("/removeFriend/:userTag", usersController.removeFriend);
 
+router.post("/login", usersController.checkPassword);
+
 module.exports = router;

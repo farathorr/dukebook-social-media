@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 
 export default function Register() {
-	const [username, setUsername] = useState("");
+	const [userTag, setUsername] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 
@@ -12,7 +12,7 @@ export default function Register() {
 		e.preventDefault();
 
 		const newUser = {
-			username,
+			userTag,
 			email,
 			password,
 		};
@@ -33,12 +33,12 @@ export default function Register() {
 		<div className={style["main-content"]}>
 			<h1 className={style["title"]}>Register</h1>
 			<form className={style["login-form"]} onSubmit={handleSubmit}>
-				<label htmlFor="username">Username:</label>
+				<label htmlFor="userTag">Username:</label>
 				<input
 					type="text"
-					value={username}
-					id="username"
-					name="username"
+					value={userTag}
+					id="userTag"
+					name="userTag"
 					placeholder="Username"
 					onChange={(e) => setUsername(e.target.value)}
 				/>
