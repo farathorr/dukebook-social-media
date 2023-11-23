@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const User = require("../models/users");
+const bcrypt = require("bcrypt");
 
 // get all users
 const getUsers = async (req, res) => {
@@ -31,10 +32,25 @@ const getUserByUserTag = async (req, res) => {
 // create user
 const createUser = async (req, res) => {
 	const user = req.body;
-	if (!user.username || !user.userTag || !user.email || !user.password) {
-		return res.status(400).json({ message: "Username, userTag, email, and password are required." });
+	if (!user.username || !user.email || !user.password) {
+		return res.status(400).json({ message: "Username, email, and password are required." });
 	}
+
+	const existingUsername = await User.findOne({ username: user.username });
+	if (existingUsername) {
+		return res.status(409).json({ message: "Username already exists." });
+	}
+
+	const existingEmail = await User.findOne({ email: user.email });
+	if (existingEmail) {
+		return res.status(409).json({ message: "Email already exists." });
+	}
+
+	const salt = await bcrypt.genSalt();
+	user.userTag = user.username.toLowerCase();
+	user.password = await bcrypt.hash(user.password, salt);
 	const newUser = new User(user);
+
 	try {
 		await newUser.save();
 		res.status(201).json(newUser);
@@ -107,7 +123,7 @@ const followUser = async (req, res) => {
 		if (!followedUser) return res.status(404).json({ message: `User ${followedUserTag} not found.` });
 		if (!followerUser) return res.status(404).json({ message: `User ${followerUserTag} not found.` });
 
-		 followedUser.followerIds.push(followerUser._id);
+		followedUser.followerIds.push(followerUser._id);
 		await followedUser.save();
 		res.status(200).json(followedUser);
 	} catch (err) {

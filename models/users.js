@@ -11,7 +11,6 @@ const userSchema = new mongoose.Schema({
 
 	userTag: {
 		type: String,
-		required: true,
 		unique: true,
 		min: 3,
 		max: 20,
