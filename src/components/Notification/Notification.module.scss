@@ -1,0 +1,44 @@
+.notifications-container {
+	--_margin: 10px;
+	--_notification-width: 300px;
+	position: fixed;
+	width: 100%;
+	top: 0px;
+	display: grid;
+	pointer-events: none;
+	margin-top: 60px;
+	--_content-width: calc(100% - var(--_margin) * 2);
+	grid-template-columns:
+		minmax(var(--_margin), 1fr) [notification-start]
+		min(var(--_content-width), var(--_notification-width))
+		[notification-end] minmax(var(--_margin), 1fr);
+	> * {
+		grid-column: notification;
+		pointer-events: all;
+	}
+}
+
+.loginError,
+.newNotification,
+.friendRequest,
+.warningError {
+	background-color: #ffbebe;
+	border: 2px solid #04aa6d;
+	color: #ff0000;
+	padding: 10px;
+	margin-bottom: 10px;
+	width: 100%;
+
+	h2 {
+		font-size: 18px;
+		margin-bottom: 5px;
+		margin-top: -5px;
+		float: left;
+		width: 80%;
+	}
+
+	.closeButton {
+		font-size: 15px;
+		font-weight: bold;
+	}
+}
