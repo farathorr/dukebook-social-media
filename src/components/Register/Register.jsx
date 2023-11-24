@@ -1,9 +1,12 @@
 import React from "react";
 import style from "./Register.module.scss";
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useState, useContext } from "react";
+import { NotificationContext } from "../NotificationControls/NotificationControls";
 
 export default function Register() {
+	const [addNotification] = useContext(NotificationContext);
+	const navigate = useNavigate();
 	const [userTag, setUsername] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
