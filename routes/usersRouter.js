@@ -1,5 +1,6 @@
 const express = require("express");
 const usersController = require("../controllers/usersController");
+const { authenticateToken } = require("../middleware/authenticateToken");
 const router = express.Router();
 
 router.get("/", usersController.getUsers);
@@ -18,6 +19,9 @@ router.get("/friends/:userTag", usersController.getFriends);
 router.put("/addFriend/:userTag", usersController.addFriend);
 router.put("/removeFriend/:userTag", usersController.removeFriend);
 
-router.post("/login", usersController.checkPassword);
+// router.post("/login", usersController.checkPassword);
+router.post("/getSensitiveData", authenticateToken, (req, res) => {
+	res.status(200).json({ message: "You have access to sensitive data." });
+});
 
 module.exports = router;
