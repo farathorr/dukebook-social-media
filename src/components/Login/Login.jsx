@@ -9,27 +9,42 @@ export default function Login() {
 	const navigate = useNavigate();
 	const [userTag, setUsertag] = useState("");
 	const [password, setPassword] = useState("");
-	const [confirmPassword, setConfirmPassword] = useState("");
+	const [rememberPassword, setRememberPassword] = useState(false);
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		const user = { userTag, password };
 
 		try {
-			const response = await fetch("http://localhost:4000/users/login", {
+			const response = await fetch("http://localhost:4001/auth/login", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify(user),
 			});
-			const data = await response.json();
 
 			if (response.status === 400) {
 				addNotification({ type: "error", message: "Wrong password", title: "Login failed", duration: 5000 });
 			} else if (response.status === 404) {
 				addNotification({ type: "error", message: "User not found", title: "Login failed", duration: 5000 });
 			} else if (response.status === 200) {
-				addNotification({ type: "success", message: "Login successful", title: "Login successful", duration: 5000 });
+				const data = await response.json();
+				if (rememberPassword) {
+					localStorage.setItem("accessToken", data.accessToken);
+					localStorage.setItem("refreshToken", data.refreshToken);
+				}
+				addNotification({ type: "success", message: "Login successful", title: "Login successful", duration: 2000 });
 				navigate("/profile");
+
+				// Test endpoint
+				const testMessage = await fetch("http://localhost:4000/users/getSensitiveData", {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${data.accessToken}`,
+					},
+				}).then((res) => res.json());
+
+				addNotification({ type: "info", message: testMessage.message, title: "Sensitive data" });
 			}
 		} catch (error) {
 			addNotification({ type: "info", message: "Could not establish a connect to the server", title: "Network problems", duration: 5000 });
@@ -55,7 +70,13 @@ export default function Login() {
 					onChange={(e) => setPassword(e.target.value)}
 				/>
 				<label htmlFor="remember-me">Remember me:</label>
-				<input type="checkbox" id="remember-me" name="remember-me" />
+				<input
+					type="checkbox"
+					id="remember-me"
+					name="remember-me"
+					checked={rememberPassword}
+					onChange={(e) => setRememberPassword(e.target.checked)}
+				/>
 				<button type="submit" defaultValue="login">
 					Login
 				</button>

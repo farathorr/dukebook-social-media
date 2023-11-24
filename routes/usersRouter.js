@@ -20,8 +20,6 @@ router.put("/addFriend/:userTag", usersController.addFriend);
 router.put("/removeFriend/:userTag", usersController.removeFriend);
 
 // router.post("/login", usersController.checkPassword);
-router.post("/getSensitiveData", authenticateToken, (req, res) => {
-	res.status(200).json({ message: "You have access to sensitive data." });
-});
+router.post("/getSensitiveData", authenticateToken, usersController.getSensitiveData);
 
 module.exports = router;
