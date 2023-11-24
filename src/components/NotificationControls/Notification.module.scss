@@ -1,7 +1,7 @@
 .notifications-container {
 	--_margin: 10px;
 	--_notification-width: 300px;
-	position: fixed;
+	position: sticky;
 	width: 100%;
 	top: 0px;
 	display: grid;
