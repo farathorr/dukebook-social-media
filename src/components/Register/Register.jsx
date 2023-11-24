@@ -3,6 +3,7 @@ import style from "./Register.module.scss";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useContext } from "react";
 import { NotificationContext } from "../NotificationControls/NotificationControls";
+import { set } from "mongoose";
 
 export default function Register() {
 	const [addNotification] = useContext(NotificationContext);
@@ -12,45 +13,64 @@ export default function Register() {
 	const [password, setPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
 
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
-
 		const regex = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
 		const numRegex = /[0-9]/;
 		if (password !== confirmPassword) {
-			console.error("Passwords don't match");
+			addNotification({ type: "error", message: "Passwords don't match", title: "Registration failed", duration: 5000 });
 			return;
 		}
 		if (password.length < 8) {
-			console.error("Password must be at least 8 characters long");
+			addNotification({ type: "error", message: "Password must be 8 characters long", title: "Registration failed", duration: 5000 });
 			return;
 		}
 		if (!regex.test(password)) {
-			console.error("Password contains no special characters");
+			addNotification({
+				type: "error",
+				message: "Password needs to contain at least 1 special character",
+				title: "Registration failed",
+				duration: 5000,
+			});
 			return;
 		}
 		if (!numRegex.test(password)) {
-			console.error("Password must contain at least one number");
+			addNotification({
+				type: "error",
+				message: "Password needs to contain at least 1 number",
+				title: "Registration failed",
+				duration: 5000,
+			});
 			return;
 		}
 
-		const newUser = {
+		let user = {
 			userTag,
 			email,
 			password,
 		};
 
-		fetch("http://localhost:4000/users", {
+		const response = await fetch("http://localhost:4000/users", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
 			},
-			body: JSON.stringify(newUser),
+			body: JSON.stringify(user),
 		});
+
+		const data = await response.json();
+
+		if (response.status === 409) {
+			addNotification({ type: "error", message: "User already exists", title: "Registration failed", duration: 5000 });
+		} else if (response.status === 201) {
+			addNotification({ type: "success", message: "Registration successful", title: "Registration successful", duration: 5000 });
+			navigate("/feed");
+		}
 
 		setUsername("");
 		setEmail("");
 		setPassword("");
+		setConfirmPassword("");
 	};
 	return (
 		<div className={style["main-content"]}>
