@@ -6,10 +6,15 @@ import { useState } from "react";
 export default function Login() {
 	const [userTag, setUsertag] = useState("");
 	const [password, setPassword] = useState("");
+	const [confirmPassword, setConfirmPassword] = useState("");
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
 
+		if (password !== confirmPassword) {
+			console.error("Passwords don't match");
+			return;
+		}
 		const user = {
 			userTag,
 			password,
@@ -42,6 +47,8 @@ export default function Login() {
 					placeholder="Password"
 					onChange={(e) => setPassword(e.target.value)}
 				/>
+				<label htmlFor="remember-me">Remember me:</label>
+				<input type="checkbox" id="remember-me" name="remember-me" />
 				<button type="submit" defaultValue="login">
 					Login
 				</button>

@@ -7,9 +7,29 @@ export default function Register() {
 	const [userTag, setUsername] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const [confirmPassword, setConfirmPassword] = useState("");
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
+
+		const regex = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+		const numRegex = /[0-9]/;
+		if (password !== confirmPassword) {
+			console.error("Passwords don't match");
+			return;
+		}
+		if (password.length < 8) {
+			console.error("Password must be at least 8 characters long");
+			return;
+		}
+		if (!regex.test(password)) {
+			console.error("Password contains no special characters");
+			return;
+		}
+		if (!numRegex.test(password)) {
+			console.error("Password must contain at least one number");
+			return;
+		}
 
 		const newUser = {
 			userTag,
@@ -47,7 +67,24 @@ export default function Register() {
 				<input type="email" value={email} id="email" name="email" placeholder="your@email.com" onChange={(e) => setEmail(e.target.value)} />
 
 				<label htmlFor="password">Password:</label>
-				<input type="password" value={password} id="password" name="password" onChange={(e) => setPassword(e.target.value)} />
+				<input
+					type="password"
+					value={password}
+					id="password"
+					name="password"
+					placeholder="Password"
+					onChange={(e) => setPassword(e.target.value)}
+				/>
+
+				<label htmlFor="confirm-password">Confirm password:</label>
+				<input
+					type="password"
+					id="confirm-password"
+					value={confirmPassword}
+					name="confirm-password"
+					placeholder="Confirm password"
+					onChange={(e) => setConfirmPassword(e.target.value)}
+				/>
 
 				<button type="submit" defaultValue="register">
 					Register
