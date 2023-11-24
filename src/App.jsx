@@ -7,7 +7,7 @@ import Post from "./components/Post/Post";
 import Login from "./components/Login/Login";
 import Register from "./components/Register/Register";
 import NotificationControls from "./components/NotificationControls/NotificationControls";
-import { NotificationStuff } from "./components/NotificationControls/NotificationControls";
+import NotificationContainer from "./components/NotificationControls/NotificationContainer/NotificationContainer";
 
 import "./App.scss";
 
@@ -16,7 +16,7 @@ export default function App() {
 		<NotificationControls>
 			<BrowserRouter>
 				<HeaderNav />
-				<NotificationStuff />
+				<NotificationContainer />
 				<Routes>
 					<Route path="/" element={<div>Home</div>} />
 					<Route path="/profile" element={<Profile />} />
