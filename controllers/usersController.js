@@ -216,6 +216,12 @@ const checkPassword = async (req, res) => {
 	}
 };
 
+// get sensitive data (TESTING, can be removed leter)
+const getSensitiveData = async (req, res) => {
+	const user = req.user;
+	res.status(200).json({ message: `You have access to "${user.userTag}" sensitive data.` });
+};
+
 module.exports = {
 	getUsers,
 	getUserById,
@@ -231,4 +237,5 @@ module.exports = {
 	removeFriend,
 	getUserByUserTag,
 	checkPassword,
+	getSensitiveData,
 };

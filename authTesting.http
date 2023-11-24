@@ -1,0 +1,34 @@
+POST http://localhost:4001/auth/login
+Content-Type: application/json
+
+{
+	"userTag": "authTest",
+	"password": "123456789!"
+}
+
+###
+
+POST http://localhost:4001/auth/refresh
+Content-Type: application/json
+
+{
+	"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOiI2NTYxMTY5YjdmZTdmMDBiZDU2MzRlZTUiLCJ0eXBlIjoicmVmcmVzaCIsInVzZXJUYWciOiJhdXRoVGVzdCIsImlhdCI6MTcwMDg2NjgxOH0.TO9Z5BhZDPnNx8FdtvryhmozfiXjeRji_3ElsAujuE0"
+}
+
+###
+
+POST http://localhost:4001/auth/logout
+Content-Type: application/json
+
+{
+	"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOiI2NTYxMTY5YjdmZTdmMDBiZDU2MzRlZTUiLCJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTcwMDg2Mjc4OX0.gdJD0dmnprnqJ0kjzHE8_kZFHrr-DuZlJayLcdyNoGA"
+}
+
+
+###
+
+POST http://localhost:4000/users/getSensitiveData
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoicmVmcmVzaCIsInVzZXJUYWciOiJhdXRoVGVzdCIsImlhdCI6MTcwMDg2Njg3NSwiZXhwIjoxNzAwODY2ODk1fQ.8MkPny3grFUbc-S3Y0dVS4K-TRrLMFVQehERqi0bm1k
+
+
