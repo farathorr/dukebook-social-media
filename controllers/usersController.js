@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const User = require("../models/users");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 
 // get all users
 const getUsers = async (req, res) => {
@@ -46,9 +46,8 @@ const createUser = async (req, res) => {
 		return res.status(409).json({ message: "Email already exists." });
 	}
 
-	const salt = await bcrypt.genSalt();
 	user.username = user.userTag;
-	user.password = await bcrypt.hash(user.password, salt);
+	user.password = await bcrypt.hash(user.password, 10);
 	const newUser = new User(user);
 
 	try {
@@ -201,21 +200,6 @@ const removeFriend = async (req, res) => {
 	}
 };
 
-// check password
-const checkPassword = async (req, res) => {
-	const { userTag, password } = req.body;
-	try {
-		const user = await User.findOne({ userTag: userTag });
-		if (!user) return res.status(404).json({ message: `User ${userTag} not found.` });
-
-		const isMatch = await bcrypt.compare(password, user.password);
-		if (!isMatch) return res.status(400).json({ message: "Invalid credentials.", isMatch: false });
-		res.status(200).json({ message: "Login successful.", isMatch: true });
-	} catch (err) {
-		res.status(404).json({ message: err.message });
-	}
-};
-
 // get sensitive data (TESTING, can be removed leter)
 const getSensitiveData = async (req, res) => {
 	const user = req.user;
@@ -236,6 +220,5 @@ module.exports = {
 	addFriend,
 	removeFriend,
 	getUserByUserTag,
-	checkPassword,
 	getSensitiveData,
 };
