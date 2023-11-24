@@ -13,6 +13,7 @@
 		minmax(var(--_margin), 1fr) [notification-start]
 		min(var(--_content-width), var(--_notification-width))
 		[notification-end] minmax(var(--_margin), 1fr);
+	z-index: 1000;
 
 	> * {
 		grid-column: notification;

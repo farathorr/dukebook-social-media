@@ -40,20 +40,18 @@ html {
 }
 
 body {
-	position: absolute;
 	margin: 0px;
 	font-family: var(--font-family);
 	font-size: var(--fs-300);
 	color: var(--clr-text-500);
 	background-color: var(--clr-background-500);
-	width: 100%;
-	height: 100%;
-	inset: 0px;
 }
 
 #root {
+	position: absolute;
 	width: 100%;
 	height: 100%;
+	inset: 0px;
 	display: flex;
 	flex-direction: column;
 }
