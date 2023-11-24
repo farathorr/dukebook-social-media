@@ -9,36 +9,6 @@ export default function NotificationContainer() {
 
 	return (
 		<div className={style["notifications-container"]}>
-			<button
-				onClick={() => {
-					addNotification({
-						duration: 5000,
-						type: "error",
-						title: "Error",
-						message: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
-					});
-					addNotification({
-						duration: 5000,
-						type: "warning",
-						title: "Warning",
-						message: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
-					});
-					addNotification({
-						duration: 5000,
-						type: "info",
-						title: "Info",
-						message: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
-					});
-					addNotification({
-						duration: 5000,
-						type: "success",
-						title: "Success",
-						message: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
-					});
-				}}
-			>
-				Add
-			</button>
 			{notifications.map((notification, index) => (
 				<Notification notification={notification} onClose={closeButton} key={index} />
 			))}

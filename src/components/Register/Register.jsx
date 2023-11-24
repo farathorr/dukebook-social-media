@@ -1,29 +1,39 @@
 import React from "react";
 import style from "./Register.module.scss";
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useState, useContext } from "react";
+import { NotificationContext } from "../NotificationControls/NotificationControls";
 
 export default function Register() {
+	const [addNotification] = useContext(NotificationContext);
+	const navigate = useNavigate();
 	const [userTag, setUsername] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 
-	const handleSubmit = (e) => {
-		e.preventDefault();
+	const handleSubmit = async (event) => {
+		event.preventDefault();
+		const newUser = { userTag, email, password };
 
-		const newUser = {
-			userTag,
-			email,
-			password,
-		};
+		try {
+			const response = await fetch("http://localhost:4000/users", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(newUser),
+			});
+			const data = await response.json();
 
-		fetch("http://localhost:4000/users", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(newUser),
-		});
+			if (response.status === 400) {
+				addNotification({ type: "error", message: data.message, title: "Registration", duration: 5000 });
+			} else if (response.status === 409) {
+				addNotification({ type: "error", message: data.message, title: "Registration", duration: 5000 });
+			} else if (response.status === 201) {
+				addNotification({ type: "success", message: "Registration successful", title: "Registration", duration: 5000 });
+				navigate("/login");
+			}
+		} catch (error) {
+			addNotification({ type: "info", message: "Could not establish a connect to the server", title: "Network problems", duration: 5000 });
+		}
 
 		setUsername("");
 		setEmail("");
