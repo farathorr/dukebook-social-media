@@ -1,27 +1,38 @@
 import React from "react";
 import style from "./Login.module.scss";
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useState, useContext } from "react";
+import { NotificationContext } from "../NotificationControls/NotificationControls";
 
 export default function Login() {
+	const [addNotification] = useContext(NotificationContext);
+	const navigate = useNavigate();
 	const [userTag, setUsertag] = useState("");
 	const [password, setPassword] = useState("");
 
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
+		const user = { userTag, password };
 
-		const user = {
-			userTag,
-			password,
-		};
+		try {
+			const response = await fetch("http://localhost:4000/users/login", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(user),
+			});
+			const data = await response.json();
 
-		fetch("http://localhost:4000/users/login", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(user),
-		});
+			if (response.status === 400) {
+				addNotification({ type: "error", message: "Wrong password", title: "Login failed", duration: 5000 });
+			} else if (response.status === 404) {
+				addNotification({ type: "error", message: "User not found", title: "Login failed", duration: 5000 });
+			} else if (response.status === 200) {
+				addNotification({ type: "success", message: "Login successful", title: "Login successful", duration: 5000 });
+				navigate("/profile");
+			}
+		} catch (error) {
+			addNotification({ type: "info", message: "Could not establish a connect to the server", title: "Network problems", duration: 5000 });
+		}
 
 		setUsertag("");
 		setPassword("");

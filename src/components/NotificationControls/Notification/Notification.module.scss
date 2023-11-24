@@ -4,11 +4,12 @@
 
 .notification {
 	background-color: var(--_background-color);
-	border-left: 6px solid #00000080;
+	border-left: 8px solid #00000080;
 	color: var(--clr-text-500);
 	padding: 5px 5px 8px 20px;
 	margin-bottom: 10px;
 	width: 100%;
+	border-radius: 5px;
 	text-shadow: 0 0 1px #00000080;
 	transition: padding 0.15s, filter 0.15s;
 	cursor: default;

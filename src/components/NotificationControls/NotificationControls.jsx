@@ -11,6 +11,7 @@ export default function NotificationControls(props) {
 	);
 
 	function addNotification(notification) {
+		notification = { duration: 5000, title: "title", message: "message", ...notification };
 		const keys = ["type", "title", "message", "duration"]; // Debugging errors
 		keys.forEach((key) => key in notification || console.error("Undefined " + key));
 

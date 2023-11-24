@@ -210,7 +210,7 @@ const checkPassword = async (req, res) => {
 
 		const isMatch = await bcrypt.compare(password, user.password);
 		if (!isMatch) return res.status(400).json({ message: "Invalid credentials.", isMatch: false });
-		res.status(200).json({ message: "Login successful." , isMatch: true});
+		res.status(200).json({ message: "Login successful.", isMatch: true });
 	} catch (err) {
 		res.status(404).json({ message: err.message });
 	}
