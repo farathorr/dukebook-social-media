@@ -27,7 +27,8 @@
 		"dev-server": "nodemon server.js",
 		"server": "node server.js",
 		"authServer": "node authServer.js",
-		"dev-authServer": "nodemon authServer.js"
+		"dev-authServer": "nodemon authServer.js",
+		"all": "npm-run-all --parallel start dev-server dev-authServer"
 	},
 	"eslintConfig": {
 		"extends": [
@@ -48,6 +49,7 @@
 		]
 	},
 	"devDependencies": {
-		"nodemon": "^3.0.1"
+		"nodemon": "^3.0.1",
+		"npm-run-all": "^4.1.5"
 	}
 }
