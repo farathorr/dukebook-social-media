@@ -20,7 +20,7 @@ export default function App() {
 				<NotificationContainer />
 				<Routes>
 					<Route path="/" element={<div>Home</div>} />
-					<Route path="/profile" element={<Profile />} />
+					<Route path="/user/:usertag" element={<Profile />} />
 					<Route path="/feed" element={<Feed />} />
 					<Route path="/login" element={<Login />} />
 					<Route path="/register" element={<Register />} />
