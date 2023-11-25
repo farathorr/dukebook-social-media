@@ -14,12 +14,18 @@ export default function ProfileUserHeader(props) {
 			</div>
 			<div className={style["left-content"]}>
 				<span className={style["profile-name"]}>{props.name}</span>
-				<span className={style["profile-tag"]}>{props.userTag}</span>
-				<pre className={style["profile-description"]}>{props.description}</pre>
+				<span className={style["profile-tag"]}>@{props.userTag}</span>
+				<pre className={style["profile-description"]}>{props.bio}</pre>
 				<div className={style["social-stats"]}>
-					<span>Subs {props.subs}</span>
-					<span>Follows {props.follows}</span>
-					<span>Joined {props.joinDate}</span>
+					<span>
+						<strong>Followers</strong> {props.followers}
+					</span>
+					<span>
+						<strong>Following</strong> {props.following}
+					</span>
+					<span>
+						<strong>Joined at</strong> {props.joinDate}
+					</span>
 				</div>
 				<div className={style["filter-buttons"]}>
 					<button className={style["selected"]}>Feed</button>
@@ -32,11 +38,11 @@ export default function ProfileUserHeader(props) {
 }
 
 ProfileUserHeader.defaultProps = {
-	name: "John Doe",
-	userTag: "@johndoe",
-	description: "This is a description",
-	subs: 0,
-	follows: 0,
-	joinDate: "12 of December 2020",
+	name: "User name",
+	userTag: "userTag",
+	bio: "This is a profile bio text",
+	followers: -1,
+	following: -1,
+	joinDate: "December 12, 2020",
 	image: image,
 };
