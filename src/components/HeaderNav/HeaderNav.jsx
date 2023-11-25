@@ -7,7 +7,7 @@ export default function HeaderNav() {
 		<nav className={style["header-nav"]}>
 			<img src="" alt="logo" />
 			<Link to="/">home</Link>
-			<Link to="/profile">profile</Link>
+			<Link to="/user/nash">profile</Link>
 			<Link to="/feed">feed</Link>
 			<Link to="/login">login</Link>
 			<Link to="/Logout">logout</Link>
