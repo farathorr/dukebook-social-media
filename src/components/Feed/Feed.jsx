@@ -1,21 +1,20 @@
 import style from "./Feed.module.scss";
 import { Link, useNavigate } from "react-router-dom";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { NotificationContext } from "../NotificationControls/NotificationControls";
 import PostComponent from "../PostComponent/PostComponent";
 import PostSearch from "./PostSearch/PostSearch";
 import { useSearchParams } from "react-router-dom";
-import { useEffect, useState } from "react";
 import axios from "axios";
 
 export default function Feed() {
-  const [addNotification] = useContext(NotificationContext);
+	const [addNotification] = useContext(NotificationContext);
 	const [searchParams] = useSearchParams();
 	const [posts, setPosts] = useState([]);
-  const [postText, setPostText] = useState("");
-  const navigate = useNavigate();
-  
-  const handleSubmit = async (e) => {
+	const [postText, setPostText] = useState("");
+	const navigate = useNavigate();
+
+	const handleSubmit = async (e) => {
 		e.preventDefault();
 
 		if (postText.length < 1) {
@@ -72,13 +71,10 @@ export default function Feed() {
 							</svg>
 						</button>
 					</div>
-				
 				</form>
-{posts.map((post) => {
+				{posts.map((post) => {
 					return <PostComponent key={post._id} username={post.name} userTag={post.userTag} date={post.date} text={post.postText} />;
 				})}
-
-
 			</section>
 		</>
 	);
