@@ -3,6 +3,7 @@ import HeaderNav from "./components/HeaderNav/HeaderNav";
 import Chat from "./components/Chat/Chat";
 import Feed from "./components/Feed/Feed";
 import Profile from "./components/Profile/Profile";
+import HearedEditForm from "./components/Profile/EditHeaderInfo/HearedEditForm";
 import Post from "./components/Post/Post";
 import Login from "./components/Login/Login";
 import Register from "./components/Register/Register";
@@ -22,6 +23,7 @@ export default function App() {
 					<Routes>
 						<Route path="/" element={<div>Home</div>} />
 						<Route path="/user/:usertag" element={<Profile />} />
+						<Route path="/user/editinfo" element={<HearedEditForm />} />
 						<Route path="/feed" element={<Feed />} />
 						<Route path="/login" element={<Login />} />
 						<Route path="/register" element={<Register />} />

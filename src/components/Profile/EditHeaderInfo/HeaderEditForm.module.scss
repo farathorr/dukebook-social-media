@@ -1,0 +1,36 @@
+.header-edit-form {
+	display: flex;
+	flex-direction: column;
+	max-width: 400px;
+	margin: auto;
+	border: 2px solid #ccc;
+	padding: 20px;
+
+	label {
+		margin-bottom: 10px;
+
+		input,
+		textarea {
+			width: 100%;
+			padding: 8px;
+			margin-top: 4px;
+			box-sizing: border-box;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+			resize: vertical;
+		}
+	}
+
+	button {
+		background-color: #007bff;
+		color: #fff;
+		padding: 10px;
+		border: none;
+		cursor: pointer;
+		transition: background-color 0.3s;
+
+		&:hover {
+			background-color: #0056b3;
+		}
+	}
+}
