@@ -13,13 +13,13 @@ const login = async (req, res) => {
 		const correctPassword = await bcrypt.compare(password, user.password);
 		if (!correctPassword) return res.status(400).json({ message: "Invalid credentials.", isMatch: false });
 
-		const tokenUser = { userid: user._id, type: "login", userTag: user.userTag };
+		const tokenUser = { userid: user._id, type: "login", userTag: user.userTag, username: user.username };
 
 		const accessToken = jwt.sign(tokenUser, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "20s" });
 		const refreshToken = jwt.sign({ ...tokenUser, type: "refresh" }, process.env.REFRESH_TOKEN_SECRET);
 		await RefreshToken.deleteOne({ userid: user._id });
 		await RefreshToken.create({ userid: user._id, token: refreshToken });
-		res.status(200).json({ accessToken, refreshToken, isMatch: true });
+		res.status(200).json({ accessToken, refreshToken, user: tokenUser });
 	} catch (err) {
 		res.status(404).json({ message: err.message });
 	}
@@ -33,11 +33,11 @@ const refresh = async (req, res) => {
 		const validToken = await RefreshToken.findOne({ token: refreshToken });
 		if (!validToken) return res.sendStatus(403);
 
-		jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
+		jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, { iat, ...user }) => {
 			if (err) return res.sendStatus(403);
-			const tokenUser = { userid: user.userid, type: "refresh", userTag: user.userTag };
+			const tokenUser = { ...user, type: "refresh" };
 			const accessToken = jwt.sign(tokenUser, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "20s" });
-			res.status(200).json({ accessToken: accessToken });
+			res.status(200).json({ accessToken: accessToken, user });
 		});
 	} catch (err) {
 		res.status(404).json({ message: err.message });

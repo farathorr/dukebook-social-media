@@ -13,7 +13,7 @@ export default function ProfileUserHeader(props) {
 				</div>
 			</div>
 			<div className={style["left-content"]}>
-				<span className={style["profile-name"]}>{props.name}</span>
+				<span className={style["profile-name"]}>{props.username}</span>
 				<span className={style["profile-tag"]}>@{props.userTag}</span>
 				<pre className={style["profile-description"]}>{props.bio}</pre>
 				<div className={style["social-stats"]}>
@@ -38,7 +38,7 @@ export default function ProfileUserHeader(props) {
 }
 
 ProfileUserHeader.defaultProps = {
-	name: "User name",
+	username: "User name",
 	userTag: "userTag",
 	bio: "This is a profile bio text",
 	followers: -1,

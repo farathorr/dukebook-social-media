@@ -12,7 +12,7 @@ POST http://localhost:4001/auth/refresh
 Content-Type: application/json
 
 {
-	"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOiI2NTYxMTY5YjdmZTdmMDBiZDU2MzRlZTUiLCJ0eXBlIjoicmVmcmVzaCIsInVzZXJUYWciOiJhdXRoVGVzdCIsImlhdCI6MTcwMDg2NjgxOH0.TO9Z5BhZDPnNx8FdtvryhmozfiXjeRji_3ElsAujuE0"
+	"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOiI2NTYxMTY5YjdmZTdmMDBiZDU2MzRlZTUiLCJ0eXBlIjoicmVmcmVzaCIsInVzZXJUYWciOiJhdXRoVGVzdCIsInVzZXJuYW1lIjoiYXV0aFRlc3QiLCJpYXQiOjE3MDA5OTkzMTN9.vprak5t5Z6_Hk_WoeXsLHGT67emstSq-tThK4teCLtY"
 }
 
 ###
@@ -21,7 +21,7 @@ POST http://localhost:4001/auth/logout
 Content-Type: application/json
 
 {
-	"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOiI2NTYxMTY5YjdmZTdmMDBiZDU2MzRlZTUiLCJ0eXBlIjoicmVmcmVzaCIsInVzZXJUYWciOiJhdXRoVGVzdCIsImlhdCI6MTcwMDk5NTMwN30.f9vIGQ9nPQ5_r3AwtaVuN7ek1ZyI3parjbfg5HjnL_w"
+	"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOiI2NTYxMTY5YjdmZTdmMDBiZDU2MzRlZTUiLCJ0eXBlIjoicmVmcmVzaCIsInVzZXJUYWciOiJhdXRoVGVzdCIsImlhdCI6MTcwMDk5Nzg3OX0.9qXeEeI8Ej_RNigKSRJCxO8tDcuy2clIULMjOSfYeTY"
 }
 
 
@@ -29,6 +29,6 @@ Content-Type: application/json
 
 POST http://localhost:4000/users/getSensitiveData
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoicmVmcmVzaCIsInVzZXJUYWciOiJhdXRoVGVzdCIsImlhdCI6MTcwMDg2Njg3NSwiZXhwIjoxNzAwODY2ODk1fQ.8MkPny3grFUbc-S3Y0dVS4K-TRrLMFVQehERqi0bm1k
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOiI2NTYxMTY5YjdmZTdmMDBiZDU2MzRlZTUiLCJ0eXBlIjoicmVmcmVzaCIsInVzZXJUYWciOiJhdXRoVGVzdCIsImlhdCI6MTcwMDk5Nzg4OCwiZXhwIjoxNzAwOTk3OTA4fQ.Fcs6UWQd3a_hn51pVmwFXIp1Nr-LygWfWMjvsZHrbWw
 
 

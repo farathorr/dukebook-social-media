@@ -28,16 +28,12 @@ export default function Login() {
 			} else if (status === 200) {
 				if (rememberPassword) localStorage.setItem("refreshToken", data.refreshToken);
 				authentication.isAuthenticated = true;
-				authentication.accessToken = data.accessToken;
-				authentication.refreshToken = data.refreshToken;
+				Object.assign(authentication, data);
 				setAuthentication({ ...authentication });
+
 				axios.defaults.headers.common["Authorization"] = `Bearer ${authentication.accessToken}`;
 				addNotification({ type: "success", message: "Login successful", title: "Login successful", duration: 2000 });
 				navigate(`/user/${userTag}`);
-
-				// Test endpoint
-				const testMessage = (await axios.post("http://localhost:4000/users/getSensitiveData")).data;
-				addNotification({ type: "info", message: testMessage.message, title: "Sensitive data" });
 			}
 		} catch (error) {
 			addNotification({ type: "error", message: "Internal server error", title: "Network problems", duration: 5000 });
