@@ -1,17 +1,21 @@
-import React from "react";
 import style from "./Feed.module.scss";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useContext } from "react";
 import { NotificationContext } from "../NotificationControls/NotificationControls";
 import PostComponent from "../PostComponent/PostComponent";
+import PostSearch from "./PostSearch/PostSearch";
+import { useSearchParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 import axios from "axios";
 
 export default function Feed() {
-	const [addNotification] = useContext(NotificationContext);
-	const navigate = useNavigate();
-	const [postText, setPostText] = useState("");
-
-	const handleSubmit = async (e) => {
+  const [addNotification] = useContext(NotificationContext);
+	const [searchParams] = useSearchParams();
+	const [posts, setPosts] = useState([]);
+  const [postText, setPostText] = useState("");
+  const navigate = useNavigate();
+  
+  const handleSubmit = async (e) => {
 		e.preventDefault();
 
 		if (postText.length < 1) {
@@ -31,8 +35,22 @@ export default function Feed() {
 		navigate("/post/" + (await response.json())._id);
 	};
 
+	useEffect(() => {
+		async function fetchPosts() {
+			const url = searchParams.get("search")?.length ? `/search/${searchParams.get("search")}` : "";
+			try {
+				const { data } = await axios.get("http://localhost:4000/posts" + url);
+				console.log(data);
+				setPosts(data);
+			} catch (error) {}
+		}
+
+		fetchPosts();
+	}, [searchParams]);
+
 	return (
 		<>
+			<PostSearch />
 			<h1 className={style["title"]}>Feed</h1>
 			<section className={style["main-content"]}>
 				<form className={style["new-post"]} onSubmit={handleSubmit}>
@@ -54,9 +72,13 @@ export default function Feed() {
 							</svg>
 						</button>
 					</div>
+				
 				</form>
-				<PostComponent />
-				<PostComponent userName="New user" userTag="@user" date="5 hours ago" />
+{posts.map((post) => {
+					return <PostComponent key={post._id} username={post.name} userTag={post.userTag} date={post.date} text={post.postText} />;
+				})}
+
+
 			</section>
 		</>
 	);
