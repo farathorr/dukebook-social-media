@@ -1,6 +1,6 @@
 const express = require("express");
 const usersController = require("../controllers/usersController");
-const { authenticateToken } = require("../middleware/authenticateToken");
+const { weakAuthentication, strongAuthentication } = require("../middleware/authenticateToken");
 const router = express.Router();
 
 router.get("/", usersController.getUsers);
@@ -20,6 +20,7 @@ router.put("/addFriend/:userTag", usersController.addFriend);
 router.put("/removeFriend/:userTag", usersController.removeFriend);
 
 // router.post("/login", usersController.checkPassword);
-router.post("/getSensitiveData", authenticateToken, usersController.getSensitiveData);
+router.post("/getSensitiveData", weakAuthentication, usersController.getSensitiveData);
+router.post("/getSensitiveData2", strongAuthentication, usersController.getSensitiveData);
 
 module.exports = router;

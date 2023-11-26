@@ -9,7 +9,7 @@ import Register from "./components/Register/Register";
 import NotificationControls from "./components/NotificationControls/NotificationControls";
 import NotificationContainer from "./components/NotificationControls/NotificationContainer/NotificationContainer";
 import AuthenticationControls from "./components/AuthenticationControls/AuthenticationControls";
-import PostComponent from "./components/PostComponent/PostComponent";
+import Home from "./components/Home/Home";
 import "./App.scss";
 
 export default function App() {
@@ -20,7 +20,7 @@ export default function App() {
 					<HeaderNav />
 					<NotificationContainer />
 					<Routes>
-						<Route path="/" element={<div>Home</div>} />
+						<Route path="/" element={<Home />} />
 						<Route path="/user/:usertag" element={<Profile />} />
 						<Route path="/feed" element={<Feed />} />
 						<Route path="/login" element={<Login />} />

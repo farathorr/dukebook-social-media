@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 
-const authenticateToken = (req, res, next) => {
+const weakAuthentication = (req, res, next) => {
 	const authHeader = req.headers?.authorization || req.headers?.Authorization;
 	const token = authHeader?.split(" ")[1];
 	if (!token) return res.sendStatus(401);
@@ -12,4 +12,16 @@ const authenticateToken = (req, res, next) => {
 	});
 };
 
-module.exports = { authenticateToken };
+const strongAuthentication = (req, res, next) => {
+	const authHeader = req.headers?.authorization || req.headers?.Authorization;
+	const token = authHeader?.split(" ")[1];
+	if (!token) return res.sendStatus(401);
+
+	jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+		if (err || user.type !== "login") return res.sendStatus(403);
+		req.user = user;
+		next();
+	});
+};
+
+module.exports = { weakAuthentication, strongAuthentication };
