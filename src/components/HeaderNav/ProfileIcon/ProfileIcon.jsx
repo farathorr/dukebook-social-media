@@ -2,10 +2,11 @@ import style from "./ProfileIcon.module.scss";
 import { AuthenticationContext } from "../../AuthenticationControls/AuthenticationControls";
 import { useContext } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function ProfileIcon() {
 	const [authentication, setAuthentication] = useContext(AuthenticationContext);
+	const navigate = useNavigate();
 	if (!authentication.isAuthenticated)
 		return (
 			<Link to="/login" className={style["sign-in"]}>
@@ -32,5 +33,6 @@ export default function ProfileIcon() {
 
 		localStorage.removeItem("accessToken");
 		localStorage.removeItem("refreshToken");
+		navigate("/");
 	}
 }

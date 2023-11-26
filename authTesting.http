@@ -12,7 +12,7 @@ POST http://localhost:4001/auth/refresh
 Content-Type: application/json
 
 {
-	"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOiI2NTYxMTY5YjdmZTdmMDBiZDU2MzRlZTUiLCJ0eXBlIjoicmVmcmVzaCIsInVzZXJUYWciOiJhdXRoVGVzdCIsImlhdCI6MTcwMDk5NzkzOH0.68SYFd-Txa4EduI8jX_LRMvZKtOuRRUATX8WZDKCbiw"
+	"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOiI2NTYxMTY5YjdmZTdmMDBiZDU2MzRlZTUiLCJ0eXBlIjoicmVmcmVzaCIsInVzZXJUYWciOiJhdXRoVGVzdCIsInVzZXJuYW1lIjoiYXV0aFRlc3QiLCJpYXQiOjE3MDA5OTkzMTN9.vprak5t5Z6_Hk_WoeXsLHGT67emstSq-tThK4teCLtY"
 }
 
 ###
