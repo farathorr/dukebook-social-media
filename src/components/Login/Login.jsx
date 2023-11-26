@@ -17,10 +17,10 @@ export default function Login() {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		const user = { userTag, password };
-
+		console.log("hello");
+		console.log(password);
 		try {
 			const { status, data } = await axios.post("http://localhost:4001/auth/login", user);
-
 			if (status === 400) {
 				addNotification({ type: "error", message: "Wrong password", title: "Login failed", duration: 5000 });
 			} else if (status === 404) {
@@ -30,7 +30,6 @@ export default function Login() {
 				authentication.isAuthenticated = true;
 				Object.assign(authentication, data);
 				setAuthentication({ ...authentication });
-
 				axios.defaults.headers.common["Authorization"] = `Bearer ${authentication.accessToken}`;
 				addNotification({ type: "success", message: "Login successful", title: "Login successful", duration: 2000 });
 				navigate(`/user/${userTag}`);
