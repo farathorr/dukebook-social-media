@@ -5,10 +5,12 @@ import { NotificationContext } from "../NotificationControls/NotificationControl
 import PostComponent from "../PostComponent/PostComponent";
 import PostSearch from "./PostSearch/PostSearch";
 import { useSearchParams } from "react-router-dom";
+import { AuthenticationContext } from "../AuthenticationControls/AuthenticationControls";
 import axios from "axios";
 
 export default function Feed() {
 	const [addNotification] = useContext(NotificationContext);
+	const [authentication] = useContext(AuthenticationContext);
 	const [searchParams] = useSearchParams();
 	const [posts, setPosts] = useState([]);
 	const [postText, setPostText] = useState("");
