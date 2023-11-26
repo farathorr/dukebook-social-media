@@ -50,6 +50,7 @@ const logout = async (req, res) => {
 	if (!refreshToken) return res.sendStatus(401);
 	try {
 		await RefreshToken.deleteOne({ token: refreshToken });
+		res.sendStatus(200);
 	} catch (err) {
 		res.status(404).json({ message: err.message });
 	}

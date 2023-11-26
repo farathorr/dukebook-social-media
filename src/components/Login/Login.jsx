@@ -3,9 +3,12 @@ import style from "./Login.module.scss";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useContext } from "react";
 import { NotificationContext } from "../NotificationControls/NotificationControls";
+import { AuthenticationContext } from "../AuthenticationControls/AuthenticationControls";
+import axios from "axios";
 
 export default function Login() {
 	const [addNotification] = useContext(NotificationContext);
+	const [authentication, setAuthentication] = useContext(AuthenticationContext);
 	const navigate = useNavigate();
 	const [userTag, setUsertag] = useState("");
 	const [password, setPassword] = useState("");
@@ -16,38 +19,28 @@ export default function Login() {
 		const user = { userTag, password };
 
 		try {
-			const response = await fetch("http://localhost:4001/auth/login", {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify(user),
-			});
+			const { status, data } = await axios.post("http://localhost:4001/auth/login", user);
 
-			if (response.status === 400) {
+			if (status === 400) {
 				addNotification({ type: "error", message: "Wrong password", title: "Login failed", duration: 5000 });
-			} else if (response.status === 404) {
+			} else if (status === 404) {
 				addNotification({ type: "error", message: "User not found", title: "Login failed", duration: 5000 });
-			} else if (response.status === 200) {
-				const data = await response.json();
-				if (rememberPassword) {
-					localStorage.setItem("accessToken", data.accessToken);
-					localStorage.setItem("refreshToken", data.refreshToken);
-				}
+			} else if (status === 200) {
+				if (rememberPassword) localStorage.setItem("refreshToken", data.refreshToken);
+				authentication.isAuthenticated = true;
+				authentication.accessToken = data.accessToken;
+				authentication.refreshToken = data.refreshToken;
+				setAuthentication({ ...authentication });
+				axios.defaults.headers.common["Authorization"] = `Bearer ${authentication.accessToken}`;
 				addNotification({ type: "success", message: "Login successful", title: "Login successful", duration: 2000 });
-				navigate("/profile");
+				navigate(`/user/${userTag}`);
 
 				// Test endpoint
-				const testMessage = await fetch("http://localhost:4000/users/getSensitiveData", {
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-						Authorization: `Bearer ${data.accessToken}`,
-					},
-				}).then((res) => res.json());
-
+				const testMessage = (await axios.post("http://localhost:4000/users/getSensitiveData")).data;
 				addNotification({ type: "info", message: testMessage.message, title: "Sensitive data" });
 			}
 		} catch (error) {
-			addNotification({ type: "info", message: "Could not establish a connect to the server", title: "Network problems", duration: 5000 });
+			addNotification({ type: "error", message: "Internal server error", title: "Network problems", duration: 5000 });
 		}
 
 		setUsertag("");
