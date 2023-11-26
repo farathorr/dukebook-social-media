@@ -27,7 +27,7 @@ export default function App() {
 						<Route path="/register" element={<Register />} />
 						<Route path="/post" element={<Post />} />
 						<Route path="/chat" element={<Chat />} />
-						<Route path="/posts/:id" element={<PostComponent />} />
+						<Route path="/post/:id" element={<Post />} />
 					</Routes>
 				</BrowserRouter>
 			</AuthenticationControls>

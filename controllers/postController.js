@@ -39,6 +39,7 @@ const getPostsByAuthor = async (req, res) => {
 // create post
 const createPost = async (req, res) => {
 	const { userTag: postAuthor, ...post } = req.body;
+	const newPost = new Post(req.body);
 	if (!postAuthor) {
 		return res.status(400).json({ message: "UserTag is required." });
 	}
@@ -48,8 +49,8 @@ const createPost = async (req, res) => {
 	try {
 		const user = await User.findOne({ userTag: postAuthor });
 		if (!user) return res.status(400).json({ message: "User does not exist." });
-		const newPost = new Post({ ...post, userId: user._id, userTag: postAuthor });
 		try {
+			newPost.populate("user");
 			await newPost.save();
 			res.status(201).json(newPost);
 		} catch (error) {
@@ -142,12 +143,12 @@ const replyToPost = async (req, res) => {
 		try {
 			await newPost.save();
 		} catch (error) {
-			res.status(409).json({ message: error.message });
+			return res.status(409).json({ message: error.message });
 		}
 
-		res.json(post);
+		return res.json(post);
 	} catch (err) {
-		res.status(500).json({ message: err.message });
+		return res.status(500).json({ message: err.message });
 	}
 };
 

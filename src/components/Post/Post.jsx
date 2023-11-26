@@ -1,18 +1,72 @@
 import React from "react";
 import style from "./Post.module.scss";
 import PostComponent from "../PostComponent/PostComponent";
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { useContext } from "react";
+import { AuthenticationContext } from "../AuthenticationControls/AuthenticationControls";
+import { NotificationContext } from "../NotificationControls/NotificationControls";
 
 export default function Post() {
+	const [authentication] = useContext(AuthenticationContext);
+	const [addNotification] = useContext(NotificationContext);
+	const params = useParams();
+	const [postData, setPostData] = useState([]);
+	const [replyText, setReplyText] = useState("");
+
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+
+		console.log(authentication);
+
+		if (!authentication.isAuthenticated) {
+			addNotification({ type: "error", message: "You must be logged in to post", title: "Post failed", duration: 5000 });
+			return;
+		}
+
+		if (replyText.length < 1) {
+			addNotification({ type: "error", message: "Post can't be empty", title: "Post failed", duration: 5000 });
+			return;
+		}
+
+		let reply = { userTag: authentication.user.userTag, postText: replyText, userId: authentication.user._id };
+
+		const response = await fetch(`http://localhost:4000/posts/${params.id}/reply`, {
+			method: "PATCH",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(reply),
+		});
+	};
+
+	useEffect(() => {
+		const fetchServices = async () => {
+			const response = await fetch(`http://localhost:4000/posts/${params.id}`);
+			const data = await response.json();
+			if (response.ok) {
+				setPostData(data);
+			}
+		};
+		fetchServices();
+	}, []);
+
 	return (
 		<>
 			<h1 className={style["title"]}>Post</h1>
 			<main className={style["main-content"]}>
-				<PostComponent></PostComponent>
-				<div className={style["new-post"]}>
-					<p>Reply</p>
-					<textarea defaultValue={""} />
+				<PostComponent userTag={"@" + postData.userTag} userName={postData.userName} text={postData.postText}></PostComponent>
+				<form className={style["new-post"]} onSubmit={handleSubmit}>
+					<p>New Reply</p>
+					<textarea
+						id="replyTextArea"
+						value={replyText}
+						name="replyText"
+						placeholder="Write reply here"
+						onChange={(e) => setReplyText(e.target.value)}
+					/>
 					<div className={style["button-container"]}>
-						<button className={style["post-button"]} value="post">
+						<button className={style["post-button"]} type="submit" value="post">
 							Post
 						</button>
 						<button className={style["link-button"]} value="link">
@@ -21,24 +75,8 @@ export default function Post() {
 							</svg>
 						</button>
 					</div>
-				</div>
-				<div className={style["main-replies"]}>
-					<PostComponent userName="Vastaaja 1" userTag="@1" text="Nice" comments="10">
-						<PostComponent text="Nice 2" comments="3">
-							<PostComponent text="Nice 3"></PostComponent>
-							<PostComponent>
-								<PostComponent userName="kassu11" text="????"></PostComponent>
-							</PostComponent>
-							<PostComponent>
-								<PostComponent>
-									<PostComponent>
-										<PostComponent></PostComponent>
-									</PostComponent>
-								</PostComponent>
-							</PostComponent>
-						</PostComponent>
-					</PostComponent>
-				</div>
+				</form>
+				<div className={style["main-replies"]}></div>
 			</main>
 		</>
 	);

@@ -1,15 +1,16 @@
 import React from "react";
 import style from "./Feed.module.scss";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState, useContext } from "react";
 import { NotificationContext } from "../NotificationControls/NotificationControls";
 import PostComponent from "../PostComponent/PostComponent";
-import axios from "axios";
+import { AuthenticationContext } from "../AuthenticationControls/AuthenticationControls";
 
 export default function Feed() {
 	const [addNotification] = useContext(NotificationContext);
 	const navigate = useNavigate();
 	const [postText, setPostText] = useState("");
+	const [authentication] = useContext(AuthenticationContext);
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
@@ -18,8 +19,12 @@ export default function Feed() {
 			addNotification({ type: "error", message: "Post can't be empty", title: "Post failed", duration: 5000 });
 			return;
 		}
-
-		let post = { userTag: "saapo", postText };
+		if (!authentication.isAuthenticated) {
+			addNotification({ type: "error", message: "You must be logged in to post", title: "Post failed", duration: 5000 });
+			return;
+		}
+		console.log(authentication);
+		let post = { userTag: authentication.user.userTag, postText };
 
 		const response = await fetch("http://localhost:4000/posts", {
 			method: "POST",
