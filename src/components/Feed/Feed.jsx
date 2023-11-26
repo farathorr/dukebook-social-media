@@ -1,11 +1,25 @@
-import React from "react";
 import style from "./Feed.module.scss";
 
 import PostComponent from "../PostComponent/PostComponent";
+import PostSearch from "./PostSearch/PostSearch";
+import { useSearchParams } from "react-router-dom";
+import { useEffect } from "react";
 
 export default function Feed() {
+	const [searchParams] = useSearchParams();
+
+	useEffect(() => {
+		async function fetchPosts() {
+			const search = searchParams.get("search");
+			console.log(search);
+		}
+
+		fetchPosts();
+	}, [searchParams]);
+
 	return (
 		<>
+			<PostSearch />
 			<h1 className={style["title"]}>Feed</h1>
 			<section className={style["main-content"]}>
 				<div className={style["new-post"]}>
