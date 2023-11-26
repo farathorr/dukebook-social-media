@@ -1,11 +1,9 @@
 import axios from "axios";
-import { createContext, useContext, useEffect, useState } from "react";
-import { NotificationContext } from "../NotificationControls/NotificationControls";
+import { createContext, useEffect, useState } from "react";
 
-const AuthenticationContext = createContext(null);
+export const AuthenticationContext = createContext(null);
 
 export default function AuthenticationControls(props) {
-	const [addNotification] = useContext(NotificationContext);
 	const [authentication, setAuthentication] = useState({
 		isAuthenticated: false,
 		accessToken: null,
@@ -28,9 +26,6 @@ export default function AuthenticationControls(props) {
 				axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
 				authentication.isAuthenticated = true;
 				setAuthentication({ ...authentication });
-
-				const testMessage = (await axios.post("http://localhost:4000/users/getSensitiveData")).data;
-				addNotification({ type: "info", message: testMessage.message, title: "Sensitive data", duration: 1000 });
 			} catch (err) {}
 		};
 

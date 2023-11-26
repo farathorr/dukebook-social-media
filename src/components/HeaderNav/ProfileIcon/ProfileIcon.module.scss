@@ -1,0 +1,16 @@
+.profile-icon {
+	position: relative;
+	width: 40px;
+	height: 40px;
+	background-color: var(--clr-accent-500);
+	border-radius: 50%;
+	display: grid;
+	justify-content: center;
+	align-items: center;
+	fill: var(--clr-secondary-400);
+	justify-self: end;
+}
+
+.sign-in {
+	justify-self: end;
+}

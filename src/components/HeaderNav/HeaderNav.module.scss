@@ -2,14 +2,30 @@
 	background-color: var(--clr-primary-500);
 	position: relative;
 	height: 50px;
+	padding-block: 6px;
 	flex-shrink: 0;
 	display: flex;
 	gap: 25px;
-	justify-content: center;
+	justify-content: space-between;
 	align-items: center;
+	padding-inline: 10px;
 	font-size: var(--fs-400);
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
 
-	a {
-		color: white;
+	img {
+		height: 100%;
+		min-height: 0px;
+	}
+
+	.links {
+		display: flex;
+		gap: 25px;
+		justify-content: center;
+		align-items: center;
+
+		a {
+			color: white;
+		}
 	}
 }

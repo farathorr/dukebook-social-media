@@ -21,7 +21,7 @@ POST http://localhost:4001/auth/logout
 Content-Type: application/json
 
 {
-	"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOiI2NTYxMTY5YjdmZTdmMDBiZDU2MzRlZTUiLCJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTcwMDg2Mjc4OX0.gdJD0dmnprnqJ0kjzHE8_kZFHrr-DuZlJayLcdyNoGA"
+	"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOiI2NTYxMTY5YjdmZTdmMDBiZDU2MzRlZTUiLCJ0eXBlIjoicmVmcmVzaCIsInVzZXJUYWciOiJhdXRoVGVzdCIsImlhdCI6MTcwMDk5NTMwN30.f9vIGQ9nPQ5_r3AwtaVuN7ek1ZyI3parjbfg5HjnL_w"
 }
 
 

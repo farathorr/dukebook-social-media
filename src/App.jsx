@@ -5,7 +5,6 @@ import Feed from "./components/Feed/Feed";
 import Profile from "./components/Profile/Profile";
 import Post from "./components/Post/Post";
 import Login from "./components/Login/Login";
-import Logout from "./components/Logout/Logout";
 import Register from "./components/Register/Register";
 import NotificationControls from "./components/NotificationControls/NotificationControls";
 import NotificationContainer from "./components/NotificationControls/NotificationContainer/NotificationContainer";
@@ -26,7 +25,6 @@ export default function App() {
 						<Route path="/feed" element={<Feed />} />
 						<Route path="/login" element={<Login />} />
 						<Route path="/register" element={<Register />} />
-						<Route path="/logout" element={<Logout />} />
 						<Route path="/post" element={<Post />} />
 						<Route path="/chat" element={<Chat />} />
 					</Routes>
