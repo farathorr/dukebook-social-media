@@ -11,7 +11,7 @@ router.delete("/:id", postController.deletePost);
 //
 router.put("/:id/like", postController.likePost);
 router.put("/:id/dislike", postController.dislikePost);
-router.post("/:id/reply", postController.replyToPost);
-router.get("/:id/replies", postController.getReplies);
+router.patch("/:id/reply", postController.replyToPost);
+router.get("/:id/replies", postController.getComments);
 
 module.exports = router;

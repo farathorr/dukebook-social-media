@@ -106,7 +106,7 @@ const dislikePost = async (req, res) => {
 	}
 	try {
 		const post = await Post.findById(id);
-		const updatedPost = await Post.findByIdAndUpdate(id, { likes: --post.likes}, { new: true });
+		const updatedPost = await Post.findByIdAndUpdate(id, { likes: --post.likes }, { new: true });
 		res.json(updatedPost);
 	} catch (err) {
 		res.status(500).json({ message: err.message });
@@ -125,7 +125,7 @@ const replyToPost = async (req, res) => {
 		const post = await Post.findById(id);
 		const updatedPost = await Post.findByIdAndUpdate(
 			id,
-			{ replies: [...post.replies, { ...reply, userId: user._id, author: replyAuthor }] },
+			{ comments: [...post.comments, { ...reply, userId: user._id, author: replyAuthor }] },
 			{ new: true }
 		);
 		res.json(updatedPost);
@@ -134,14 +134,14 @@ const replyToPost = async (req, res) => {
 	}
 };
 
-const getReplies = async (req, res) => {
+const getComments = async (req, res) => {
 	const { id } = req.params;
 	if (!mongoose.Types.ObjectId.isValid(id)) {
 		return res.status(404).send(`No post with id: ${id}`);
 	}
 	try {
 		const post = await Post.findById(id);
-		res.json(post.replies);
+		res.json(post.comments);
 	} catch (err) {
 		res.status(500).json({ message: err.message });
 	}
@@ -157,5 +157,5 @@ module.exports = {
 	likePost,
 	dislikePost,
 	replyToPost,
-	getReplies,
+	getComments,
 };
