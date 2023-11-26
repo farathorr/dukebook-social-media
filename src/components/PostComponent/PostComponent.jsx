@@ -65,5 +65,5 @@ PostComponent.defaultProps = {
 	likes: 0,
 	dislikes: 0,
 	comments: 0,
-	date: "2 hours ago",
+	date: new Date().toLocaleString(),
 };

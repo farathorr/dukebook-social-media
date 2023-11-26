@@ -9,7 +9,7 @@ export default function ProfileIcon() {
 	if (!authentication.isAuthenticated)
 		return (
 			<Link to="/login" className={style["sign-in"]}>
-				Sing in
+				Sign in
 			</Link>
 		);
 
