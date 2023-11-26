@@ -25,6 +25,33 @@ const login = async (req, res) => {
 	}
 };
 
+// Update token user info
+const update = async (req, res) => {
+	const authHeader = req.headers?.authorization || req.headers?.Authorization;
+	const token = authHeader?.split(" ")[1];
+	if (!token) return res.sendStatus(401);
+
+	jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, user) => {
+		if (err || user.type !== "login") return res.sendStatus(403);
+		try {
+			const tableUser = await User.findById(user.userid);
+			if (!user) return res.status(404).json({ message: `User ${userTag} not found.` });
+			Object.keys(user).forEach((key) => {
+				if (user[key]) tableUser[key] = user[key];
+			});
+
+			const accessToken = jwt.sign({ ...user, type: "login" }, process.env.ACCESS_TOKEN_SECRET);
+			const refreshToken = jwt.sign({ ...user, type: "refresh" }, process.env.REFRESH_TOKEN_SECRET);
+			await RefreshToken.deleteOne({ userid: user.userid });
+			await RefreshToken.create({ userid: user.userid, token: refreshToken });
+			const { iat, exp, ...userData } = user;
+			res.status(200).json({ accessToken, refreshToken, user: userData });
+		} catch (err) {
+			res.status(404).json({ message: err.message });
+		}
+	});
+};
+
 // Refresh access token
 const refresh = async (req, res) => {
 	const refreshToken = req.body?.token;
@@ -56,4 +83,4 @@ const logout = async (req, res) => {
 	}
 };
 
-module.exports = { login, refresh, logout };
+module.exports = { login, update, refresh, logout };
