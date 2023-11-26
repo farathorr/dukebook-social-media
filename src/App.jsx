@@ -9,7 +9,7 @@ import Register from "./components/Register/Register";
 import NotificationControls from "./components/NotificationControls/NotificationControls";
 import NotificationContainer from "./components/NotificationControls/NotificationContainer/NotificationContainer";
 import AuthenticationControls from "./components/AuthenticationControls/AuthenticationControls";
-
+import PostComponent from "./components/PostComponent/PostComponent";
 import "./App.scss";
 
 export default function App() {
@@ -27,6 +27,7 @@ export default function App() {
 						<Route path="/register" element={<Register />} />
 						<Route path="/post" element={<Post />} />
 						<Route path="/chat" element={<Chat />} />
+						<Route path="/posts/:id" element={<PostComponent />} />
 					</Routes>
 				</BrowserRouter>
 			</AuthenticationControls>

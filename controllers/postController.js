@@ -18,9 +18,11 @@ const getPostById = async (req, res) => {
 	if (!mongoose.Types.ObjectId.isValid(id)) {
 		return res.status(404).send(`No post with id: ${id}`);
 	}
-	const post = await Post.findById(id);
+	const post = await Post.findById(id).populate("comments");
+	console.log(post);
 	res.status(200).json(post);
 };
+
 
 // search posts by text
 const searchPosts = async (req, res) => {
@@ -43,13 +45,13 @@ const searchPosts = async (req, res) => {
 	}
 };
 
-//get posts by author
+//get posts by userTag
 const getPostsByAuthor = async (req, res) => {
-	const { author } = req.params;
+	const { userTag } = req.params;
 	try {
-		const user = await User.findOne({ userTag: author });
-		if (!user) return res.status(400).json({ message: "Author does not exist." });
-		const posts = await Post.find({ userId: user._id });
+		const user = await User.findOne({ userTag: userTag });
+		if (!user) return res.status(400).json({ message: "User does not exist." });
+		const posts = await Post.find({ userId: user._id }).populate("comments");
 		res.json(posts);
 	} catch (err) {
 		res.status(500).json({ message: err.message });
@@ -58,14 +60,17 @@ const getPostsByAuthor = async (req, res) => {
 
 // create post
 const createPost = async (req, res) => {
-	const { author: postAuthor, ...post } = req.body;
-	if (!postAuthor || !post.postText) {
-		return res.status(400).json({ message: "Author and text is required." });
+	const { userTag: postAuthor, ...post } = req.body;
+	if (!postAuthor) {
+		return res.status(400).json({ message: "UserTag is required." });
+	}
+	if (!post.postText) {
+		return res.status(400).json({ message: "Post text is required." });
 	}
 	try {
 		const user = await User.findOne({ userTag: postAuthor });
-		if (!user) return res.status(400).json({ message: "Author does not exist." });
-		const newPost = new Post({ ...post, userId: user._id, author: postAuthor });
+		if (!user) return res.status(400).json({ message: "User does not exist." });
+		const newPost = new Post({ ...post, userId: user._id, userTag: postAuthor });
 		try {
 			await newPost.save();
 			res.status(201).json(newPost);
@@ -79,14 +84,14 @@ const createPost = async (req, res) => {
 
 const updatePost = async (req, res) => {
 	const { id } = req.params;
-	const { author: postAuthor, ...post } = req.body;
+	const { userTag: postAuthor, ...post } = req.body;
 	if (!mongoose.Types.ObjectId.isValid(id)) {
 		return res.status(404).send(`No post with id: ${id}`);
 	}
 	try {
 		const user = await User.findOne({ userTag: postAuthor });
-		if (!user) return res.status(400).json({ message: "Author does not exist." });
-		const updatedPost = await Post.findByIdAndUpdate(id, { ...post, userId: user._id, author: postAuthor }, { new: true });
+		if (!user) return res.status(400).json({ message: "User does not exist." });
+		const updatedPost = await Post.findByIdAndUpdate(id, { ...post, userId: user._id, userTag: postAuthor }, { new: true });
 		res.json(updatedPost);
 	} catch (err) {
 		res.status(500).json({ message: err.message });
@@ -136,20 +141,33 @@ const dislikePost = async (req, res) => {
 
 const replyToPost = async (req, res) => {
 	const { id } = req.params;
-	const { author: replyAuthor, ...reply } = req.body;
+	const { userTag: replyAuthor, ...post } = req.body;
+	const newPost = new Post(req.body);
 	if (!mongoose.Types.ObjectId.isValid(id)) {
 		return res.status(404).send(`No post with id: ${id}`);
 	}
 	try {
 		const user = await User.findOne({ userTag: replyAuthor });
-		if (!user) return res.status(400).json({ message: "Author does not exist." });
+		if (!user) return res.status(400).json({ message: "User does not exist." });
 		const post = await Post.findById(id);
-		const updatedPost = await Post.findByIdAndUpdate(
-			id,
-			{ comments: [...post.comments, { ...reply, userId: user._id, author: replyAuthor }] },
-			{ new: true }
-		);
-		res.json(updatedPost);
+		console.log(post);
+		console.log(newPost._id);
+		post.comments.push(newPost);
+		if (!post.originalPostParentId) {
+			newPost.originalPostParentId = id;
+		} else {
+			newPost.originalPostParentId = post.originalPostParentId;
+		}
+		newPost.replyParentId = id;
+		await post.save();
+		post.populate("comments");
+		try {
+			await newPost.save();
+		} catch (error) {
+			res.status(409).json({ message: error.message });
+		}
+
+		res.json(post);
 	} catch (err) {
 		res.status(500).json({ message: err.message });
 	}

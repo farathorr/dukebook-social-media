@@ -1,5 +1,7 @@
 import style from "./Feed.module.scss";
-
+import { Link, useNavigate } from "react-router-dom";
+import { useState, useContext } from "react";
+import { NotificationContext } from "../NotificationControls/NotificationControls";
 import PostComponent from "../PostComponent/PostComponent";
 import PostSearch from "./PostSearch/PostSearch";
 import { useSearchParams } from "react-router-dom";
@@ -7,8 +9,31 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 export default function Feed() {
+  const [addNotification] = useContext(NotificationContext);
 	const [searchParams] = useSearchParams();
 	const [posts, setPosts] = useState([]);
+  const [postText, setPostText] = useState("");
+  const navigate = useNavigate();
+  
+  const handleSubmit = async (e) => {
+		e.preventDefault();
+
+		if (postText.length < 1) {
+			addNotification({ type: "error", message: "Post can't be empty", title: "Post failed", duration: 5000 });
+			return;
+		}
+
+		let post = { userTag: "saapo", postText };
+
+		const response = await fetch("http://localhost:4000/posts", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(post),
+		});
+		navigate("/post/" + (await response.json())._id);
+	};
 
 	useEffect(() => {
 		async function fetchPosts() {
@@ -28,11 +53,17 @@ export default function Feed() {
 			<PostSearch />
 			<h1 className={style["title"]}>Feed</h1>
 			<section className={style["main-content"]}>
-				<div className={style["new-post"]}>
+				<form className={style["new-post"]} onSubmit={handleSubmit}>
 					<p>New Post</p>
-					<textarea defaultValue={""} />
+					<textarea
+						id="postTextArea"
+						value={postText}
+						name="postText"
+						placeholder="Write post here"
+						onChange={(e) => setPostText(e.target.value)}
+					/>
 					<div className={style["button-container"]}>
-						<button className={style["post-button"]} value="post">
+						<button className={style["post-button"]} type="submit" value="post">
 							Post
 						</button>
 						<button className={style["link-button"]} value="link">
@@ -41,10 +72,13 @@ export default function Feed() {
 							</svg>
 						</button>
 					</div>
-				</div>
-				{posts.map((post) => {
+				
+				</form>
+{posts.map((post) => {
 					return <PostComponent key={post._id} username={post.name} userTag={post.userTag} date={post.date} text={post.postText} />;
 				})}
+
+
 			</section>
 		</>
 	);

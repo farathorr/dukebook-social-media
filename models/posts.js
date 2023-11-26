@@ -5,7 +5,7 @@ const postSchema = new mongoose.Schema({
 		type: String,
 		required: true,
 	},
-	author: {
+	userTag: {
 		type: String,
 		required: true,
 	},
@@ -26,14 +26,21 @@ const postSchema = new mongoose.Schema({
 		default: [],
 	},
 	comments: {
-		type: Array,
+		type: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: "Post",
+			},
+		],
 		default: [],
 	},
-	originalReplyParentId: {
-		type: String,
+	originalPostParentId: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: "Post",
 	},
 	replyParentId: {
-		type: String,
+		type: mongoose.Schema.Types.ObjectId,
+		ref: "Post",
 	},
 });
 
