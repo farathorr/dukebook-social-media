@@ -4,6 +4,7 @@ const router = express.Router();
 
 router.get("/", postController.getPosts);
 router.get("/:id", postController.getPostById);
+router.get("/search/:search", postController.searchPosts);
 router.get("/author/:author", postController.getPostsByAuthor);
 router.post("/", postController.createPost);
 router.patch("/:id", postController.updatePost);

@@ -3,15 +3,21 @@ import style from "./Feed.module.scss";
 import PostComponent from "../PostComponent/PostComponent";
 import PostSearch from "./PostSearch/PostSearch";
 import { useSearchParams } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 export default function Feed() {
 	const [searchParams] = useSearchParams();
+	const [posts, setPosts] = useState([]);
 
 	useEffect(() => {
 		async function fetchPosts() {
-			const search = searchParams.get("search");
-			console.log(search);
+			const url = searchParams.get("search")?.length ? `/search/${searchParams.get("search")}` : "";
+			try {
+				const { data } = await axios.get("http://localhost:4000/posts" + url);
+				console.log(data);
+				setPosts(data);
+			} catch (error) {}
 		}
 
 		fetchPosts();
@@ -36,8 +42,9 @@ export default function Feed() {
 						</button>
 					</div>
 				</div>
-				<PostComponent />
-				<PostComponent userName="New user" userTag="@user" date="5 hours ago" />
+				{posts.map((post) => {
+					return <PostComponent key={post._id} username={post.name} userTag={post.userTag} date={post.date} text={post.postText} />;
+				})}
 			</section>
 		</>
 	);
