@@ -17,6 +17,12 @@ Content-Type: application/json
 
 ###
 
+POST http://localhost:4001/auth/update
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOiI2NTYzNjVmMjMxYjkxYjFhZDYzMWRmZjciLCJ0eXBlIjoibG9naW4iLCJ1c2VyVGFnIjoiYXV0aFRlc3QiLCJ1c2VybmFtZSI6ImF1dGhUZXN0IiwiaWF0IjoxNzAxMDIyMjMyLCJleHAiOjE3MDEwMjIyNTJ9.sxooCYQZgNQ_hoPJMyjbzwdus73oTjwknb9Ad7DgHyI
+
+###
+
 POST http://localhost:4001/auth/logout
 Content-Type: application/json
 
