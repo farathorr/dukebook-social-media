@@ -23,6 +23,28 @@ const getPostById = async (req, res) => {
 	res.status(200).json(post);
 };
 
+
+// search posts by text
+const searchPosts = async (req, res) => {
+	const { search } = req.params;
+	try {
+		const wordCount = decodeURI(search).split(" ").length;
+
+		if (wordCount > 1) {
+			const posts = await Post.find({ $text: { $search: search } }, { score: { $meta: "textScore" } }).sort({
+				score: { $meta: "textScore" },
+			});
+			return res.json(posts);
+		} else {
+			const posts = await Post.find({ postText: { $regex: search, $options: "i" } });
+			return res.json(posts);
+		}
+		res.json(posts);
+	} catch (err) {
+		res.status(500).json({ message: err.message });
+	}
+};
+
 //get posts by userTag
 const getPostsByAuthor = async (req, res) => {
 	const { userTag } = req.params;
@@ -168,6 +190,7 @@ const getComments = async (req, res) => {
 module.exports = {
 	getPosts,
 	getPostById,
+	searchPosts,
 	getPostsByAuthor,
 	createPost,
 	updatePost,
