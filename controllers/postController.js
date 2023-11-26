@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
 const Post = require("../models/posts");
-const User = require("../models/users");
+const { User } = require("../models/users");
 
 // get all posts
 const getPosts = async (req, res) => {
 	try {
-		const posts = await Post.find();
+		const posts = await Post.find().populate("user");
 		res.json(posts);
 	} catch (err) {
 		res.status(500).json({ message: err.message });
@@ -18,11 +18,19 @@ const getPostById = async (req, res) => {
 	if (!mongoose.Types.ObjectId.isValid(id)) {
 		return res.status(404).send(`No post with id: ${id}`);
 	}
-	const post = await Post.findById(id).populate("comments");
+	const post = await Post.findById(id)
+		.populate("user")
+		.populate("comments")
+		.populate({
+			path: "comments",
+			populate: {
+				path: "user",
+				model: "User",
+			},
+		});
 	console.log(post);
 	res.status(200).json(post);
 };
-
 
 // search posts by text
 const searchPosts = async (req, res) => {
@@ -61,7 +69,6 @@ const getPostsByAuthor = async (req, res) => {
 // create post
 const createPost = async (req, res) => {
 	const { userTag: postAuthor, ...post } = req.body;
-	const newPost = new Post(req.body);
 	if (!postAuthor) {
 		return res.status(400).json({ message: "UserTag is required." });
 	}
@@ -72,6 +79,7 @@ const createPost = async (req, res) => {
 		const user = await User.findOne({ userTag: postAuthor });
 		if (!user) return res.status(400).json({ message: "User does not exist." });
 		try {
+			const newPost = new Post({ ...req.body, user });
 			newPost.populate("user");
 			await newPost.save();
 			res.status(201).json(newPost);
@@ -143,25 +151,23 @@ const dislikePost = async (req, res) => {
 const replyToPost = async (req, res) => {
 	const { id } = req.params;
 	const { userTag: replyAuthor, ...post } = req.body;
-	const newPost = new Post(req.body);
 	if (!mongoose.Types.ObjectId.isValid(id)) {
 		return res.status(404).send(`No post with id: ${id}`);
 	}
+
 	try {
 		const user = await User.findOne({ userTag: replyAuthor });
 		if (!user) return res.status(400).json({ message: "User does not exist." });
 		const post = await Post.findById(id);
-		console.log(post);
-		console.log(newPost._id);
-		post.comments.push(newPost);
+		const newPost = new Post({ ...req.body, user });
 		if (!post.originalPostParentId) {
 			newPost.originalPostParentId = id;
 		} else {
 			newPost.originalPostParentId = post.originalPostParentId;
 		}
 		newPost.replyParentId = id;
+		post.comments.push(newPost);
 		await post.save();
-		post.populate("comments");
 		try {
 			await newPost.save();
 		} catch (error) {
@@ -180,7 +186,15 @@ const getComments = async (req, res) => {
 		return res.status(404).send(`No post with id: ${id}`);
 	}
 	try {
-		const post = await Post.findById(id);
+		const post = await Post.findById(id)
+			.populate("comments")
+			.populate({
+				path: "comments",
+				populate: {
+					path: "user",
+					model: "User",
+				},
+			});
 		res.json(post.comments);
 	} catch (err) {
 		res.status(500).json({ message: err.message });

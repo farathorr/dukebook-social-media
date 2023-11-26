@@ -12,12 +12,11 @@ export default function Post() {
 	const [addNotification] = useContext(NotificationContext);
 	const params = useParams();
 	const [postData, setPostData] = useState([]);
+	const [repliesData, setReplies] = useState([]);
 	const [replyText, setReplyText] = useState("");
-
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-
-		console.log(authentication);
+		console.log("POOOST", postData);
 
 		if (!authentication.isAuthenticated) {
 			addNotification({ type: "error", message: "You must be logged in to post", title: "Post failed", duration: 5000 });
@@ -42,20 +41,32 @@ export default function Post() {
 
 	useEffect(() => {
 		const fetchServices = async () => {
-			const response = await fetch(`http://localhost:4000/posts/${params.id}`);
-			const data = await response.json();
-			if (response.ok) {
-				setPostData(data);
+			const parentPost = await fetch(`http://localhost:4000/posts/${params.id}`);
+			const postData = await parentPost.json();
+			if (parentPost.ok) {
+				setPostData(postData);
 			}
+			const replies = await fetch(`http://localhost:4000/posts/${params.id}/replies`);
+			const repliesData = await replies.json();
+			if (replies.ok) {
+				setReplies(repliesData);
+			}
+			console.log(repliesData);
 		};
 		fetchServices();
-	}, []);
+	}, [params]);
 
 	return (
 		<>
 			<h1 className={style["title"]}>Post</h1>
 			<main className={style["main-content"]}>
-				<PostComponent userTag={"@" + postData.userTag} userName={postData.userName} text={postData.postText}></PostComponent>
+				<PostComponent
+					key={postData._id}
+					postId={postData._id}
+					userTag={"@" + postData.user?.userTag}
+					userName={postData.user?.userName}
+					text={postData.postText}
+				></PostComponent>
 				<form className={style["new-post"]} onSubmit={handleSubmit}>
 					<p>New Reply</p>
 					<textarea
@@ -77,6 +88,15 @@ export default function Post() {
 					</div>
 				</form>
 				<div className={style["main-replies"]}></div>
+				{repliesData.map((reply) => (
+					<PostComponent
+						key={reply._id}
+						postId={reply._id}
+						userTag={"@" + reply.user?.userTag}
+						username={reply.user?.username}
+						text={reply.postText}
+					></PostComponent>
+				))}
 			</main>
 		</>
 	);

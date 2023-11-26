@@ -9,22 +9,15 @@ const userSchema = new mongoose.Schema(
 			min: 3,
 			max: 20,
 		},
+		sensitiveData: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "SensitiveData",
+		},
 		username: {
 			type: String,
 			unique: true,
 			min: 3,
 			max: 20,
-		},
-		email: {
-			type: String,
-			required: true,
-			unique: true,
-			max: 50,
-		},
-		password: {
-			type: String,
-			required: true,
-			min: 6,
 		},
 		profilePicture: {
 			type: String,
@@ -66,6 +59,22 @@ const userSchema = new mongoose.Schema(
 	{ timestamps: true }
 );
 
+const sensitiveDataSchema = new mongoose.Schema({
+	email: {
+		type: String,
+		required: true,
+		unique: true,
+		max: 50,
+	},
+	password: {
+		type: String,
+		required: true,
+		min: 6,
+	},
+});
+
+const SensitiveData = mongoose.model("SensitiveData", sensitiveDataSchema);
+
 const User = mongoose.model("User", userSchema);
 
-module.exports = User;
+module.exports = { User, SensitiveData };

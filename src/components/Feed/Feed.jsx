@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState, useContext, useEffect } from "react";
 import { NotificationContext } from "../NotificationControls/NotificationControls";
 import PostComponent from "../PostComponent/PostComponent";
+import { AuthenticationContext } from "../AuthenticationControls/AuthenticationControls";
 import PostSearch from "./PostSearch/PostSearch";
 import { useSearchParams } from "react-router-dom";
 import { AuthenticationContext } from "../AuthenticationControls/AuthenticationControls";
@@ -12,6 +13,7 @@ export default function Feed() {
 	const [addNotification] = useContext(NotificationContext);
 	const [authentication] = useContext(AuthenticationContext);
 	const [searchParams] = useSearchParams();
+	const [authentication] = useContext(AuthenticationContext);
 	const [posts, setPosts] = useState([]);
 	const [postText, setPostText] = useState("");
 	const navigate = useNavigate();
@@ -79,7 +81,7 @@ export default function Feed() {
 					</div>
 				</form>
 				{posts.map((post) => {
-					return <PostComponent key={post._id} username={post.name} userTag={post.userTag} date={post.date} text={post.postText} />;
+					return <PostComponent key={post._id} postId={post._id} username={post.name} userTag={post.userTag} date={post.date} text={post.postText} />;
 				})}
 			</section>
 		</>
