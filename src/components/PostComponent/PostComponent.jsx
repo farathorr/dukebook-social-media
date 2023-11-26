@@ -8,7 +8,7 @@ export default function PostComponent(props) {
 				<div className={style["post-content"]}>
 					<img className={style["profile-pic"]} src={props.profilePic} alt="Profile picture" width={100} height={100} />
 					<div className={style["post-text-container"]}>
-						<span className={style["post-user-name"]}>{props.userName}</span>
+						<span className={style["post-user-name"]}>{props.username}</span>
 						<span className={style["post-user-tag"]}>{props.userTag}</span>
 						<span className={style["time-stamp"]} title="12:54 14/11/2023">
 							{props.date}
@@ -58,7 +58,7 @@ export default function PostComponent(props) {
 
 PostComponent.defaultProps = {
 	profilePic: require("../../images/Duke3D.png"),
-	userName: "Duke",
+	username: "Duke",
 	userTag: "@author",
 	text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam quibusdam, voluptatum, quos, voluptatem voluptas quia quaeaspernatur voluptatibus quod doloribus quas. Quisquam quibusdam, voluptatum, quos, voluptatem voluptas quia quae aspernaturvoluptatibus quod doloribus quas.",
 	images: [],

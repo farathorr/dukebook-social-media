@@ -23,7 +23,7 @@ export default function ProfileIcon() {
 
 	function logout() {
 		const token = authentication.refreshToken;
-		if (token) axios.post("http://localhost:4000/auth/logout", { token }).catch((err) => {});
+		if (token) axios.post("http://localhost:4001/auth/logout", { token }).catch((err) => {});
 
 		authentication.isAuthenticated = false;
 		authentication.accessToken = null;

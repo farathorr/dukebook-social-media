@@ -23,16 +23,16 @@ export default function Profile() {
 	return (
 		<div className={style["profile-page"]}>
 			<ProfileUserHeader
-				name={userData?.username}
+				username={userData?.username}
 				userTag={userData?.userTag}
 				bio={userData?.bio}
 				followers={userData?.followerIds.length}
 				following={userData?.followedIds.length}
 				joinDate={formatDate(userData?.updatedAt)}
 			/>
-			<PostComponent userName={userData?.username} userTag={userData?.userTag} />
-			<PostComponent userName={userData?.username} userTag={userData?.userTag} />
-			<PostComponent userName={userData?.username} userTag={userData?.userTag} />
+			<PostComponent username={userData?.username} userTag={userData?.userTag} />
+			<PostComponent username={userData?.username} userTag={userData?.userTag} />
+			<PostComponent username={userData?.username} userTag={userData?.userTag} />
 		</div>
 	);
 }
