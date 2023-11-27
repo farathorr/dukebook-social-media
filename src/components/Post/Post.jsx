@@ -64,8 +64,10 @@ export default function Post() {
 					key={postData._id}
 					postId={postData._id}
 					userTag={"@" + postData.user?.userTag}
-					userName={postData.user?.userName}
+					username={postData.user?.username}
 					text={postData.postText}
+					likes={postData.likes?.length}
+					dislikes={postData.dislikes?.length}
 				></PostComponent>
 				<form className={style["new-post"]} onSubmit={handleSubmit}>
 					<p>New Reply</p>
@@ -95,6 +97,8 @@ export default function Post() {
 						userTag={"@" + reply.user?.userTag}
 						username={reply.user?.username}
 						text={reply.postText}
+						likes={reply.likes.length}
+						dislikes={reply.dislikes.length}
 					></PostComponent>
 				))}
 			</main>

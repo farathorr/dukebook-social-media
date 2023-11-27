@@ -6,14 +6,12 @@ import PostComponent from "../PostComponent/PostComponent";
 import { AuthenticationContext } from "../AuthenticationControls/AuthenticationControls";
 import PostSearch from "./PostSearch/PostSearch";
 import { useSearchParams } from "react-router-dom";
-import { AuthenticationContext } from "../AuthenticationControls/AuthenticationControls";
 import axios from "axios";
 
 export default function Feed() {
 	const [addNotification] = useContext(NotificationContext);
 	const [authentication] = useContext(AuthenticationContext);
 	const [searchParams] = useSearchParams();
-	const [authentication] = useContext(AuthenticationContext);
 	const [posts, setPosts] = useState([]);
 	const [postText, setPostText] = useState("");
 	const navigate = useNavigate();
@@ -81,7 +79,18 @@ export default function Feed() {
 					</div>
 				</form>
 				{posts.map((post) => {
-					return <PostComponent key={post._id} postId={post._id} username={post.name} userTag={post.userTag} date={post.date} text={post.postText} />;
+					return (
+						<PostComponent
+							key={post._id}
+							postId={post._id}
+							username={post.user.username}
+							userTag={post.user.userTag}
+							date={post.date}
+							text={post.postText}
+							likes={post.likes.length}
+							dislikes={post.dislikes.length}
+						/>
+					);
 				})}
 			</section>
 		</>

@@ -1,8 +1,50 @@
 import React from "react";
 import style from "./PostComponent.module.scss";
+import axios from "axios";
 import { Link } from "react-router-dom";
+import { useState, useContext, useEffect } from "react";
+import { AuthenticationContext } from "../AuthenticationControls/AuthenticationControls";
+import { NotificationContext } from "../NotificationControls/NotificationControls";
 
 export default function PostComponent(props) {
+	const [authentication] = useContext(AuthenticationContext);
+	const [likes, setLikes] = useState(props.likes);
+	const [dislikes, setDislikes] = useState(props.dislikes);
+	const [addNotification] = useContext(NotificationContext);
+
+	const dislike = async () => {
+		console.log(authentication);
+		console.log(authentication.isAuthenticated);
+		console.log(authentication.user.userid);
+		if (!authentication.isAuthenticated) {
+			addNotification({ type: "error", message: "You must be logged in to dislike posts", title: "Dislike failed", duration: 5000 });
+			return;
+		}
+		try {
+			axios.put(`http://localhost:4000/posts/${props.postId}/dislike`, { userId: authentication.user.userid }).then((res) => {
+				setDislikes(res.data.dislikes.length);
+				setLikes(res.data.likes.length);
+			});
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	const like = async () => {
+		if (!authentication.isAuthenticated) {
+			addNotification({ type: "error", message: "You must be logged in to like posts", title: "Like failed", duration: 5000 });
+			return;
+		}
+		try {
+			axios.put(`http://localhost:4000/posts/${props.postId}/like`, { userId: authentication.user.userid }).then((res) => {
+				setDislikes(res.data.dislikes.length);
+				setLikes(res.data.likes.length);
+			});
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
 	return (
 		<div className={style["post-container"]}>
 			<div className={style["post-data"]}>
@@ -22,19 +64,19 @@ export default function PostComponent(props) {
 				</div>
 				<div className={style["post-stats"]}>
 					<div className={style["stat-container"]}>
-						<button className={style["like-button"]}>
+						<button className={style["like-button"]} onClick={like}>
 							<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512">
 								<path d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 141.2V448c0 17.7 14.3 32 32 32s32-14.3 32-32V141.2L329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z" />
 							</svg>
-							<span>{props.likes}</span>
+							<span>{likes}</span>
 						</button>
 					</div>
 					<div className={style["stat-container"]}>
-						<button className={style["dislike-button"]}>
+						<button className={style["dislike-button"]} onClick={dislike}>
 							<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512">
 								<path d="M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z" />
 							</svg>
-							<span>{props.dislikes}</span>
+							<span>{dislikes}</span>
 						</button>
 					</div>
 					<div className={style["stat-container"]}>
@@ -59,7 +101,7 @@ export default function PostComponent(props) {
 
 PostComponent.defaultProps = {
 	profilePic: require("../../images/Duke3D.png"),
-	username: "Duke",
+	username: "",
 	userTag: "@author",
 	postText:
 		"Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam quibusdam, voluptatum, quos, voluptatem voluptas quia quaeaspernatur voluptatibus quod doloribus quas. Quisquam quibusdam, voluptatum, quos, voluptatem voluptas quia quae aspernaturvoluptatibus quod doloribus quas.",
