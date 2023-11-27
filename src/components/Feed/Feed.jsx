@@ -8,6 +8,8 @@ import PostSearch from "./PostSearch/PostSearch";
 import { useSearchParams } from "react-router-dom";
 import axios from "axios";
 
+const postError = { type: "error", title: "Post failed" };
+
 export default function Feed() {
 	const [addNotification] = useContext(NotificationContext);
 	const [authentication] = useContext(AuthenticationContext);
@@ -16,28 +18,17 @@ export default function Feed() {
 	const [postText, setPostText] = useState("");
 	const navigate = useNavigate();
 
-	const handleSubmit = async (e) => {
-		e.preventDefault();
+	const handleSubmit = async (event) => {
+		event.preventDefault();
 
-		if (postText.length < 1) {
-			addNotification({ type: "error", message: "Post can't be empty", title: "Post failed", duration: 5000 });
-			return;
-		}
-		if (!authentication.isAuthenticated) {
-			addNotification({ type: "error", message: "You must be logged in to post", title: "Post failed", duration: 5000 });
-			return;
-		}
-		console.log(authentication);
-		let post = { userTag: authentication.user.userTag, postText };
+		if (postText.length < 1) return addNotification({ ...postError, message: "Post can't be empty" });
+		if (!authentication.isAuthenticated) return addNotification({ ...postError, message: "You must be logged in to post" });
 
-		const response = await fetch("http://localhost:4000/posts", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(post),
-		});
-		navigate("/post/" + (await response.json())._id);
+		try {
+			const post = { userTag: authentication.user.userTag, postText };
+			const { data } = await axios.post("http://localhost:4000/posts", post);
+			navigate("/post/" + data._id);
+		} catch (err) {}
 	};
 
 	useEffect(() => {
@@ -47,7 +38,7 @@ export default function Feed() {
 				const { data } = await axios.get("http://localhost:4000/posts" + url);
 				console.log(data);
 				setPosts(data);
-			} catch (error) {}
+			} catch (err) {}
 		}
 
 		fetchPosts();
@@ -89,6 +80,7 @@ export default function Feed() {
 							text={post.postText}
 							likes={post.likes.length}
 							dislikes={post.dislikes.length}
+							comments={post.comments?.length}
 						/>
 					);
 				})}
