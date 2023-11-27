@@ -9,8 +9,8 @@ export default function NotificationContainer() {
 
 	return (
 		<div className={style["notifications-container"]}>
-			{notifications.map((notification, index) => (
-				<Notification notification={notification} onClose={closeButton} key={index} />
+			{notifications.map((notification) => (
+				<Notification notification={notification} onClose={closeButton} key={notification.startTime + "-" + notification.duration} />
 			))}
 		</div>
 	);
