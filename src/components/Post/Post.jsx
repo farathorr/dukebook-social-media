@@ -62,12 +62,12 @@ export default function Post() {
 				<PostComponent
 					key={postData._id}
 					postId={postData._id}
-					userTag={"@" + postData.user?.userTag}
+					userTag={postData.user?.userTag}
 					username={postData.user?.username}
 					text={postData.postText}
 					likes={postData.likes?.length}
 					comments={postData.comments?.length}
-          dislikes={postData.dislikes?.length}
+					dislikes={postData.dislikes?.length}
 					date={postData.createdAt}
 				/>
 				<form className={style["new-post"]} onSubmit={handleSubmit}>
