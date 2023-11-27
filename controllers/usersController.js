@@ -104,8 +104,8 @@ const getFollowing = async (req, res) => {
 
 // follow user by userTag
 const followUser = async (req, res) => {
-	const { followedUserTag } = req.params;
-	const { followerUserTag } = req.body;
+	const { userTag: followedUserTag } = req.params;
+	const { userTag: followerUserTag } = req.body;
 	try {
 		console.log(`Followed User Tag: ${followedUserTag}`);
 		console.log(`Follower User Tag: ${followerUserTag}`);
@@ -118,8 +118,14 @@ const followUser = async (req, res) => {
 		if (!followedUser) return res.status(404).json({ message: `User ${followedUserTag} not found.` });
 		if (!followerUser) return res.status(404).json({ message: `User ${followerUserTag} not found.` });
 
+		if (followedUser.followerIds.some((id) => id.toString() === followerUser._id.toString())) {
+			return res.status(404).json({ message: `User ${followerUserTag} is already following user ${followedUserTag}.` });
+		}
+
 		followedUser.followerIds.push(followerUser._id);
-		await followedUser.save();
+		followerUser.followedIds.push(followedUser._id);
+		followedUser.save();
+		followerUser.save();
 		res.status(200).json(followedUser);
 	} catch (err) {
 		res.status(404).json({ message: err.message });
@@ -128,8 +134,8 @@ const followUser = async (req, res) => {
 
 // unfollow user by userTag
 const unfollowUser = async (req, res) => {
-	const { followedUserTag } = req.params;
-	const { followerUserTag } = req.body;
+	const { userTag: followedUserTag } = req.params;
+	const { userTag: followerUserTag } = req.body;
 	try {
 		const followedUser = await User.findOne({ userTag: followedUserTag });
 		const followerUser = await User.findOne({ userTag: followerUserTag });
@@ -137,8 +143,13 @@ const unfollowUser = async (req, res) => {
 		if (!followedUser) return res.status(404).json({ message: `User ${followedUserTag} not found.` });
 		if (!followerUser) return res.status(404).json({ message: `User ${followerUserTag} not found.` });
 
-		await followedUser.followerIds.delete(followerUser._id);
-		await followedUser.save();
+		if (!followedUser.followerIds.some((id) => id.toString() === followerUser._id.toString())) {
+			return res.status(404).json({ message: `User ${followerUserTag} is not following user ${followedUserTag}.` });
+		}
+		await followedUser.followerIds.pull(followerUser._id);
+		followerUser.followedIds.pull(followedUser._id);
+		followedUser.save();
+		followerUser.save();
 		res.status(200).json(followedUser);
 	} catch (err) {
 		res.status(404).json({ message: err.message });
@@ -160,7 +171,7 @@ const getFriends = async (req, res) => {
 
 // add friend by userTag
 const addFriend = async (req, res) => {
-	const { friendUserTag } = req.params;
+	const { userTag : friendUserTag } = req.params;
 	const { userTag } = req.body;
 	try {
 		const friendUser = await User.findOne({ userTag: friendUserTag });
@@ -169,7 +180,7 @@ const addFriend = async (req, res) => {
 		if (!friendUser) return res.status(404).json({ message: `User ${friendUser} not found.` });
 		if (!user) return res.status(404).json({ message: `User ${user} not found.` });
 
-		await friendUser.friendList.push(user._id);
+		friendUser.friendList.push(user._id);
 		await friendUser.save();
 		res.status(200).json(friendUser);
 	} catch (err) {
@@ -179,7 +190,7 @@ const addFriend = async (req, res) => {
 
 // remove friend by userTag
 const removeFriend = async (req, res) => {
-	const { friendUserTag } = req.params;
+	const { userTag : friendUserTag } = req.params;
 	const { userTag } = req.body;
 	try {
 		const friendUser = await User.findOne({ userTag: friendUserTag });
