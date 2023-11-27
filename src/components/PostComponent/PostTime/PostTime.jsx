@@ -27,10 +27,10 @@ function deltaTime(time) {
 	if (delta < 60) return delta + "s";
 	if (delta < 3600) return Math.floor(delta / 60) + "m";
 	if (delta < 86400) return Math.floor(delta / 3600) + "h";
-	if (delta < 604800) return Math.floor(delta / 86400) + "days";
-	if (delta < 2628000) return Math.floor(delta / 604800) + "weeks";
-	if (delta < 31536000) return Math.floor(delta / 2628000) + "Months";
-	if (delta >= 31536000) return Math.floor(delta / 31536000) + "years";
+	if (delta < 604800) return Math.floor(delta / 86400) + "d";
+	if (delta < 2628000) return Math.floor(delta / 604800) + "w";
+	if (delta < 31536000) return Math.floor(delta / 2628000) + "M";
+	if (delta >= 31536000) return Math.floor(delta / 31536000) + "y";
 }
 
 function formatDate(utcTime) {
