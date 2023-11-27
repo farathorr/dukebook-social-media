@@ -4,35 +4,52 @@ import PostComponent from "../PostComponent/PostComponent";
 import ProfileUserHeader from "./ProfileUserHeader/ProfileUserHeader";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import axios from "axios";
 
 export default function Profile() {
 	const params = useParams();
-	const [userData, setUserData] = useState(null);
+	const [profileData, setProfileData] = useState(null);
+	const [posts, setPosts] = useState([]);
 
 	useEffect(() => {
 		const fetchServices = async () => {
-			const response = await fetch(`http://localhost:4000/users/userTag/${params.usertag}`);
-			const data = await response.json();
-			if (response.ok) {
-				setUserData(data);
+			try {
+				const { data: profileData } = await axios.get(`http://localhost:4000/users/userTag/${params.usertag}`);
+				if (profileData) setProfileData(profileData);
+				const { data: posts } = await axios.get(`http://localhost:4000/posts/author/${params.usertag}`);
+				if (posts) setPosts(posts);
+			} catch (err) {
+				console.log(err);
 			}
 		};
+
 		fetchServices();
 	}, []);
 
 	return (
 		<div className={style["profile-page"]}>
 			<ProfileUserHeader
-				username={userData?.username}
-				userTag={userData?.userTag}
-				bio={userData?.bio}
-				followers={userData?.followerIds.length}
-				following={userData?.followedIds.length}
-				joinDate={formatDate(userData?.updatedAt)}
+				username={profileData?.username}
+				userTag={profileData?.userTag}
+				bio={profileData?.bio}
+				followers={profileData?.followerIds.length}
+				following={profileData?.followedIds.length}
+				joinDate={formatDate(profileData?.updatedAt)}
 			/>
-			<PostComponent username={userData?.username} userTag={userData?.userTag} />
-			<PostComponent username={userData?.username} userTag={userData?.userTag} />
-			<PostComponent username={userData?.username} userTag={userData?.userTag} />
+			{posts.map((post) => (
+				<PostComponent
+					key={post._id}
+					postId={post._id}
+					username={profileData?.username}
+					userTag={profileData?.userTag}
+					text={post.postText}
+					date={post.createdAt}
+					comments={post.comments.length}
+					likes={post.likes.length}
+					dislikes={post.dislikes.length}
+					onRemove={setPosts}
+				/>
+			))}
 		</div>
 	);
 }

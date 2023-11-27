@@ -108,6 +108,7 @@ export default function Post() {
 						dislikes={reply.dislikes.length}
 						comments={reply.comments?.length}
 						date={reply.createdAt}
+						onRemove={setReplies}
 					/>
 				))}
 			</main>

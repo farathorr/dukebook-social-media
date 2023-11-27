@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import style from "./PostTime.module.scss";
 
 export default function PostTime(props) {
 	const [time, setTime] = useState(deltaTime(props.time));
@@ -11,7 +12,11 @@ export default function PostTime(props) {
 		return () => clearInterval(interval);
 	}, []);
 
-	return <span title={formatDate(props.time)}>{time}</span>;
+	return (
+		<span className={style.time} title={formatDate(props.time)}>
+			{time}
+		</span>
+	);
 }
 
 function deltaTime(time) {

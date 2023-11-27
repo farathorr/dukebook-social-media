@@ -46,6 +46,16 @@ export default function PostComponent(props) {
 		}
 	};
 
+	const removePost = async () => {
+		try {
+			await axios.delete(`http://localhost:4000/posts/${props.postId}`);
+			addNotification({ type: "success", message: "Post removed", title: "Post removed", duration: 5000 });
+			props.onRemove?.((posts) => posts.filter((post) => post._id !== props.postId));
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
 	return (
 		<div className={style["post-container"]}>
 			<div className={style["post-data"]}>
@@ -53,7 +63,9 @@ export default function PostComponent(props) {
 					<img className={style["profile-pic"]} src={props.profilePic} alt="Profile picture" width={100} height={100} />
 					<div className={style["post-text-container"]}>
 						<span className={style["post-user-name"]}>{props.username}</span>
-						<span className={style["post-user-tag"]}>@{props.userTag}</span>
+						<Link className={style["post-user-tag"]} to={`/user/${props.userTag}`}>
+							@{props.userTag}
+						</Link>
 						<PostTime time={props.date} />
 						<pre className={style["post-text"]}>{props.text}</pre>
 						{props.images.map((image, index) => (
@@ -86,6 +98,11 @@ export default function PostComponent(props) {
 							<span>{props.comments}</span>
 						</Link>
 					</div>
+					{authentication.isAuthenticated && authentication.user.userTag === props.userTag && props.onRemove ? (
+						<div className={style["stat-container"] + " " + style["remove-button"]}>
+							<button onClick={removePost}>Remove</button>
+						</div>
+					) : null}
 				</div>
 			</div>
 			{props.children ? (
