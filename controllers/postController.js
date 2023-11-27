@@ -132,13 +132,22 @@ const deletePost = async (req, res) => {
 
 const likePost = async (req, res) => {
 	const { id } = req.params;
+	const { userId } = req.body;
 	if (!mongoose.Types.ObjectId.isValid(id)) {
 		return res.status(404).send(`No post with id: ${id}`);
 	}
 	try {
 		const post = await Post.findById(id);
-		const updatedPost = await Post.findByIdAndUpdate(id, { likes: ++post.likes }, { new: true });
-		res.json(updatedPost);
+		if (post.likes.some((id) => id.toString() === userId)) {
+			post.likes.pull(userId);
+		} else if (post.dislikes.some((id) => id.toString() === userId)) {
+			post.dislikes.pull(userId);
+			post.likes.push(userId);
+		} else {
+			post.likes.push(userId);
+		}
+		post.save();
+		res.json(post);
 	} catch (err) {
 		res.status(500).json({ message: err.message });
 	}
@@ -146,13 +155,23 @@ const likePost = async (req, res) => {
 
 const dislikePost = async (req, res) => {
 	const { id } = req.params;
+	const { userId } = req.body;
 	if (!mongoose.Types.ObjectId.isValid(id)) {
 		return res.status(404).send(`No post with id: ${id}`);
 	}
 	try {
 		const post = await Post.findById(id);
-		const updatedPost = await Post.findByIdAndUpdate(id, { likes: --post.likes }, { new: true });
-		res.json(updatedPost);
+		console.log(post.dislikes.some((id) => id.toString() === userId));
+		if (post.dislikes.some((id) => id.toString() === userId)) {
+			post.dislikes.pull(userId);
+		} else if (post.likes.some((id) => id.toString() === userId)) {
+			post.likes.pull(userId);
+			post.dislikes.push(userId);
+		} else {
+			post.dislikes.push(userId);
+		}
+		post.save();
+		res.json(post);
 	} catch (err) {
 		res.status(500).json({ message: err.message });
 	}

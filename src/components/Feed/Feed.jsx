@@ -84,6 +84,8 @@ export default function Feed() {
 						date={post.createdAt}
 						text={post.postText}
 						comments={post.comments?.length}
+            dislikes={post.dislikes.length}
+            likes={post.likes.length}
 					/>
 				))}
 			</section>
