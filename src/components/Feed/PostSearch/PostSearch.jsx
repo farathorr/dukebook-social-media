@@ -1,10 +1,12 @@
 import { useState } from "react";
 import style from "./PostSearch.module.scss";
 import { useNavigate } from "react-router";
+import { useSearchParams } from "react-router-dom";
 
 export default function PostSearch() {
+	const [searchParams] = useSearchParams();
+	const [search, setSearch] = useState(searchParams.get("search") || "");
 	const navigate = useNavigate();
-	const [search, setSearch] = useState("");
 
 	function handleSubmit(e) {
 		e.preventDefault();

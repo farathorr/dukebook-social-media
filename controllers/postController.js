@@ -5,7 +5,7 @@ const { User } = require("../models/users");
 // get all posts
 const getPosts = async (req, res) => {
 	try {
-		const posts = await Post.find().populate("user");
+		const posts = await Post.find().sort({ createdAt: -1, _id: 1 }).limit(100).populate("user");
 		res.json(posts);
 	} catch (err) {
 		res.status(500).json({ message: err.message });
@@ -39,15 +39,25 @@ const searchPosts = async (req, res) => {
 		const wordCount = decodeURI(search).split(" ").length;
 
 		if (wordCount > 1) {
-			const posts = await Post.find({ $text: { $search: search } }, { score: { $meta: "textScore" } }).sort({
-				score: { $meta: "textScore" },
-			});
+			const posts = await Post.find({ $text: { $search: search } }, { score: { $meta: "textScore" } })
+				.sort({
+					score: { $meta: "textScore" },
+					createdAt: -1,
+					_id: 1,
+				})
+				.limit(100)
+				.populate("user");
 			return res.json(posts);
 		} else {
-			const posts = await Post.find({ postText: { $regex: search, $options: "i" } });
+			const posts = await Post.find({ postText: { $regex: search, $options: "i" } })
+				.sort({
+					createdAt: -1,
+					_id: 1,
+				})
+				.limit(100)
+				.populate("user");
 			return res.json(posts);
 		}
-		res.json(posts);
 	} catch (err) {
 		res.status(500).json({ message: err.message });
 	}
