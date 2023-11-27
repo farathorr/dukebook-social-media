@@ -46,6 +46,16 @@ export default function PostComponent(props) {
 		}
 	};
 
+	const removePost = async () => {
+		try {
+			await axios.delete(`http://localhost:4000/posts/${props.postId}`);
+			addNotification({ type: "success", message: "Post removed", title: "Post removed", duration: 5000 });
+			props.onRemove?.((posts) => posts.filter((post) => post._id !== props.postId));
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
 	return (
 		<div className={style["post-container"]}>
 			<div className={style["post-data"]}>
@@ -88,6 +98,11 @@ export default function PostComponent(props) {
 							<span>{props.comments}</span>
 						</Link>
 					</div>
+					{authentication.isAuthenticated && authentication.user.userTag === props.userTag && props.onRemove ? (
+						<div className={style["stat-container"] + " " + style["remove-button"]}>
+							<button onClick={removePost}>Remove</button>
+						</div>
+					) : null}
 				</div>
 			</div>
 			{props.children ? (

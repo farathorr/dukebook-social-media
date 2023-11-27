@@ -123,7 +123,7 @@ const deletePost = async (req, res) => {
 		return res.status(404).send(`No post with id: ${id}`);
 	}
 	try {
-		await Post.findByIdAndRemove(id);
+		await Post.findByIdAndDelete(id);
 		res.json({ message: "Post deleted successfully." });
 	} catch (err) {
 		res.status(500).json({ message: err.message });

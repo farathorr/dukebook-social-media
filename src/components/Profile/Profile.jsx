@@ -42,11 +42,12 @@ export default function Profile() {
 					postId={post._id}
 					username={profileData?.username}
 					userTag={profileData?.userTag}
-					postText={post.postText}
+					text={post.postText}
 					date={post.createdAt}
 					comments={post.comments.length}
 					likes={post.likes.length}
 					dislikes={post.dislikes.length}
+					onRemove={setPosts}
 				/>
 			))}
 		</div>
