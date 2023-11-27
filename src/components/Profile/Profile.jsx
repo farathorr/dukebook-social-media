@@ -31,6 +31,7 @@ export default function Profile() {
 			<ProfileUserHeader
 				username={profileData?.username}
 				userTag={profileData?.userTag}
+				userId = {profileData?._id}
 				bio={profileData?.bio}
 				followers={profileData?.followerIds}
 				following={profileData?.followedIds.length}
