@@ -30,6 +30,8 @@ export default function Post() {
 			const reply = { userTag: authentication.user.userTag, postText: replyText, userId: authentication.user._id };
 			await axios.patch(`http://localhost:4000/posts/${params.id}/reply`, reply);
 			setUpdatePostContent((state) => !state);
+			setReplyText("");
+			addNotification({ type: "success", title: "Reply successful", message: "Your reply has been posted", duration: 3000 });
 		} catch (err) {
 			console.log(err);
 		}
