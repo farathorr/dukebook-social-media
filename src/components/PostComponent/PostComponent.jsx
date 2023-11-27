@@ -13,9 +13,6 @@ export default function PostComponent(props) {
 	const [addNotification] = useContext(NotificationContext);
 
 	const dislike = async () => {
-		console.log(authentication);
-		console.log(authentication.isAuthenticated);
-		console.log(authentication.user.userid);
 		if (!authentication.isAuthenticated) {
 			addNotification({ type: "error", message: "You must be logged in to dislike posts", title: "Dislike failed", duration: 5000 });
 			return;

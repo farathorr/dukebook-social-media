@@ -171,7 +171,7 @@ const getFriends = async (req, res) => {
 
 // add friend by userTag
 const addFriend = async (req, res) => {
-	const { friendUserTag } = req.params;
+	const { userTag : friendUserTag } = req.params;
 	const { userTag } = req.body;
 	try {
 		const friendUser = await User.findOne({ userTag: friendUserTag });
@@ -180,7 +180,7 @@ const addFriend = async (req, res) => {
 		if (!friendUser) return res.status(404).json({ message: `User ${friendUser} not found.` });
 		if (!user) return res.status(404).json({ message: `User ${user} not found.` });
 
-		await friendUser.friendList.push(user._id);
+		friendUser.friendList.push(user._id);
 		await friendUser.save();
 		res.status(200).json(friendUser);
 	} catch (err) {
@@ -190,7 +190,7 @@ const addFriend = async (req, res) => {
 
 // remove friend by userTag
 const removeFriend = async (req, res) => {
-	const { friendUserTag } = req.params;
+	const { userTag : friendUserTag } = req.params;
 	const { userTag } = req.body;
 	try {
 		const friendUser = await User.findOne({ userTag: friendUserTag });

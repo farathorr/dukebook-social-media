@@ -25,8 +25,9 @@ export default function Profile() {
 			<ProfileUserHeader
 				username={userData?.username}
 				userTag={userData?.userTag}
+				userId = {userData?._id}
 				bio={userData?.bio}
-				followers={userData?.followerIds.length}
+				followers={userData?.followerIds}
 				following={userData?.followedIds.length}
 				joinDate={formatDate(userData?.updatedAt)}
 			/>
