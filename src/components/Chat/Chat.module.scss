@@ -15,7 +15,7 @@
 		.friend-list {
 			width: 250px;
 			height: 100%;
-			background-color: rgb(56, 56, 56);
+			background-color: var(--clr-primary-700);
 			overflow-y: auto;
 			flex-shrink: 0;
 		}
@@ -30,7 +30,7 @@
 
 			.chat-bar {
 				height: 50px;
-				background-color: #545454;
+				background-color: var(--clr-primary-400);
 				display: grid;
 				grid-template-columns: auto auto 1fr;
 
@@ -66,14 +66,15 @@
 				height: 100%;
 				background-color: rgba(255, 255, 255, 0.644);
 				overflow-y: scroll;
-				background-image: url("../../images/background.webp");
+				// background-image: url("../../images/background.webp");
+				background-color: var(--clr-background-500);
 				background-size: cover;
 			}
 
 			.chat-input {
 				width: 100%;
 				height: max-content;
-				background-color: #3d3d3d;
+				background-color: var(--clr-accent-600);
 				display: flex;
 				gap: 10px;
 				padding: 10px;
@@ -84,7 +85,7 @@
 					height: 42px;
 					max-height: 150px;
 					border-radius: 5px;
-					background-color: rgb(90, 90, 90);
+					background-color: var(--clr-accent-400);
 					padding: 10px 15px;
 					font-size: inherit;
 					font-family: inherit;
@@ -103,7 +104,7 @@
 				.attach-button {
 					border: none;
 					outline: none;
-					background-color: #5a5a5a;
+					background-color: var(--clr-accent-500);
 					height: max-content;
 					cursor: pointer;
 					padding: 10px;

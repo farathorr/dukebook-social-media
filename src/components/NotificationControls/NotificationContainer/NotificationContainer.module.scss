@@ -7,7 +7,7 @@
 	top: 10px;
 	display: grid;
 	pointer-events: none;
-	margin-top: 10px;
+	transform: translateY(10px);
 	--_content-width: calc(100% - var(--_margin) * 2);
 	grid-template-columns:
 		minmax(var(--_margin), 1fr) [notification-start]
