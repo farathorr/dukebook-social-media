@@ -6,6 +6,9 @@ import { useParams } from "react-router-dom";
 import { useContext } from "react";
 import { AuthenticationContext } from "../AuthenticationControls/AuthenticationControls";
 import { NotificationContext } from "../NotificationControls/NotificationControls";
+import axios from "axios";
+
+const postError = { type: "error", title: "Post failed" };
 
 export default function Post() {
 	const [authentication] = useContext(AuthenticationContext);
@@ -14,47 +17,39 @@ export default function Post() {
 	const [postData, setPostData] = useState([]);
 	const [repliesData, setReplies] = useState([]);
 	const [replyText, setReplyText] = useState("");
-	const handleSubmit = async (e) => {
-		e.preventDefault();
+	const [updatePostContent, setUpdatePostContent] = useState(false);
+
+	const handleSubmit = async (event) => {
+		event.preventDefault();
 		console.log("POOOST", postData);
 
-		if (!authentication.isAuthenticated) {
-			addNotification({ type: "error", message: "You must be logged in to post", title: "Post failed", duration: 5000 });
-			return;
+		if (!authentication.isAuthenticated) return addNotification({ ...postError, message: "You must be logged in to post" });
+		if (replyText.length < 1) return addNotification({ ...postError, message: "Post can't be empty" });
+
+		try {
+			const reply = { userTag: authentication.user.userTag, postText: replyText, userId: authentication.user._id };
+			await axios.patch(`http://localhost:4000/posts/${params.id}/reply`, reply);
+			setUpdatePostContent((state) => !state);
+		} catch (err) {
+			console.log(err);
 		}
-
-		if (replyText.length < 1) {
-			addNotification({ type: "error", message: "Post can't be empty", title: "Post failed", duration: 5000 });
-			return;
-		}
-
-		let reply = { userTag: authentication.user.userTag, postText: replyText, userId: authentication.user._id };
-
-		const response = await fetch(`http://localhost:4000/posts/${params.id}/reply`, {
-			method: "PATCH",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(reply),
-		});
 	};
 
 	useEffect(() => {
 		const fetchServices = async () => {
-			const parentPost = await fetch(`http://localhost:4000/posts/${params.id}`);
-			const postData = await parentPost.json();
-			if (parentPost.ok) {
-				setPostData(postData);
+			try {
+				const parentPost = await axios.get(`http://localhost:4000/posts/${params.id}`);
+				const replies = await axios.get(`http://localhost:4000/posts/${params.id}/replies`);
+
+				if (parentPost.status === 200) setPostData(parentPost.data);
+				if (replies.status === 200) setReplies(replies.data);
+			} catch (err) {
+				console.log(err);
 			}
-			const replies = await fetch(`http://localhost:4000/posts/${params.id}/replies`);
-			const repliesData = await replies.json();
-			if (replies.ok) {
-				setReplies(repliesData);
-			}
-			console.log(repliesData);
 		};
+
 		fetchServices();
-	}, [params]);
+	}, [params, updatePostContent]);
 
 	return (
 		<>
@@ -63,10 +58,11 @@ export default function Post() {
 				<PostComponent
 					key={postData._id}
 					postId={postData._id}
-					userTag={"@" + postData.user?.userTag}
+					userTag={postData.user?.userTag}
 					userName={postData.user?.userName}
 					text={postData.postText}
-				></PostComponent>
+					comments={postData.comments?.length}
+				/>
 				<form className={style["new-post"]} onSubmit={handleSubmit}>
 					<p>New Reply</p>
 					<textarea
@@ -92,10 +88,11 @@ export default function Post() {
 					<PostComponent
 						key={reply._id}
 						postId={reply._id}
-						userTag={"@" + reply.user?.userTag}
+						userTag={reply.user?.userTag}
 						username={reply.user?.username}
 						text={reply.postText}
-					></PostComponent>
+						comments={reply.comments?.length}
+					/>
 				))}
 			</main>
 		</>
