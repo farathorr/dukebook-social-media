@@ -51,6 +51,8 @@ export default function Post() {
 		fetchServices();
 	}, [params, updatePostContent]);
 
+	if (postData.length === 0) return null;
+
 	return (
 		<>
 			<h1 className={style["title"]}>Post</h1>
@@ -62,6 +64,7 @@ export default function Post() {
 					userName={postData.user?.userName}
 					text={postData.postText}
 					comments={postData.comments?.length}
+					date={postData.createdAt}
 				/>
 				<form className={style["new-post"]} onSubmit={handleSubmit}>
 					<p>New Reply</p>
@@ -92,6 +95,7 @@ export default function Post() {
 						username={reply.user?.username}
 						text={reply.postText}
 						comments={reply.comments?.length}
+						date={reply.createdAt}
 					/>
 				))}
 			</main>

@@ -75,7 +75,7 @@ export default function Feed() {
 						postId={post._id}
 						username={post.user.username}
 						userTag={post.user.userTag}
-						date={post.date}
+						date={post.createdAt}
 						text={post.postText}
 						comments={post.comments?.length}
 					/>
