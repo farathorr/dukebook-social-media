@@ -36,6 +36,7 @@ export default function Feed() {
 			const url = searchParams.get("search")?.length ? `/search/${searchParams.get("search")}` : "";
 			try {
 				const { data } = await axios.get("http://localhost:4000/posts" + url);
+				console.log(data);
 				setPosts(data);
 			} catch (err) {}
 		}
@@ -76,6 +77,7 @@ export default function Feed() {
 						userTag={post.user.userTag}
 						date={post.date}
 						text={post.postText}
+						comments={post.comments?.length}
 					/>
 				))}
 			</section>
