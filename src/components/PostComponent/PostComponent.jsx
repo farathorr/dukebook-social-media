@@ -53,7 +53,9 @@ export default function PostComponent(props) {
 					<img className={style["profile-pic"]} src={props.profilePic} alt="Profile picture" width={100} height={100} />
 					<div className={style["post-text-container"]}>
 						<span className={style["post-user-name"]}>{props.username}</span>
-						<span className={style["post-user-tag"]}>@{props.userTag}</span>
+						<Link className={style["post-user-tag"]} to={`/user/${props.userTag}`}>
+							@{props.userTag}
+						</Link>
 						<PostTime time={props.date} />
 						<pre className={style["post-text"]}>{props.text}</pre>
 						{props.images.map((image, index) => (
