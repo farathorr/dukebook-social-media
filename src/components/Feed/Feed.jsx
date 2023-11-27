@@ -1,5 +1,4 @@
 import style from "./Feed.module.scss";
-import { Link, useNavigate } from "react-router-dom";
 import { useState, useContext, useEffect } from "react";
 import { NotificationContext } from "../NotificationControls/NotificationControls";
 import PostComponent from "../PostComponent/PostComponent";
@@ -16,7 +15,7 @@ export default function Feed() {
 	const [searchParams] = useSearchParams();
 	const [posts, setPosts] = useState([]);
 	const [postText, setPostText] = useState("");
-	const navigate = useNavigate();
+	const [updatePostContent, setUpdatePostContent] = useState(false);
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
@@ -27,7 +26,9 @@ export default function Feed() {
 		try {
 			const post = { userTag: authentication.user.userTag, postText };
 			const { data } = await axios.post("http://localhost:4000/posts", post);
-			navigate("/post/" + data._id);
+			setUpdatePostContent((state) => !state);
+			setPostText("");
+			addNotification({ type: "success", title: "Post successful", message: "Your post has been posted", duration: 3000 });
 		} catch (err) {}
 	};
 
@@ -36,13 +37,12 @@ export default function Feed() {
 			const url = searchParams.get("search")?.length ? `/search/${searchParams.get("search")}` : "";
 			try {
 				const { data } = await axios.get("http://localhost:4000/posts" + url);
-				console.log(data);
 				setPosts(data);
 			} catch (err) {}
 		}
 
 		fetchPosts();
-	}, [searchParams]);
+	}, [searchParams, updatePostContent]);
 
 	return (
 		<>
@@ -57,6 +57,12 @@ export default function Feed() {
 						name="postText"
 						placeholder="Write post here"
 						onChange={(e) => setPostText(e.target.value)}
+						onInput={(e) => {
+							const input = e.target;
+							input.style.height = "";
+							input.style.height = input.scrollHeight + "px";
+						}}
+						style={{ height: "52px" }}
 					/>
 					<div className={style["button-container"]}>
 						<button className={style["post-button"]} type="submit" value="post">
@@ -69,21 +75,19 @@ export default function Feed() {
 						</button>
 					</div>
 				</form>
-				{posts.map((post) => {
-					return (
-						<PostComponent
-							key={post._id}
-							postId={post._id}
-							username={post.user.username}
-							userTag={post.user.userTag}
-							date={post.date}
-							text={post.postText}
-							likes={post.likes.length}
-							dislikes={post.dislikes.length}
-							comments={post.comments?.length}
-						/>
-					);
-				})}
+				{posts.map((post) => (
+					<PostComponent
+						key={post._id}
+						postId={post._id}
+						username={post.user.username}
+						userTag={post.user.userTag}
+						date={post.createdAt}
+						text={post.postText}
+						comments={post.comments?.length}
+            dislikes={post.dislikes.length}
+            likes={post.likes.length}
+					/>
+				))}
 			</section>
 		</>
 	);

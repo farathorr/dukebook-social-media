@@ -2,6 +2,7 @@ import React from "react";
 import style from "./PostComponent.module.scss";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import PostTime from "./PostTime/PostTime";
 import { useState, useContext, useEffect } from "react";
 import { AuthenticationContext } from "../AuthenticationControls/AuthenticationControls";
 import { NotificationContext } from "../NotificationControls/NotificationControls";
@@ -53,9 +54,7 @@ export default function PostComponent(props) {
 					<div className={style["post-text-container"]}>
 						<span className={style["post-user-name"]}>{props.username}</span>
 						<span className={style["post-user-tag"]}>@{props.userTag}</span>
-						<span className={style["time-stamp"]} title="12:54 14/11/2023">
-							{props.date}
-						</span>
+						<PostTime time={props.date} />
 						<pre className={style["post-text"]}>{props.text}</pre>
 						{props.images.map((image, index) => (
 							<img className={style["post-image"]} src={image} key={index} alt="Picture" />

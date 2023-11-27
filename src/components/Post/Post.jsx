@@ -30,6 +30,8 @@ export default function Post() {
 			const reply = { userTag: authentication.user.userTag, postText: replyText, userId: authentication.user._id };
 			await axios.patch(`http://localhost:4000/posts/${params.id}/reply`, reply);
 			setUpdatePostContent((state) => !state);
+			setReplyText("");
+			addNotification({ type: "success", title: "Reply successful", message: "Your reply has been posted", duration: 3000 });
 		} catch (err) {
 			console.log(err);
 		}
@@ -51,6 +53,8 @@ export default function Post() {
 		fetchServices();
 	}, [params, updatePostContent]);
 
+	if (postData.length === 0) return null;
+
 	return (
 		<>
 			<h1 className={style["title"]}>Post</h1>
@@ -63,8 +67,9 @@ export default function Post() {
 					text={postData.postText}
 					likes={postData.likes?.length}
 					comments={postData.comments?.length}
-					dislikes={postData.dislikes?.length}
-				></PostComponent>
+          dislikes={postData.dislikes?.length}
+					date={postData.createdAt}
+				/>
 				<form className={style["new-post"]} onSubmit={handleSubmit}>
 					<p>New Reply</p>
 					<textarea
@@ -72,6 +77,12 @@ export default function Post() {
 						value={replyText}
 						name="replyText"
 						placeholder="Write reply here"
+						onInput={(e) => {
+							const input = e.target;
+							input.style.height = "";
+							input.style.height = input.scrollHeight + "px";
+						}}
+						style={{ height: "52px" }}
 						onChange={(e) => setReplyText(e.target.value)}
 					/>
 					<div className={style["button-container"]}>
@@ -96,7 +107,8 @@ export default function Post() {
 						likes={reply.likes.length}
 						dislikes={reply.dislikes.length}
 						comments={reply.comments?.length}
-					></PostComponent>
+						date={reply.createdAt}
+					/>
 				))}
 			</main>
 		</>

@@ -14,7 +14,6 @@ export default function HeaderNav() {
 				<Link to="/">home</Link>
 				{authentication.isAuthenticated && <Link to={`/user/${authentication.user.userTag}`}>profile</Link>}
 				<Link to="/feed">feed</Link>
-				<Link to="/post">post</Link>
 				<Link to="/chat">chat</Link>
 			</div>
 			<ProfileIcon />
