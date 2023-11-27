@@ -73,6 +73,12 @@ export default function Post() {
 						value={replyText}
 						name="replyText"
 						placeholder="Write reply here"
+						onInput={(e) => {
+							const input = e.target;
+							input.style.height = "";
+							input.style.height = input.scrollHeight + "px";
+						}}
+						style={{ height: "52px" }}
 						onChange={(e) => setReplyText(e.target.value)}
 					/>
 					<div className={style["button-container"]}>

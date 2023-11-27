@@ -57,6 +57,12 @@ export default function Feed() {
 						name="postText"
 						placeholder="Write post here"
 						onChange={(e) => setPostText(e.target.value)}
+						onInput={(e) => {
+							const input = e.target;
+							input.style.height = "";
+							input.style.height = input.scrollHeight + "px";
+						}}
+						style={{ height: "52px" }}
 					/>
 					<div className={style["button-container"]}>
 						<button className={style["post-button"]} type="submit" value="post">
