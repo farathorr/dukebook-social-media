@@ -5,7 +5,10 @@ const { User } = require("../models/users");
 // get all posts
 const getPosts = async (req, res) => {
 	try {
-		const posts = await Post.find().sort({ createdAt: -1, _id: 1 }).limit(100).populate("user");
+		const posts = await Post.find({ originalPostParentId: { $exists: false } })
+			.sort({ createdAt: -1, _id: 1 })
+			.limit(100)
+			.populate("user");
 		res.json(posts);
 	} catch (err) {
 		res.status(500).json({ message: err.message });
