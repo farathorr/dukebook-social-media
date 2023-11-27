@@ -29,13 +29,12 @@ export default function Profile() {
 	return (
 		<div className={style["profile-page"]}>
 			<ProfileUserHeader
-				username={userData?.username}
-				userTag={userData?.userTag}
-				userId = {userData?._id}
-				bio={userData?.bio}
-				followers={userData?.followerIds}
-				following={userData?.followedIds.length}
-				joinDate={formatDate(userData?.updatedAt)}
+				username={profileData?.username}
+				userTag={profileData?.userTag}
+				bio={profileData?.bio}
+				followers={profileData?.followerIds}
+				following={profileData?.followedIds.length}
+				joinDate={formatDate(profileData?.updatedAt)}
 			/>
 			{posts.map((post) => (
 				<PostComponent
