@@ -67,9 +67,9 @@ const searchPosts = async (req, res) => {
 const getPostsByAuthor = async (req, res) => {
 	const { userTag } = req.params;
 	try {
-		const user = await User.findOne({ userTag: userTag });
+		const user = await User.findOne({ userTag });
 		if (!user) return res.status(400).json({ message: "User does not exist." });
-		const posts = await Post.find({ userId: user._id }).populate("comments");
+		const posts = await Post.find({ user: user._id });
 		res.json(posts);
 	} catch (err) {
 		res.status(500).json({ message: err.message });
