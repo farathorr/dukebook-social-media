@@ -192,6 +192,7 @@ const replyToPost = async (req, res) => {
 		const newPost = new Post({ ...req.body, user });
 		newPost.originalPostParentId = post.originalPostParentId ?? id;
 		newPost.replyParentId = id;
+		newPost.nestingLevel = post.nestingLevel + 1;
 		post.comments.push(newPost);
 		await post.save();
 		try {
