@@ -1,6 +1,6 @@
 import { useContext, useEffect } from "react";
 import { AuthenticationContext } from "../AuthenticationControls/AuthenticationControls";
-import axios from "axios";
+import { api } from "../../api";
 
 export default function Home() {
 	const [authentication] = useContext(AuthenticationContext);
@@ -9,7 +9,7 @@ export default function Home() {
 		console.log("???");
 		async function fetchData() {
 			try {
-				const { data } = await axios.post("http://localhost:4000/users/getSensitiveData2");
+				const { data } = await api.sensitiveData();
 				console.log(data);
 			} catch (err) {}
 		}

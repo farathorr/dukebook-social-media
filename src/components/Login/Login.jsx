@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState, useContext } from "react";
 import { NotificationContext } from "../NotificationControls/NotificationControls";
 import { AuthenticationContext } from "../AuthenticationControls/AuthenticationControls";
-import axios from "axios";
+import { api } from "../../api";
 
 export default function Login() {
 	const [addNotification] = useContext(NotificationContext);
@@ -16,21 +16,17 @@ export default function Login() {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		const user = { userTag, password };
-		console.log("hello");
-		console.log(password);
+		const user = { userTag, password, rememberPassword };
 		try {
-			const { status, data } = await axios.post("http://localhost:4001/auth/login", user);
+			const { status, data } = await api.login(user);
 			if (status === 400) {
 				addNotification({ type: "error", message: "Wrong password", title: "Login failed", duration: 5000 });
 			} else if (status === 404) {
 				addNotification({ type: "error", message: "User not found", title: "Login failed", duration: 5000 });
 			} else if (status === 200) {
-				if (rememberPassword) localStorage.setItem("refreshToken", data.refreshToken);
 				authentication.isAuthenticated = true;
 				Object.assign(authentication, data);
-				setAuthentication({ ...authentication });
-				axios.defaults.headers.common["Authorization"] = `Bearer ${authentication.accessToken}`;
+				setAuthentication({ ...authentication, rememberPassword });
 				addNotification({ type: "success", message: "Login successful", title: "Login successful", duration: 2000 });
 				navigate(`/user/${userTag}`);
 			}

@@ -4,7 +4,7 @@ import PostComponent from "../PostComponent/PostComponent";
 import ProfileUserHeader from "./ProfileUserHeader/ProfileUserHeader";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
+import { api } from "../../api";
 
 export default function Profile() {
 	const params = useParams();
@@ -14,9 +14,9 @@ export default function Profile() {
 	useEffect(() => {
 		const fetchServices = async () => {
 			try {
-				const { data: profileData } = await axios.get(`http://localhost:4000/users/userTag/${params.usertag}`);
+				const { data: profileData } = await api.getUserByUserTag(params.userTag);
+				const { data: posts } = await api.getPostsByAuthor(params.userTag);
 				if (profileData) setProfileData(profileData);
-				const { data: posts } = await axios.get(`http://localhost:4000/posts/author/${params.usertag}`);
 				if (posts) setPosts(posts);
 			} catch (err) {
 				console.log(err);
@@ -31,7 +31,7 @@ export default function Profile() {
 			<ProfileUserHeader
 				username={profileData?.username}
 				userTag={profileData?.userTag}
-				userId = {profileData?._id}
+				userId={profileData?._id}
 				bio={profileData?.bio}
 				followers={profileData?.followerIds}
 				following={profileData?.followedIds.length}

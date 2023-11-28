@@ -1,19 +1,20 @@
 const express = require("express");
 const postController = require("../controllers/postController");
 const router = express.Router();
+const { weakAuthentication } = require("../middleware/authenticateToken");
 
 router.get("/", postController.getPosts);
 router.get("/:id", postController.getPostById);
 
 router.get("/search/:search", postController.searchPosts);
 router.get("/author/:userTag", postController.getPostsByAuthor);
-router.post("/", postController.createPost);
-router.patch("/:id", postController.updatePost);
-router.delete("/:id", postController.deletePost);
+router.post("/", weakAuthentication, postController.createPost);
+router.patch("/:id", weakAuthentication, postController.updatePost);
+router.delete("/:id", weakAuthentication, postController.deletePost);
 //
-router.put("/:id/like", postController.likePost);
-router.put("/:id/dislike", postController.dislikePost);
-router.patch("/:id/reply", postController.replyToPost);
+router.put("/:id/like", weakAuthentication, postController.likePost);
+router.put("/:id/dislike", weakAuthentication, postController.dislikePost);
+router.patch("/:id/reply", weakAuthentication, postController.replyToPost);
 router.get("/:id/replies", postController.getComments);
 
 module.exports = router;
