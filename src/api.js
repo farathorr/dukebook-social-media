@@ -61,6 +61,10 @@ export const api = {
 		const response = await axios.get(`http://localhost:4000/posts/${postId}/replies?nesting=${nesting ?? 3}`);
 		return response;
 	},
+	getPostParent: async (postId, nesting) => {
+		const response = await axios.get(`http://localhost:4000/posts/${postId}/parents?nesting=${nesting ?? 3}`);
+		return response;
+	},
 	searchPosts: async (search) => {
 		const response = await axios.get(`http://localhost:4000/posts/search/${search}`);
 		return response;
