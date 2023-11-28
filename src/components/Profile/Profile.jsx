@@ -36,6 +36,7 @@ export default function Profile() {
 				followers={profileData?.followerIds}
 				following={profileData?.followedIds.length}
 				joinDate={formatDate(profileData?.updatedAt)}
+				followerCount={profileData?.followerIds?.length}
 			/>
 			{posts.map((post) => (
 				<PostComponent

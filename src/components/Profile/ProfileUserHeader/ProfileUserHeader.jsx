@@ -4,11 +4,11 @@ import image from "../../../images/Duke3D.png";
 import { useState, useEffect, useContext } from "react";
 import { AuthenticationContext } from "../../AuthenticationControls/AuthenticationControls";
 import { NotificationContext } from "../../NotificationControls/NotificationControls";
-import axios from "axios";
+import { api } from "../../../api";
 
 export default function ProfileUserHeader(props) {
 	const [isFollowing, setIsFollowing] = useState(false);
-	const [followers, setFollowers] = useState();
+	const [followers, setFollowers] = useState(0);
 	const [followButtonText, setFollowButtonText] = useState("Follow");
 	const [isFriend, setIsFriend] = useState(false);
 	const [friendButtonText, setFriendButtonText] = useState("Add as friend");
@@ -19,7 +19,7 @@ export default function ProfileUserHeader(props) {
 	const fetchData = async () => {
 		console.log("FETCHING DATA");
 		try {
-			const { data } = await axios.get(`http://localhost:4000/users/${props.userId}`, { withCredentials: true });
+			const { data } = await api.getUserById(props.userId);
 			setFollowers(data.followerIds.length);
 		} catch (err) {
 			console.log(err);
@@ -28,28 +28,22 @@ export default function ProfileUserHeader(props) {
 			// FOLLOWS
 			// get the current user
 			const currentUser = await authentication.user;
-			const { data } = await axios.get(`http://localhost:4000/users/${currentUser.userId}`, { withCredentials: true });
+			const { data } = await api.getUserById(currentUser.userId);
 			setUser(data);
 			// check if the user is already following the profile user
 			const isAlreadyFollowed = data.followedIds?.some((id) => id === props.userId);
 			setIsFollowing(isAlreadyFollowed);
 			// update the follow button text
-			if (isAlreadyFollowed) {
-				setFollowButtonText("Unfollow");
-			} else {
-				setFollowButtonText("Follow");
-			}
+			if (isAlreadyFollowed) setFollowButtonText("Unfollow");
+			else setFollowButtonText("Follow");
+
 			// FRIENDS
 			// check if the user is already friends with the profile user
 			const isAlreadyFriend = data.friendList?.some((id) => id === props.userId);
 			setIsFriend(isAlreadyFriend);
-			console.log("isAlreadyFriend", isAlreadyFriend);
 			// update the friend button text
-			if (isAlreadyFriend) {
-				setFriendButtonText("Remove friend");
-			} else {
-				setFriendButtonText("Add as friend");
-			}
+			if (isAlreadyFriend) setFriendButtonText("Remove friend");
+			else setFriendButtonText("Add as friend");
 		} catch (err) {
 			console.log(err);
 		}
@@ -89,23 +83,11 @@ export default function ProfileUserHeader(props) {
 		console.log(user);
 		// follow/unfollow the user
 		try {
-			if (!isFollowing) {
-				const { data } = await axios.put(
-					`http://localhost:4000/users/follow/${props.userTag}`,
-					{ userTag: user.userTag },
-					{ withCredentials: true }
-				);
-				setFollowers(data.followerIds.length);
-				setIsFollowing(true);
-			} else if (isFollowing) {
-				const { data } = await axios.put(
-					`http://localhost:4000/users/unfollow/${props.userTag}`,
-					{ userTag: user.userTag },
-					{ withCredentials: true }
-				);
-				setFollowers(data.followerIds.length);
-				setIsFollowing(false);
-			}
+			const action = isFollowing ? api.unfollowUser : api.followUser;
+			const { data } = await action(props.userTag);
+			console.log(data);
+			setFollowers(data.followerIds.length);
+			setIsFollowing(!isFollowing);
 		} catch (err) {
 			console.log(err);
 		}
@@ -115,15 +97,10 @@ export default function ProfileUserHeader(props) {
 		if (!checkAuthentication("Friend") || checkIfOwnProfile("Friend")) return;
 
 		try {
-			if (!isFriend) {
-				await axios.put(`http://localhost:4000/users/addFriend/${props.userTag}`, { userTag: user.userTag }, { withCredentials: true });
-				setIsFriend(true);
-				setFriendButtonText("Remove friend");
-			} else if (isFriend) {
-				await axios.put(`http://localhost:4000/users/removeFriend/${props.userTag}`, { userTag: user.userTag }, { withCredentials: true });
-				setIsFriend(false);
-				setFriendButtonText("Add as friend");
-			}
+			const action = isFriend ? api.removeFriend : api.addFriend;
+			await action(props.userTag);
+			setFriendButtonText(`${!isFriend ? "Remove" : "Add as"} friend`);
+			setIsFriend(!isFriend);
 		} catch (err) {
 			console.log(err);
 		}
