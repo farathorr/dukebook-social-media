@@ -25,23 +25,19 @@ export default function ProfileUserHeader(props) {
 			console.log(err);
 		}
 		try {
-			// FOLLOWS
-			// get the current user
-			const currentUser = await authentication.user;
+			const currentUser = authentication.user;
+			if (!currentUser) return;
 			const { data } = await api.getUserById(currentUser.userId);
 			setUser(data);
-			// check if the user is already following the profile user
 			const isAlreadyFollowed = data.followedIds?.some((id) => id === props.userId);
 			setIsFollowing(isAlreadyFollowed);
 			// update the follow button text
 			if (isAlreadyFollowed) setFollowButtonText("Unfollow");
 			else setFollowButtonText("Follow");
 
-			// FRIENDS
-			// check if the user is already friends with the profile user
 			const isAlreadyFriend = data.friendList?.some((id) => id === props.userId);
 			setIsFriend(isAlreadyFriend);
-			// update the friend button text
+
 			if (isAlreadyFriend) setFriendButtonText("Remove friend");
 			else setFriendButtonText("Add as friend");
 		} catch (err) {
