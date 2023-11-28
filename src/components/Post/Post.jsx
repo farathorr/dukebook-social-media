@@ -15,7 +15,7 @@ export default function Post() {
 	useEffect(() => {
 		const fetchServices = async () => {
 			try {
-				const parentPost = await api.getPostById(params.id);
+				const parentPost = await api.getPostParent(params.id, 5);
 				const replies = await api.getPostReplies(params.id, 7);
 
 				if (parentPost.status === 200) setPostData(parentPost.data);
@@ -34,6 +34,7 @@ export default function Post() {
 		<>
 			<h1 className={style["title"]}>Post</h1>
 			<main className={style["main-content"]}>
+				{postData.replyParentId && <Link to={"/post/" + postData.replyParentId._id}>{"< Back"}</Link>}
 				<PostComponent
 					key={postData._id}
 					postId={postData._id}
@@ -52,6 +53,24 @@ export default function Post() {
 			</main>
 		</>
 	);
+
+	function LoopParents({ post }) {
+		return (
+			<PostComponent
+				postId={post._id}
+				userTag={post.user?.userTag}
+				username={post.user?.username}
+				text={post.postText}
+				likes={post.likes.length}
+				dislikes={post.dislikes.length}
+				comments={post.comments?.length}
+				date={post.createdAt}
+			>
+				{post?.replyParentId && <LoopComments post={post?.replyParentId} />}
+			</PostComponent>
+		);
+	}
+
 	function LoopComments(props) {
 		return (
 			<>
