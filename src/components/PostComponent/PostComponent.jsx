@@ -53,8 +53,9 @@ export default function PostComponent(props) {
 
 	useEffect(() => {
 		socket.on("post/" + props.postId, ({ likes, dislikes }) => {
-			if (dislikes) setDislikes(dislikes);
-			if (likes) setLikes(likes);
+			console.log("???", likes, dislikes);
+			if (dislikes != null) setDislikes(dislikes);
+			if (likes != null) setLikes(likes);
 		});
 
 		return () => {
