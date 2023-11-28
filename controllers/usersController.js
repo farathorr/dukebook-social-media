@@ -105,13 +105,13 @@ const getFollowing = async (req, res) => {
 // follow user by userTag
 const followUser = async (req, res) => {
 	const { userTag: followedUserTag } = req.params;
-	const { userTag: followerUserTag } = req.body;
+	const { userId: followerUserId, userTag: followerUserTag } = req.user;
 	try {
 		console.log(`Followed User Tag: ${followedUserTag}`);
 		console.log(`Follower User Tag: ${followerUserTag}`);
 
 		const followedUser = await User.findOne({ userTag: followedUserTag });
-		const followerUser = await User.findOne({ userTag: followerUserTag });
+		const followerUser = await User.findById(followerUserId);
 
 		console.log(`Followed User: ${followedUser}`);
 		console.log(`Follower User: ${followerUser}`);
@@ -135,10 +135,10 @@ const followUser = async (req, res) => {
 // unfollow user by userTag
 const unfollowUser = async (req, res) => {
 	const { userTag: followedUserTag } = req.params;
-	const { userTag: followerUserTag } = req.body;
+	const { userId: followerUserId, userTag: followerUserTag } = req.user;
 	try {
 		const followedUser = await User.findOne({ userTag: followedUserTag });
-		const followerUser = await User.findOne({ userTag: followerUserTag });
+		const followerUser = await User.findById(followerUserId);
 
 		if (!followedUser) return res.status(404).json({ message: `User ${followedUserTag} not found.` });
 		if (!followerUser) return res.status(404).json({ message: `User ${followerUserTag} not found.` });
@@ -172,16 +172,16 @@ const getFriends = async (req, res) => {
 // add friend by userTag
 const addFriend = async (req, res) => {
 	const { userTag: friendUserTag } = req.params;
-	const { userTag } = req.body;
+	const { userId } = req.user;
 	try {
 		const friendUser = await User.findOne({ userTag: friendUserTag });
-		const user = await User.findOne({ userTag: userTag });
+		const user = await User.findById(userId);
 
 		if (!friendUser) return res.status(404).json({ message: `User ${friendUser} not found.` });
 		if (!user) return res.status(404).json({ message: `User ${user} not found.` });
 
 		if (user.friendList.some((id) => id.toString() === friendUser._id.toString())) {
-			return res.status(404).json({ message: `User ${userTag} is already friends with user ${friendUserTag}.` });
+			return res.status(404).json({ message: `User ${req.user.userTag} is already friends with user ${friendUserTag}.` });
 		}
 		user.friendList.push(friendUser._id);
 		await user.save();
@@ -194,16 +194,16 @@ const addFriend = async (req, res) => {
 // remove friend by userTag
 const removeFriend = async (req, res) => {
 	const { userTag: friendUserTag } = req.params;
-	const { userTag } = req.body;
+	const { userId } = req.user;
 	try {
 		const friendUser = await User.findOne({ userTag: friendUserTag });
-		const user = await User.findOne({ userTag: userTag });
+		const user = await User.findById(userId);
 
 		if (!friendUser) return res.status(404).json({ message: `User ${friendUser} not found.` });
 		if (!user) return res.status(404).json({ message: `User ${user} not found.` });
 
 		if (!user.friendList.some((id) => id.toString() === friendUser._id.toString())) {
-			return res.status(404).json({ message: `User ${userTag} is not friends with user ${friendUserTag}.` });
+			return res.status(404).json({ message: `User ${req.user.userTag} is not friends with user ${friendUserTag}.` });
 		}
 
 		await user.friendList.pull(friendUser._id);

@@ -86,10 +86,30 @@ export const api = {
 		const response = await axios.get("http://localhost:4000/users");
 		return response;
 	},
+	getUserById: async (userId) => {
+		const response = await axios.get(`http://localhost:4000/users/${userId}`);
+		return response;
+	},
 	getUserByUserTag: async (userTag) => {
 		const response = await axios.get(`http://localhost:4000/users/userTag/${userTag}`);
 		return response;
 	},
+	followUser: requiresAuth(async (userTag) => {
+		const response = await axios.put(`http://localhost:4000/users/follow/${userTag}`, {}, { withCredentials: true });
+		return response;
+	}),
+	unfollowUser: requiresAuth(async (userTag) => {
+		const response = await axios.put(`http://localhost:4000/users/unfollow/${userTag}`, {}, { withCredentials: true });
+		return response;
+	}),
+	addFriend: requiresAuth(async (userTag) => {
+		const response = await axios.put(`http://localhost:4000/users/addFriend/${userTag}`, {}, { withCredentials: true });
+		return response;
+	}),
+	removeFriend: requiresAuth(async (userTag) => {
+		const response = await axios.put(`http://localhost:4000/users/removeFriend/${userTag}`, {}, { withCredentials: true });
+		return response;
+	}),
 };
 
 function requiresAuth(callback) {
