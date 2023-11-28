@@ -208,20 +208,23 @@ const replyToPost = async (req, res) => {
 };
 
 const getComments = async (req, res) => {
+	const nestingLevel = Math.min(Math.max(req.query?.nesting ?? 0, 0), 10);
 	const { id } = req.params;
-	if (!mongoose.Types.ObjectId.isValid(id)) {
-		return res.status(404).send(`No post with id: ${id}`);
-	}
+	if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No post with id: ${id}`);
+
 	try {
-		const post = await Post.findById(id)
-			.populate("comments")
-			.populate({
-				path: "comments",
-				populate: {
-					path: "user",
-					model: "User",
-				},
-			});
+		const nesting = deepPopulate(nestingLevel, {});
+
+		function deepPopulate(nesting, value) {
+			Object.assign(value, { path: "comments", model: "Post", populate: [{ path: "user", model: "User" }] });
+			if (--nesting <= 0) return value;
+			value.populate.push({});
+			deepPopulate(nesting, value.populate.at(-1));
+
+			return value;
+		}
+
+		const post = await Post.findById(id).populate(nesting);
 		res.json(post.comments);
 	} catch (err) {
 		res.status(500).json({ message: err.message });
