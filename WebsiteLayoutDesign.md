@@ -18,6 +18,10 @@
 
 - Linkki: [nav bar ](<https://www.figma.com/file/XkniAvzibrvqPT5bj16ird/Web-App-UI-Design-(Community)?type=design&node-id=188-5060&mode=design&t=BpjI3BmoBOy3qZOK-0>)
 
+- Linkki: [nav bar2 ](https://refero.design/369-contra.com/40241?query=social%20media&source=search)
+
+- Linkki: [nav bar2 ](https://dribbble.com/shots/5933501-Dribble)
+
 - Linkki: [nav bar2 ](https://www.sellx.com/)
 
 ## etusivu (Home page)
@@ -34,3 +38,7 @@
 ## Kirjautumis sivu (Login page)
 
 - Linkki: [etusivu](https://dribbble.com/shots/16140039-Social-media-website)
+
+## iconit (Icons)
+
+linkki: [iconit](https://davv.store/svg_motion)
