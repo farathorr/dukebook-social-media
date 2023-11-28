@@ -2,7 +2,7 @@ import React from "react";
 import style from "./Post.module.scss";
 import PostComponent from "../PostComponent/PostComponent";
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useContext } from "react";
 import { AuthenticationContext } from "../AuthenticationControls/AuthenticationControls";
 import { NotificationContext } from "../NotificationControls/NotificationControls";
@@ -42,7 +42,9 @@ export default function Post() {
 		const fetchServices = async () => {
 			try {
 				const parentPost = await api.getPostById(params.id);
-				const replies = await api.getPostReplies(params.id);
+				const replies = await api.getPostReplies(params.id, 7);
+
+				console.log(replies);
 
 				if (parentPost.status === 200) setPostData(parentPost.data);
 				if (replies.status === 200) setReplies(replies.data);
@@ -97,11 +99,19 @@ export default function Post() {
 						</button>
 					</div>
 				</form>
-				<div className={style["main-replies"]}></div>
-				{repliesData.map((reply) => (
+				<div className={style["main-replies"]}>
+					<LoopComments replies={repliesData} key="comments" />
+				</div>
+			</main>
+		</>
+	);
+	function LoopComments(props) {
+		return (
+			<>
+				{props.replies.map((reply) => (
 					<PostComponent
-						key={reply._id}
 						postId={reply._id}
+						key={reply._id}
 						userTag={reply.user?.userTag}
 						username={reply.user?.username}
 						text={reply.postText}
@@ -110,9 +120,20 @@ export default function Post() {
 						comments={reply.comments?.length}
 						date={reply.createdAt}
 						onRemove={setReplies}
-					/>
+					>
+						{reply?.comments?.[0]?.createdAt && <LoopComments key={reply._id + "comments"} replies={reply?.comments} />}
+						{reply?.comments.length !== 0 && !reply?.comments?.[0]?.createdAt && <LoadMoreComments link={reply._id} />}
+					</PostComponent>
 				))}
-			</main>
-		</>
+			</>
+		);
+	}
+}
+
+function LoadMoreComments(props) {
+	return (
+		<Link to={"/post/" + props.link}>
+			<button>Load more</button>
+		</Link>
 	);
 }
