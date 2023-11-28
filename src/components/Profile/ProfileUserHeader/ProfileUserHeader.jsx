@@ -10,6 +10,8 @@ export default function ProfileUserHeader(props) {
 	const [isFollowing, setIsFollowing] = useState(false);
 	const [followers, setFollowers] = useState();
 	const [followButtonText, setFollowButtonText] = useState("Follow");
+	const [isFriend, setIsFriend] = useState(false);
+	const [friendButtonText, setFriendButtonText] = useState("Add as friend");
 	const [authentication] = useContext(AuthenticationContext);
 	const [addNotification] = useContext(NotificationContext);
 	const [user, setUser] = useState({});
@@ -23,6 +25,7 @@ export default function ProfileUserHeader(props) {
 			console.log(err);
 		}
 		try {
+			// FOLLOWS
 			// get the current user
 			const currentUser = await authentication.user;
 			const { data } = await axios.get(`http://localhost:4000/users/${currentUser.userid}`);
@@ -36,20 +39,53 @@ export default function ProfileUserHeader(props) {
 			} else {
 				setFollowButtonText("Follow");
 			}
+			// FRIENDS
+			// check if the user is already friends with the profile user
+			const isAlreadyFriend = data.friendList?.some((id) => id === props.userId);
+			setIsFriend(isAlreadyFriend);
+			console.log("isAlreadyFriend", isAlreadyFriend);
+			// update the friend button text
+			if (isAlreadyFriend) {
+				setFriendButtonText("Remove friend");
+			} else {
+				setFriendButtonText("Add as friend");
+			}
 		} catch (err) {
 			console.log(err);
 		}
 	};
 
+	const checkAuthentication = (operationType) => {
+		if (authentication.isAuthenticated) {
+			return true;
+		} else {
+			addNotification({
+				type: "error",
+				message: "You must be logged in to " + operationType.toLowerCase() + " users",
+				title: operationType + " failed",
+				duration: 5000,
+			});
+			return false;
+		}
+	};
+
+	const checkIfOwnProfile = (operationType) => {
+		if (user.userTag === props.userTag) {
+			addNotification({
+				type: "error",
+				message: "You can't " + operationType.toLowerCase() + " yourself",
+				title: operationType + " failed",
+				duration: 5000,
+			});
+			return true;
+		}
+		return false;
+	};
+
 	const handleFollow = async () => {
 		// check if the user is logged in and if the user is trying to follow himself
-		if (!authentication.isAuthenticated) {
-			addNotification({ type: "error", message: "You must be logged in to follow users", title: "Follow failed", duration: 5000 });
-			return;
-		} else if (user.userTag === props.userTag) {
-			addNotification({ type: "error", message: "You can't follow yourself", title: "Follow failed", duration: 5000 });
-			return;
-		}
+		if (!checkAuthentication("Follow") || checkIfOwnProfile("Follow")) return;
+
 		// follow/unfollow the user
 		try {
 			if (!isFollowing) {
@@ -60,6 +96,24 @@ export default function ProfileUserHeader(props) {
 				const { data } = await axios.put(`http://localhost:4000/users/unfollow/${props.userTag}`, { userTag: user.userTag });
 				setFollowers(data.followerIds.length);
 				setIsFollowing(false);
+			}
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
+	const handleFriend = async () => {
+		if (!checkAuthentication("Friend") || checkIfOwnProfile("Friend")) return;
+
+		try {
+			if (!isFriend) {
+				await axios.put(`http://localhost:4000/users/addFriend/${props.userTag}`, { userTag: user.userTag });
+				setIsFriend(true);
+				setFriendButtonText("Remove friend");
+			} else if (isFriend) {
+				await axios.put(`http://localhost:4000/users/removeFriend/${props.userTag}`, { userTag: user.userTag });
+				setIsFriend(false);
+				setFriendButtonText("Add as friend");
 			}
 		} catch (err) {
 			console.log(err);
@@ -78,7 +132,9 @@ export default function ProfileUserHeader(props) {
 					<button className={style["follow-button"]} onClick={handleFollow}>
 						{followButtonText}
 					</button>
-					<button className={style["add-to-friend"]}>Add to friend</button>
+					<button className={style["add-to-friend"]} onClick={handleFriend}>
+						{friendButtonText}
+					</button>
 				</div>
 			</div>
 			<div className={style["left-content"]}>

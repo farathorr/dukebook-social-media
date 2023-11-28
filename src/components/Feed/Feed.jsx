@@ -79,8 +79,8 @@ export default function Feed() {
 					<PostComponent
 						key={post._id}
 						postId={post._id}
-						username={post.user.username}
-						userTag={post.user.userTag}
+						username={post.user?.username}
+						userTag={post.user?.userTag}
 						date={post.createdAt}
 						text={post.postText}
 						comments={post.comments?.length}
