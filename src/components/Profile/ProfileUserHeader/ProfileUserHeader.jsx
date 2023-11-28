@@ -17,7 +17,7 @@ export default function ProfileUserHeader(props) {
 	const [user, setUser] = useState({});
 
 	const fetchData = async () => {
-		console.log("FETCHING DATA");
+		if (!props.userId) return;
 		try {
 			const { data } = await api.getUserById(props.userId);
 			setFollowers(data.followerIds.length);
