@@ -8,7 +8,7 @@ import { api } from "../../../api";
 
 export default function ProfileUserHeader(props) {
 	const [isFollowing, setIsFollowing] = useState(false);
-	const [followers, setFollowers] = useState(0);
+	const [followers, setFollowers] = useState(props.followers);
 	const [followButtonText, setFollowButtonText] = useState("Follow");
 	const [isFriend, setIsFriend] = useState(false);
 	const [friendButtonText, setFriendButtonText] = useState("Add as friend");

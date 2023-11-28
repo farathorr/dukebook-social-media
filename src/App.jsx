@@ -1,3 +1,4 @@
+import socketIO from "socket.io-client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HeaderNav from "./components/HeaderNav/HeaderNav";
 import Chat from "./components/Chat/Chat";
@@ -13,6 +14,8 @@ import AuthenticationControls from "./components/AuthenticationControls/Authenti
 import Home from "./components/Home/Home";
 import "./App.scss";
 
+const socket = socketIO.connect("http://localhost:4000");
+
 export default function App() {
 	return (
 		<NotificationControls>
@@ -21,7 +24,7 @@ export default function App() {
 					<HeaderNav />
 					<NotificationContainer />
 					<Routes>
-						<Route path="/" element={<Home />} />
+						<Route path="/" element={<Home socket={socket} />} />
 						<Route path="/user/:userTag" element={<Profile />} />
 						<Route path="/user/editinfo" element={<HearedEditForm />} />
 						<Route path="/feed" element={<Feed />} />
