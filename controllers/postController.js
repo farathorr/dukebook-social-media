@@ -133,7 +133,7 @@ const deletePost = async (req, res) => {
 
 const likePost = async (req, res) => {
 	const { id } = req.params;
-	const { userId } = req.body;
+	const { userId } = req.user;
 	if (!mongoose.Types.ObjectId.isValid(id)) {
 		return res.status(404).send(`No post with id: ${id}`);
 	}
@@ -156,7 +156,7 @@ const likePost = async (req, res) => {
 
 const dislikePost = async (req, res) => {
 	const { id } = req.params;
-	const { userId } = req.body;
+	const { userId } = req.user;
 	if (!mongoose.Types.ObjectId.isValid(id)) {
 		return res.status(404).send(`No post with id: ${id}`);
 	}

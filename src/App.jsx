@@ -22,7 +22,7 @@ export default function App() {
 					<NotificationContainer />
 					<Routes>
 						<Route path="/" element={<Home />} />
-						<Route path="/user/:usertag" element={<Profile />} />
+						<Route path="/user/:userTag" element={<Profile />} />
 						<Route path="/user/editinfo" element={<HearedEditForm />} />
 						<Route path="/feed" element={<Feed />} />
 						<Route path="/login" element={<Login />} />

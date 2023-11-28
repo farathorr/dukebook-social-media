@@ -1,11 +1,11 @@
 import React from "react";
 import style from "./PostComponent.module.scss";
-import axios from "axios";
 import { Link } from "react-router-dom";
 import PostTime from "./PostTime/PostTime";
 import { useState, useContext, useEffect } from "react";
 import { AuthenticationContext } from "../AuthenticationControls/AuthenticationControls";
 import { NotificationContext } from "../NotificationControls/NotificationControls";
+import { api } from "../../api";
 
 export default function PostComponent(props) {
 	const [authentication] = useContext(AuthenticationContext);
@@ -18,14 +18,11 @@ export default function PostComponent(props) {
 			addNotification({ type: "error", message: "You must be logged in to dislike posts", title: "Dislike failed", duration: 5000 });
 			return;
 		}
-		try {
-			axios.put(`http://localhost:4000/posts/${props.postId}/dislike`, { userId: authentication.user.userid }).then((res) => {
-				setDislikes(res.data.dislikes.length);
-				setLikes(res.data.likes.length);
-			});
-		} catch (error) {
-			console.log(error);
-		}
+
+		const { status, data } = await api.dislikePost(props.postId);
+		if (status !== 200) return addNotification({ type: "error", message: data.error, title: "Dislike failed", duration: 5000 });
+		setDislikes(data.dislikes.length);
+		setLikes(data.likes.length);
 	};
 
 	const like = async () => {
@@ -33,24 +30,21 @@ export default function PostComponent(props) {
 			addNotification({ type: "error", message: "You must be logged in to like posts", title: "Like failed", duration: 5000 });
 			return;
 		}
-		try {
-			axios.put(`http://localhost:4000/posts/${props.postId}/like`, { userId: authentication.user.userid }).then((res) => {
-				setDislikes(res.data.dislikes.length);
-				setLikes(res.data.likes.length);
-			});
-		} catch (error) {
-			console.log(error);
-		}
+
+		const { status, data } = await api.likePost(props.postId);
+		if (status !== 200) return addNotification({ type: "error", message: data.error, title: "Like failed", duration: 5000 });
+		setDislikes(data.dislikes.length);
+		setLikes(data.likes.length);
 	};
 
 	const removePost = async () => {
-		try {
-			await axios.delete(`http://localhost:4000/posts/${props.postId}`);
-			addNotification({ type: "success", message: "Post removed", title: "Post removed", duration: 5000 });
-			props.onRemove?.((posts) => posts.filter((post) => post._id !== props.postId));
-		} catch (error) {
-			console.log(error);
+		const { status } = await api.removePost(props.postId);
+		if (status !== 200) {
+			return addNotification({ type: "error", message: "Failed to remove post", title: "Post removal failed", duration: 5000 });
 		}
+
+		addNotification({ type: "success", message: "Post removed", title: "Post removed", duration: 5000 });
+		props.onRemove?.((posts) => posts.filter((post) => post._id !== props.postId));
 	};
 
 	return (

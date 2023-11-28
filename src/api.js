@@ -25,7 +25,7 @@ export const api = {
 			axios.defaults.headers.common["Authorization"] = `Bearer ${response.data.accessToken}`;
 			return response;
 		} catch (err) {
-			console.error(err);
+			return err.response;
 		}
 	},
 	logout: async () => {
@@ -69,9 +69,25 @@ export const api = {
 		const response = await axios.patch(`http://localhost:4000/posts/${postId}/reply`, { postText }, { withCredentials: true });
 		return response;
 	}),
+	dislikePost: requiresAuth(async (postId) => {
+		const response = await axios.put(`http://localhost:4000/posts/${postId}/dislike`, {}, { withCredentials: true });
+		return response;
+	}),
+	likePost: requiresAuth(async (postId) => {
+		const response = await axios.put(`http://localhost:4000/posts/${postId}/like`, {}, { withCredentials: true });
+		return response;
+	}),
+	removePost: requiresAuth(async (postId) => {
+		const response = await axios.delete(`http://localhost:4000/posts/${postId}`, { withCredentials: true });
+		return response;
+	}),
 
 	users: async () => {
 		const response = await axios.get("http://localhost:4000/users");
+		return response;
+	},
+	getUserByUserTag: async (userTag) => {
+		const response = await axios.get(`http://localhost:4000/users/userTag/${userTag}`);
 		return response;
 	},
 };
@@ -84,7 +100,7 @@ function requiresAuth(callback) {
 		} catch (err) {
 			if (err.response?.status === 403) {
 				const response = await api.refreshToken();
-				if (response.status === 200) {
+				if (response?.status === 200) {
 					return await callback(...settings);
 				} else {
 					return response;
