@@ -6,7 +6,6 @@ import { useParams } from "react-router-dom";
 import { useContext } from "react";
 import { AuthenticationContext } from "../AuthenticationControls/AuthenticationControls";
 import { NotificationContext } from "../NotificationControls/NotificationControls";
-import axios from "axios";
 import { api } from "../../api";
 
 const postError = { type: "error", title: "Post failed" };
@@ -42,8 +41,8 @@ export default function Post() {
 	useEffect(() => {
 		const fetchServices = async () => {
 			try {
-				const parentPost = await axios.get(`http://localhost:4000/posts/${params.id}`);
-				const replies = await axios.get(`http://localhost:4000/posts/${params.id}/replies`);
+				const parentPost = await api.getPostById(params.id);
+				const replies = await api.getPostReplies(params.id);
 
 				if (parentPost.status === 200) setPostData(parentPost.data);
 				if (replies.status === 200) setReplies(replies.data);

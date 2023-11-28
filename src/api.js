@@ -49,6 +49,18 @@ export const api = {
 		const response = await axios.get("http://localhost:4000/posts");
 		return response;
 	},
+	getPostById: async (postId) => {
+		const response = await axios.get(`http://localhost:4000/posts/${postId}`);
+		return response;
+	},
+	getPostsByAuthor: async (userTag) => {
+		const response = await axios.get(`http://localhost:4000/posts/author/${userTag}`);
+		return response;
+	},
+	getPostReplies: async (postId) => {
+		const response = await axios.get(`http://localhost:4000/posts/${postId}/replies`);
+		return response;
+	},
 	searchPosts: async (search) => {
 		const response = await axios.get(`http://localhost:4000/posts/search/${search}`);
 		return response;
