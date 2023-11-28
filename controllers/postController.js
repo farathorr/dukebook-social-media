@@ -231,6 +231,30 @@ const getComments = async (req, res) => {
 	}
 };
 
+const getParentPosts = async (req, res) => {
+	const nestingLevel = Math.min(Math.max(req.query?.nesting ?? 0, 0), 10);
+	const { id } = req.params;
+	if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No post with id: ${id}`);
+
+	try {
+		const nesting = deepPopulate(nestingLevel, {});
+
+		function deepPopulate(nesting, value) {
+			Object.assign(value, { path: "replyParentId", model: "Post" });
+			if (--nesting <= 0) return value;
+			value.populate = {};
+			deepPopulate(nesting, value.populate);
+
+			return value;
+		}
+
+		const post = await Post.findById(id).populate(nesting);
+		res.json(post);
+	} catch (err) {
+		res.status(500).json({ message: err.message });
+	}
+};
+
 module.exports = {
 	getPosts,
 	getPostById,
@@ -239,6 +263,7 @@ module.exports = {
 	createPost,
 	updatePost,
 	deletePost,
+	getParentPosts,
 	likePost,
 	dislikePost,
 	replyToPost,
