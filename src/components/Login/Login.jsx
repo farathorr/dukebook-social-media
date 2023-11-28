@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState, useContext } from "react";
 import { NotificationContext } from "../NotificationControls/NotificationControls";
 import { AuthenticationContext } from "../AuthenticationControls/AuthenticationControls";
-import axios from "axios";
+import { api } from "../../api";
 
 export default function Login() {
 	const [addNotification] = useContext(NotificationContext);
@@ -18,7 +18,7 @@ export default function Login() {
 		e.preventDefault();
 		const user = { userTag, password, rememberPassword };
 		try {
-			const { status, data } = await axios.post("http://localhost:4001/auth/login", user, { withCredentials: true });
+			const { status, data } = await api.login(user);
 			if (status === 400) {
 				addNotification({ type: "error", message: "Wrong password", title: "Login failed", duration: 5000 });
 			} else if (status === 404) {
@@ -27,7 +27,6 @@ export default function Login() {
 				authentication.isAuthenticated = true;
 				Object.assign(authentication, data);
 				setAuthentication({ ...authentication, rememberPassword });
-				axios.defaults.headers.common["Authorization"] = `Bearer ${authentication.accessToken}`;
 				addNotification({ type: "success", message: "Login successful", title: "Login successful", duration: 2000 });
 				navigate(`/user/${userTag}`);
 			}

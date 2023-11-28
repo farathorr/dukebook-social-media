@@ -5,7 +5,7 @@ import PostComponent from "../PostComponent/PostComponent";
 import { AuthenticationContext } from "../AuthenticationControls/AuthenticationControls";
 import PostSearch from "./PostSearch/PostSearch";
 import { useSearchParams } from "react-router-dom";
-import axios from "axios";
+import { api } from "../../api";
 
 const postError = { type: "error", title: "Post failed" };
 
@@ -20,12 +20,14 @@ export default function Feed() {
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 
-		if (postText.length < 1) return addNotification({ ...postError, message: "Post can't be empty" });
 		if (!authentication.isAuthenticated) return addNotification({ ...postError, message: "You must be logged in to post" });
+		if (postText.length < 1) return addNotification({ ...postError, message: "Post can't be empty" });
 
 		try {
 			const post = { userTag: authentication.user.userTag, postText };
-			const { data } = await axios.post("http://localhost:4000/posts", post);
+			const { status, data } = await api.createPost(post);
+			if (status == 400) return addNotification({ ...postError, message: data.message });
+
 			setUpdatePostContent((state) => !state);
 			setPostText("");
 			addNotification({ type: "success", title: "Post successful", message: "Your post has been posted", duration: 3000 });
@@ -34,9 +36,10 @@ export default function Feed() {
 
 	useEffect(() => {
 		async function fetchPosts() {
-			const url = searchParams.get("search")?.length ? `/search/${searchParams.get("search")}` : "";
+			const url = searchParams.get("search");
+			const seach = url ? api.searchPosts : api.getPosts;
 			try {
-				const { data } = await axios.get("http://localhost:4000/posts" + url);
+				const { data } = await seach(url);
 				setPosts(data);
 			} catch (err) {}
 		}

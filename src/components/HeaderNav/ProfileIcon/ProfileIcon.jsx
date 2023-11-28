@@ -1,8 +1,8 @@
 import style from "./ProfileIcon.module.scss";
 import { AuthenticationContext } from "../../AuthenticationControls/AuthenticationControls";
 import { useContext } from "react";
-import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import { api } from "../../../api";
 
 export default function ProfileIcon() {
 	const [authentication, setAuthentication] = useContext(AuthenticationContext);
@@ -23,16 +23,12 @@ export default function ProfileIcon() {
 	);
 
 	function logout() {
-		try {
-			axios.post("http://localhost:4001/auth/logout", {}, { withCredentials: true });
+		api.logout();
 
-			authentication.isAuthenticated = false;
-			authentication.accessToken = null;
-			authentication.refreshToken = null;
-			setAuthentication({ ...authentication });
-			navigate("/");
-		} catch (err) {
-			console.log(err);
-		}
+		authentication.isAuthenticated = false;
+		authentication.accessToken = null;
+		authentication.refreshToken = null;
+		setAuthentication({ ...authentication });
+		navigate("/");
 	}
 }

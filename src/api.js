@@ -3,10 +3,6 @@ import axios from "axios";
 let refreshToken = "";
 
 export const api = {
-	users: async () => {
-		const response = await axios.get("http://localhost:4000/users");
-		return response;
-	},
 	login: async ({ password, userTag, rememberPassword }) => {
 		try {
 			const response = await axios.post(
@@ -32,10 +28,34 @@ export const api = {
 			console.error(err);
 		}
 	},
+	logout: async () => {
+		try {
+			const response = await axios.post("http://localhost:4001/auth/logout", { token: refreshToken }, { withCredentials: true });
+			return response;
+		} catch (err) {
+			console.error(err);
+		}
+	},
 	sensitiveData: requiresAuth(async () => {
 		const response = await axios.post("http://localhost:4000/users/getSensitiveData", {}, { withCredentials: true });
 		return response;
 	}),
+	createPost: requiresAuth(async ({ userTag, postText }) => {
+		const response = await axios.post("http://localhost:4000/posts", { userTag, postText }, { withCredentials: true });
+		return response;
+	}),
+	getPosts: async () => {
+		const response = await axios.get("http://localhost:4000/posts");
+		return response;
+	},
+	searchPosts: async (search) => {
+		const response = await axios.get(`http://localhost:4000/posts/search/${search}`);
+		return response;
+	},
+	users: async () => {
+		const response = await axios.get("http://localhost:4000/users");
+		return response;
+	},
 };
 
 function requiresAuth(callback) {
@@ -47,7 +67,7 @@ function requiresAuth(callback) {
 			if (err.response?.status === 403) {
 				const response = await api.refreshToken();
 				if (response.status === 200) {
-					return await callback(settings);
+					return await callback(...settings);
 				} else {
 					return response;
 				}
