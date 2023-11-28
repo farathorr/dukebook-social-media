@@ -5,9 +5,11 @@ import PostTime from "./PostTime/PostTime";
 import { useState, useContext, useEffect } from "react";
 import { AuthenticationContext } from "../AuthenticationControls/AuthenticationControls";
 import { NotificationContext } from "../NotificationControls/NotificationControls";
+import { SocketContext } from "../SocketControls/SocketControls";
 import { api } from "../../api";
 
 export default function PostComponent(props) {
+	const [socket] = useContext(SocketContext);
 	const [authentication] = useContext(AuthenticationContext);
 	const [likes, setLikes] = useState(props.likes);
 	const [dislikes, setDislikes] = useState(props.dislikes);
@@ -23,6 +25,7 @@ export default function PostComponent(props) {
 		if (status !== 200) return addNotification({ type: "error", message: data.error, title: "Dislike failed", duration: 5000 });
 		setDislikes(data.dislikes.length);
 		setLikes(data.likes.length);
+		socket.emit("postUpdate", { postId: props.postId, likes: data.likes.length, dislikes: data.dislikes.length });
 	};
 
 	const like = async () => {
@@ -35,6 +38,7 @@ export default function PostComponent(props) {
 		if (status !== 200) return addNotification({ type: "error", message: data.error, title: "Like failed", duration: 5000 });
 		setDislikes(data.dislikes.length);
 		setLikes(data.likes.length);
+		socket.emit("postUpdate", { postId: props.postId, likes: data.likes.length, dislikes: data.dislikes.length });
 	};
 
 	const removePost = async () => {
@@ -46,6 +50,17 @@ export default function PostComponent(props) {
 		addNotification({ type: "success", message: "Post removed", title: "Post removed", duration: 5000 });
 		props.onRemove?.((posts) => posts.filter((post) => post._id !== props.postId));
 	};
+
+	useEffect(() => {
+		socket.on("post/" + props.postId, ({ likes, dislikes }) => {
+			if (dislikes) setDislikes(dislikes);
+			if (likes) setLikes(likes);
+		});
+
+		return () => {
+			socket.off("post/" + props.postId);
+		};
+	}, []);
 
 	return (
 		<div className={style["post-container"]}>
