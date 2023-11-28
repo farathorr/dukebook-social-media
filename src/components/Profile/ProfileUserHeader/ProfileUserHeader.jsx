@@ -19,7 +19,7 @@ export default function ProfileUserHeader(props) {
 	const fetchData = async () => {
 		console.log("FETCHING DATA");
 		try {
-			const { data } = await axios.get(`http://localhost:4000/users/${props.userId}`);
+			const { data } = await axios.get(`http://localhost:4000/users/${props.userId}`, { withCredentials: true });
 			setFollowers(data.followerIds.length);
 		} catch (err) {
 			console.log(err);
@@ -28,7 +28,7 @@ export default function ProfileUserHeader(props) {
 			// FOLLOWS
 			// get the current user
 			const currentUser = await authentication.user;
-			const { data } = await axios.get(`http://localhost:4000/users/${currentUser.userid}`);
+			const { data } = await axios.get(`http://localhost:4000/users/${currentUser.userId}`, { withCredentials: true });
 			setUser(data);
 			// check if the user is already following the profile user
 			const isAlreadyFollowed = data.followedIds?.some((id) => id === props.userId);
@@ -86,14 +86,23 @@ export default function ProfileUserHeader(props) {
 		// check if the user is logged in and if the user is trying to follow himself
 		if (!checkAuthentication("Follow") || checkIfOwnProfile("Follow")) return;
 
+		console.log(user);
 		// follow/unfollow the user
 		try {
 			if (!isFollowing) {
-				const { data } = await axios.put(`http://localhost:4000/users/follow/${props.userTag}`, { userTag: user.userTag });
+				const { data } = await axios.put(
+					`http://localhost:4000/users/follow/${props.userTag}`,
+					{ userTag: user.userTag },
+					{ withCredentials: true }
+				);
 				setFollowers(data.followerIds.length);
 				setIsFollowing(true);
 			} else if (isFollowing) {
-				const { data } = await axios.put(`http://localhost:4000/users/unfollow/${props.userTag}`, { userTag: user.userTag });
+				const { data } = await axios.put(
+					`http://localhost:4000/users/unfollow/${props.userTag}`,
+					{ userTag: user.userTag },
+					{ withCredentials: true }
+				);
 				setFollowers(data.followerIds.length);
 				setIsFollowing(false);
 			}
@@ -107,11 +116,11 @@ export default function ProfileUserHeader(props) {
 
 		try {
 			if (!isFriend) {
-				await axios.put(`http://localhost:4000/users/addFriend/${props.userTag}`, { userTag: user.userTag });
+				await axios.put(`http://localhost:4000/users/addFriend/${props.userTag}`, { userTag: user.userTag }, { withCredentials: true });
 				setIsFriend(true);
 				setFriendButtonText("Remove friend");
 			} else if (isFriend) {
-				await axios.put(`http://localhost:4000/users/removeFriend/${props.userTag}`, { userTag: user.userTag });
+				await axios.put(`http://localhost:4000/users/removeFriend/${props.userTag}`, { userTag: user.userTag }, { withCredentials: true });
 				setIsFriend(false);
 				setFriendButtonText("Add as friend");
 			}
