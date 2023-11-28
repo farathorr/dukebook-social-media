@@ -4,23 +4,21 @@ const { weakAuthentication, strongAuthentication } = require("../middleware/auth
 const router = express.Router();
 
 router.get("/", usersController.getUsers);
-router.get("/:id", usersController.getUserById);
-router.get("/userTag/:userTag", usersController.getUserByUserTag);
 router.post("/", usersController.createUser);
-router.patch("/:id", usersController.updateUser);
-router.delete("/:id", usersController.deleteUser);
 
-router.put("/follow/:userTag", weakAuthentication, usersController.followUser);
-router.put("/unfollow/:userTag", weakAuthentication, usersController.unfollowUser);
-router.get("/followers/:userTag", usersController.getFollowers);
-router.get("/following/:userTag", usersController.getFollowing);
+router.get("/:id", usersController.getUserById);
+router.patch("/:id", usersController.updateUserById);
+router.delete("/:id", usersController.deleteUserById);
 
-router.get("/friends/:userTag", usersController.getFriends);
-router.put("/addFriend/:userTag", weakAuthentication, usersController.addFriend);
-router.put("/removeFriend/:userTag", weakAuthentication, usersController.removeFriend);
+router.get("/userTag/:userTag", usersController.getUserByUserTag);
 
-// router.post("/login", usersController.checkPassword);
-router.post("/getSensitiveData", weakAuthentication, usersController.getSensitiveData);
-router.post("/getSensitiveData2", strongAuthentication, usersController.getSensitiveData);
+router.get("/followers/:userTag", usersController.getFollowersByUserTag);
+router.get("/following/:userTag", usersController.getFollowingByUserTag);
+router.put("/follow/:userTag", weakAuthentication, usersController.followUserByUserTag);
+router.put("/unfollow/:userTag", weakAuthentication, usersController.unfollowUserByUserTag);
+
+router.get("/friends/:userTag", usersController.getFriendsByUserTag);
+router.put("/addFriend/:userTag", weakAuthentication, usersController.addFriendByUserTag);
+router.put("/removeFriend/:userTag", weakAuthentication, usersController.removeFriendByUserTag);
 
 module.exports = router;

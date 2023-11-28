@@ -36,10 +36,6 @@ export const api = {
 			console.error(err);
 		}
 	},
-	sensitiveData: requiresAuth(async () => {
-		const response = await axios.post("http://localhost:4000/users/getSensitiveData", {}, { withCredentials: true });
-		return response;
-	}),
 
 	createPost: requiresAuth(async ({ postText }) => {
 		const response = await axios.post("http://localhost:4000/posts", { postText }, { withCredentials: true });
@@ -86,6 +82,10 @@ export const api = {
 		return response;
 	}),
 
+	createUser: async ({ userTag, email, password }) => {
+		const response = await axios.post("http://localhost:4000/users", { userTag, email, password });
+		return response;
+	},
 	users: async () => {
 		const response = await axios.get("http://localhost:4000/users");
 		return response;
