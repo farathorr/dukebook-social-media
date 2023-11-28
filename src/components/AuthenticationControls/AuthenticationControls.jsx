@@ -19,7 +19,7 @@ export default function AuthenticationControls(props) {
 				if (!token) return;
 
 				axios.defaults.cancelToken = source.token;
-				const { data } = await axios.post("http://localhost:4001/auth/refresh", { token });
+				const { data } = await axios.post("http://localhost:4001/auth/refresh", { token }, { withCredentials: true });
 				if (!data?.accessToken) return;
 				authentication.isAuthenticated = true;
 				axios.defaults.headers.common["Authorization"] = `Bearer ${data.accessToken}`;

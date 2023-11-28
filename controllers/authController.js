@@ -9,7 +9,7 @@ const login = async (req, res) => {
 	try {
 		const user = await User.findOne({ userTag }).populate("sensitiveData");
 		if (!user) return res.status(404).json({ message: `User ${userTag} not found.` });
-		
+
 		const correctPassword = await bcrypt.compare(password, user.sensitiveData.password);
 		if (!correctPassword) return res.status(400).json({ message: "Invalid credentials.", isMatch: false });
 
@@ -19,6 +19,9 @@ const login = async (req, res) => {
 		const refreshToken = jwt.sign({ ...tokenUser, type: "refresh" }, process.env.REFRESH_TOKEN_SECRET);
 		await RefreshToken.deleteOne({ userid: user._id });
 		await RefreshToken.create({ userid: user._id, token: refreshToken });
+
+		res.cookie("refreshToken", refreshToken, { httpOnly: true, secure: false });
+
 		res.status(200).json({ accessToken, refreshToken, user: tokenUser });
 	} catch (err) {
 		res.status(404).json({ message: err.message });
@@ -54,6 +57,8 @@ const update = async (req, res) => {
 
 // Refresh access token
 const refresh = async (req, res) => {
+	console.log(req.cookies?.refreshToken);
+
 	const refreshToken = req.body?.token;
 	if (!refreshToken) return res.sendStatus(401);
 	try {
