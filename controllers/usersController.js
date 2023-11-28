@@ -171,7 +171,7 @@ const getFriends = async (req, res) => {
 
 // add friend by userTag
 const addFriend = async (req, res) => {
-	const { userTag : friendUserTag } = req.params;
+	const { userTag: friendUserTag } = req.params;
 	const { userTag } = req.body;
 	try {
 		const friendUser = await User.findOne({ userTag: friendUserTag });
@@ -180,9 +180,12 @@ const addFriend = async (req, res) => {
 		if (!friendUser) return res.status(404).json({ message: `User ${friendUser} not found.` });
 		if (!user) return res.status(404).json({ message: `User ${user} not found.` });
 
-		friendUser.friendList.push(user._id);
-		await friendUser.save();
-		res.status(200).json(friendUser);
+		if (user.friendList.some((id) => id.toString() === friendUser._id.toString())) {
+			return res.status(404).json({ message: `User ${userTag} is already friends with user ${friendUserTag}.` });
+		}
+		user.friendList.push(friendUser._id);
+		await user.save();
+		res.status(200).json(user);
 	} catch (err) {
 		res.status(404).json({ message: err.message });
 	}
@@ -190,7 +193,7 @@ const addFriend = async (req, res) => {
 
 // remove friend by userTag
 const removeFriend = async (req, res) => {
-	const { userTag : friendUserTag } = req.params;
+	const { userTag: friendUserTag } = req.params;
 	const { userTag } = req.body;
 	try {
 		const friendUser = await User.findOne({ userTag: friendUserTag });
@@ -199,9 +202,13 @@ const removeFriend = async (req, res) => {
 		if (!friendUser) return res.status(404).json({ message: `User ${friendUser} not found.` });
 		if (!user) return res.status(404).json({ message: `User ${user} not found.` });
 
-		await friendUser.friendList.delete(user._id);
-		await friendUser.save();
-		res.status(200).json(friendUser);
+		if (!user.friendList.some((id) => id.toString() === friendUser._id.toString())) {
+			return res.status(404).json({ message: `User ${userTag} is not friends with user ${friendUserTag}.` });
+		}
+
+		await user.friendList.pull(friendUser._id);
+		await user.save();
+		res.status(200).json(user);
 	} catch (err) {
 		res.status(404).json({ message: err.message });
 	}
