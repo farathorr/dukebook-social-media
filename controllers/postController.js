@@ -81,18 +81,16 @@ const getPostsByAuthor = async (req, res) => {
 
 // create post
 const createPost = async (req, res) => {
-	const { userTag: postAuthor, ...post } = req.body;
-	if (!postAuthor) {
-		return res.status(400).json({ message: "UserTag is required." });
-	}
-	if (!post.postText) {
-		return res.status(400).json({ message: "Post text is required." });
-	}
+	const { userId } = req.user;
+	const { postText } = req.body;
+	if (!userId) return res.status(400).json({ message: "UserTag is required." });
+	if (!postText) return res.status(400).json({ message: "Post text is required." });
+
 	try {
-		const user = await User.findOne({ userTag: postAuthor });
+		const user = await User.findById(userId);
 		if (!user) return res.status(400).json({ message: "User does not exist." });
 		try {
-			const newPost = new Post({ ...req.body, user });
+			const newPost = new Post({ postText, user });
 			newPost.populate("user");
 			await newPost.save();
 			res.status(201).json(newPost);
@@ -182,21 +180,17 @@ const dislikePost = async (req, res) => {
 
 const replyToPost = async (req, res) => {
 	const { id } = req.params;
-	const { userTag: replyAuthor, ...post } = req.body;
+	const { userId } = req.user;
 	if (!mongoose.Types.ObjectId.isValid(id)) {
 		return res.status(404).send(`No post with id: ${id}`);
 	}
 
 	try {
-		const user = await User.findOne({ userTag: replyAuthor });
+		const user = await User.findById(userId);
 		if (!user) return res.status(400).json({ message: "User does not exist." });
 		const post = await Post.findById(id);
 		const newPost = new Post({ ...req.body, user });
-		if (!post.originalPostParentId) {
-			newPost.originalPostParentId = id;
-		} else {
-			newPost.originalPostParentId = post.originalPostParentId;
-		}
+		newPost.originalPostParentId = post.originalPostParentId ?? id;
 		newPost.replyParentId = id;
 		post.comments.push(newPost);
 		await post.save();

@@ -7,6 +7,7 @@ import { useContext } from "react";
 import { AuthenticationContext } from "../AuthenticationControls/AuthenticationControls";
 import { NotificationContext } from "../NotificationControls/NotificationControls";
 import axios from "axios";
+import { api } from "../../api";
 
 const postError = { type: "error", title: "Post failed" };
 
@@ -27,8 +28,9 @@ export default function Post() {
 		if (replyText.length < 1) return addNotification({ ...postError, message: "Post can't be empty" });
 
 		try {
-			const reply = { userTag: authentication.user.userTag, postText: replyText, userId: authentication.user._id };
-			await axios.patch(`http://localhost:4000/posts/${params.id}/reply`, reply);
+			const reply = { postId: params.id, postText: replyText };
+			await api.replyToPost(reply);
+
 			setUpdatePostContent((state) => !state);
 			setReplyText("");
 			addNotification({ type: "success", title: "Reply successful", message: "Your reply has been posted", duration: 3000 });

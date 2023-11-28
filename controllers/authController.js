@@ -13,12 +13,12 @@ const login = async (req, res) => {
 		const correctPassword = await bcrypt.compare(password, user.sensitiveData.password);
 		if (!correctPassword) return res.status(400).json({ message: "Invalid credentials.", isMatch: false });
 
-		const tokenUser = { userid: user._id, type: "login", userTag: user.userTag, username: user.username };
+		const tokenUser = { userId: user._id, type: "login", userTag: user.userTag, username: user.username };
 
 		const accessToken = jwt.sign(tokenUser, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "20s" });
 		const refreshToken = jwt.sign({ ...tokenUser, type: "refresh" }, process.env.REFRESH_TOKEN_SECRET);
-		await RefreshToken.deleteOne({ userid: user._id });
-		await RefreshToken.create({ userid: user._id, token: refreshToken });
+		await RefreshToken.deleteOne({ userId: user._id });
+		await RefreshToken.create({ userId: user._id, token: refreshToken });
 
 		if (rememberPassword) {
 			const today = new Date();
@@ -45,7 +45,7 @@ const update = async (req, res) => {
 	jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, user) => {
 		if (err || user.type !== "login") return res.sendStatus(403);
 		try {
-			const tableUser = await User.findById(user.userid);
+			const tableUser = await User.findById(user.userId);
 			if (!user) return res.status(404).json({ message: `User ${userTag} not found.` });
 
 			const { iat, exp, ...userData } = user;
@@ -53,8 +53,8 @@ const update = async (req, res) => {
 
 			const accessToken = jwt.sign({ ...user, type: "login" }, process.env.ACCESS_TOKEN_SECRET);
 			const refreshToken = jwt.sign({ ...user, type: "refresh" }, process.env.REFRESH_TOKEN_SECRET);
-			await RefreshToken.deleteOne({ userid: user.userid });
-			await RefreshToken.create({ userid: user.userid, token: refreshToken });
+			await RefreshToken.deleteOne({ userId: user.userId });
+			await RefreshToken.create({ userId: user.userId, token: refreshToken });
 			if (rememberPassword) {
 				const today = new Date();
 				res.cookie("__refreshToken__", refreshToken, {
@@ -73,7 +73,7 @@ const update = async (req, res) => {
 
 // Refresh access token
 const refresh = async (req, res) => {
-	const refreshToken = req.cookies?.__refreshToken__ ?? req.body?.token;
+	const refreshToken = req.body?.token || req.cookies?.__refreshToken__;
 	if (!refreshToken) return res.sendStatus(401);
 	try {
 		const validToken = await RefreshToken.findOne({ token: refreshToken });
@@ -92,7 +92,7 @@ const refresh = async (req, res) => {
 
 // Logout and remove refresh token from database
 const logout = async (req, res) => {
-	const refreshToken = req.cookies?.__refreshToken__ ?? req.body?.token;
+	const refreshToken = req.body?.token || req.cookies?.__refreshToken__;
 	if (!refreshToken) return res.sendStatus(401);
 	try {
 		await RefreshToken.deleteOne({ token: refreshToken });
