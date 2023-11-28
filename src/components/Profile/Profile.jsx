@@ -33,7 +33,7 @@ export default function Profile() {
 				userTag={profileData?.userTag}
 				userId={profileData?._id}
 				bio={profileData?.bio}
-				followers={profileData?.followerIds}
+				followers={profileData?.followerIds.length}
 				following={profileData?.followedIds.length}
 				joinDate={formatDate(profileData?.updatedAt)}
 				followerCount={profileData?.followerIds?.length}

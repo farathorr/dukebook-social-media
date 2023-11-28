@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 const { User, SensitiveData } = require("../models/users");
 const Post = require("../models/posts");
 const bcrypt = require("bcryptjs");
-const { default: axios } = require("axios");
 
 // get all users
 const getUsers = async (req, res) => {
@@ -57,7 +56,7 @@ const createUser = async (req, res) => {
 };
 
 // update user by id
-const updateUser = async (req, res) => {
+const updateUserById = async (req, res) => {
 	const { id } = req.params;
 	const { username, userTag, email, password, profilePicture, profileDescription } = req.body;
 	if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -69,7 +68,7 @@ const updateUser = async (req, res) => {
 };
 
 // delete user by id
-const deleteUser = async (req, res) => {
+const deleteUserById = async (req, res) => {
 	const { id } = req.params;
 	try {
 		console.log("Deleting user with ID:", id);
@@ -90,7 +89,7 @@ const deleteUser = async (req, res) => {
 };
 
 // get followers by userTag
-const getFollowers = async (req, res) => {
+const getFollowersByUserTag = async (req, res) => {
 	const { userTag } = req.params;
 	try {
 		const user = await User.findOne({ userTag: userTag });
@@ -103,7 +102,7 @@ const getFollowers = async (req, res) => {
 };
 
 // get following by userTag
-const getFollowing = async (req, res) => {
+const getFollowingByUserTag = async (req, res) => {
 	const { userTag } = req.params;
 	try {
 		const user = await User.findOne({ userTag: userTag });
@@ -116,7 +115,7 @@ const getFollowing = async (req, res) => {
 };
 
 // follow user by userTag
-const followUser = async (req, res) => {
+const followUserByUserTag = async (req, res) => {
 	const { userTag: followedUserTag } = req.params;
 	const { userId: followerUserId, userTag: followerUserTag } = req.user;
 	try {
@@ -146,7 +145,7 @@ const followUser = async (req, res) => {
 };
 
 // unfollow user by userTag
-const unfollowUser = async (req, res) => {
+const unfollowUserByUserTag = async (req, res) => {
 	const { userTag: followedUserTag } = req.params;
 	const { userId: followerUserId, userTag: followerUserTag } = req.user;
 	try {
@@ -170,7 +169,7 @@ const unfollowUser = async (req, res) => {
 };
 
 //get friends by userTag
-const getFriends = async (req, res) => {
+const getFriendsByUserTag = async (req, res) => {
 	const { userTag } = req.params;
 	try {
 		const user = await User.findOne({ userTag: userTag });
@@ -183,7 +182,7 @@ const getFriends = async (req, res) => {
 };
 
 // add friend by userTag
-const addFriend = async (req, res) => {
+const addFriendByUserTag = async (req, res) => {
 	const { userTag: friendUserTag } = req.params;
 	const { userId } = req.user;
 	try {
@@ -205,7 +204,7 @@ const addFriend = async (req, res) => {
 };
 
 // remove friend by userTag
-const removeFriend = async (req, res) => {
+const removeFriendByUserTag = async (req, res) => {
 	const { userTag: friendUserTag } = req.params;
 	const { userId } = req.user;
 	try {
@@ -227,25 +226,18 @@ const removeFriend = async (req, res) => {
 	}
 };
 
-// get sensitive data (TESTING, can be removed leter)
-const getSensitiveData = async (req, res) => {
-	const user = req.user;
-	res.status(200).json({ message: `You have access to "${user.userTag}" sensitive data.` });
-};
-
 module.exports = {
 	getUsers,
 	getUserById,
 	createUser,
-	updateUser,
-	deleteUser,
-	getFollowers,
-	getFollowing,
-	followUser,
-	unfollowUser,
-	getFriends,
-	addFriend,
-	removeFriend,
+	updateUserById,
+	deleteUserById,
+	getFollowersByUserTag,
+	getFollowingByUserTag,
+	followUserByUserTag,
+	unfollowUserByUserTag,
+	getFriendsByUserTag,
+	addFriendByUserTag,
+	removeFriendByUserTag,
 	getUserByUserTag,
-	getSensitiveData,
 };

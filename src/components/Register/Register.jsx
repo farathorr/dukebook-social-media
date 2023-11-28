@@ -1,9 +1,10 @@
-import React from "react";
 import style from "./Register.module.scss";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useContext } from "react";
 import { NotificationContext } from "../NotificationControls/NotificationControls";
-import { set } from "mongoose";
+import { api } from "../../api";
+
+const errorMessage = { type: "error", title: "Registration failed" };
 
 export default function Register() {
 	const [addNotification] = useContext(NotificationContext);
@@ -13,58 +14,24 @@ export default function Register() {
 	const [password, setPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
 
-	const handleSubmit = async (e) => {
-		e.preventDefault();
-		const regex = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
-		const numRegex = /[0-9]/;
-		if (password !== confirmPassword) {
-			addNotification({ type: "error", message: "Passwords don't match", title: "Registration failed", duration: 5000 });
-			return;
-		}
-		if (password.length < 8) {
-			addNotification({ type: "error", message: "Password must be 8 characters long", title: "Registration failed", duration: 5000 });
-			return;
-		}
-		if (!regex.test(password)) {
-			addNotification({
-				type: "error",
-				message: "Password needs to contain at least 1 special character",
-				title: "Registration failed",
-				duration: 5000,
-			});
-			return;
-		}
-		if (!numRegex.test(password)) {
-			addNotification({
-				type: "error",
-				message: "Password needs to contain at least 1 number",
-				title: "Registration failed",
-				duration: 5000,
-			});
-			return;
-		}
+	const handleSubmit = async (event) => {
+		event.preventDefault();
+		const allowedCharacterRegex = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+		const numbersRegex = /[0-9]/;
 
-		let user = {
-			userTag,
-			email,
-			password,
-		};
+		if (password !== confirmPassword) return addNotification({ ...errorMessage, message: "Passwords don't match" });
+		if (password.length < 8) return addNotification({ ...errorMessage, message: "Password must be 8 characters long" });
+		if (!allowedCharacterRegex.test(password)) {
+			return addNotification({ ...errorMessage, message: "Password needs to contain at least 1 special character" });
+		}
+		if (!numbersRegex.test(password)) return addNotification({ ...errorMessage, message: "Password needs to contain at least 1 number" });
 
-		const response = await fetch("http://localhost:4000/users", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(user),
-		});
+		const { status } = await api.createUser({ userTag, email, password });
 
-		const data = await response.json();
-
-		if (response.status === 409) {
-			addNotification({ type: "error", message: "User already exists", title: "Registration failed", duration: 5000 });
-		} else if (response.status === 201) {
-			addNotification({ type: "success", message: "Registration successful", title: "Registration successful", duration: 5000 });
-			navigate("/feed");
+		if (status === 409) addNotification({ ...errorMessage, message: "User already exists" });
+		else if (status === 201) {
+			addNotification({ type: "success", message: "Registration successful", title: "Registration successful" });
+			navigate("/login");
 		}
 
 		setUsername("");
@@ -109,9 +76,7 @@ export default function Register() {
 					onChange={(e) => setConfirmPassword(e.target.value)}
 				/>
 
-				<button type="submit" defaultValue="register">
-					Register
-				</button>
+				<button type="submit">Register</button>
 			</form>
 			<div className={style["register-login-container"]}>
 				<label htmlFor="login">Existing user? Login here:</label>
