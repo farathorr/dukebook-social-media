@@ -23,16 +23,16 @@ export default function ProfileIcon() {
 	);
 
 	function logout() {
-		const token = authentication.refreshToken;
-		if (token) axios.post("http://localhost:4001/auth/logout", { token }).catch((err) => {});
+		try {
+			axios.post("http://localhost:4001/auth/logout", {}, { withCredentials: true });
 
-		authentication.isAuthenticated = false;
-		authentication.accessToken = null;
-		authentication.refreshToken = null;
-		setAuthentication({ ...authentication });
-
-		localStorage.removeItem("accessToken");
-		localStorage.removeItem("refreshToken");
-		navigate("/");
+			authentication.isAuthenticated = false;
+			authentication.accessToken = null;
+			authentication.refreshToken = null;
+			setAuthentication({ ...authentication });
+			navigate("/");
+		} catch (err) {
+			console.log(err);
+		}
 	}
 }

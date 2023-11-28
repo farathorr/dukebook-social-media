@@ -14,12 +14,8 @@ export default function AuthenticationControls(props) {
 		const source = axios.CancelToken.source();
 		const fetchData = async () => {
 			try {
-				const token = localStorage.getItem("refreshToken");
-				authentication.refreshToken = token;
-				if (!token) return;
-
 				axios.defaults.cancelToken = source.token;
-				const { data } = await axios.post("http://localhost:4001/auth/refresh", { token }, { withCredentials: true });
+				const { data } = await axios.post("http://localhost:4001/auth/refresh", {}, { withCredentials: true });
 				if (!data?.accessToken) return;
 				authentication.isAuthenticated = true;
 				axios.defaults.headers.common["Authorization"] = `Bearer ${data.accessToken}`;

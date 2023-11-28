@@ -5,7 +5,7 @@ const RefreshToken = require("../models/refreshToken");
 
 // Generate access token
 const login = async (req, res) => {
-	const { userTag, password } = req.body;
+	const { userTag, password, rememberPassword } = req.body;
 	try {
 		const user = await User.findOne({ userTag }).populate("sensitiveData");
 		if (!user) return res.status(404).json({ message: `User ${userTag} not found.` });
@@ -20,7 +20,14 @@ const login = async (req, res) => {
 		await RefreshToken.deleteOne({ userid: user._id });
 		await RefreshToken.create({ userid: user._id, token: refreshToken });
 
-		res.cookie("refreshToken", refreshToken, { httpOnly: true, secure: false });
+		if (rememberPassword) {
+			const today = new Date();
+			res.cookie("__refreshToken__", refreshToken, {
+				httpOnly: true,
+				secure: process.env.MODE !== "dev",
+				expires: new Date(today.setDate(today.getDate() + 30)),
+			});
+		}
 
 		res.status(200).json({ accessToken, refreshToken, user: tokenUser });
 	} catch (err) {
@@ -31,6 +38,7 @@ const login = async (req, res) => {
 // Update token user info
 const update = async (req, res) => {
 	const authHeader = req.headers?.authorization || req.headers?.Authorization;
+	const { rememberPassword } = req.body;
 	const token = authHeader?.split(" ")[1];
 	if (!token) return res.sendStatus(401);
 
@@ -39,15 +47,23 @@ const update = async (req, res) => {
 		try {
 			const tableUser = await User.findById(user.userid);
 			if (!user) return res.status(404).json({ message: `User ${userTag} not found.` });
-			Object.keys(user).forEach((key) => {
-				if (user[key]) tableUser[key] = user[key];
-			});
+
+			const { iat, exp, ...userData } = user;
+			Object.entries(userData).forEach((key, value) => (userData[key] = tableUser[key] ?? value));
 
 			const accessToken = jwt.sign({ ...user, type: "login" }, process.env.ACCESS_TOKEN_SECRET);
 			const refreshToken = jwt.sign({ ...user, type: "refresh" }, process.env.REFRESH_TOKEN_SECRET);
 			await RefreshToken.deleteOne({ userid: user.userid });
 			await RefreshToken.create({ userid: user.userid, token: refreshToken });
-			const { iat, exp, ...userData } = user;
+			if (rememberPassword) {
+				const today = new Date();
+				res.cookie("__refreshToken__", refreshToken, {
+					httpOnly: true,
+					secure: process.env.MODE !== "dev",
+					expires: new Date(today.setDate(today.getDate() + 30)),
+				});
+			}
+
 			res.status(200).json({ accessToken, refreshToken, user: userData });
 		} catch (err) {
 			res.status(404).json({ message: err.message });
@@ -57,9 +73,7 @@ const update = async (req, res) => {
 
 // Refresh access token
 const refresh = async (req, res) => {
-	console.log(req.cookies?.refreshToken);
-
-	const refreshToken = req.body?.token;
+	const refreshToken = req.cookies?.__refreshToken__ ?? req.body?.token;
 	if (!refreshToken) return res.sendStatus(401);
 	try {
 		const validToken = await RefreshToken.findOne({ token: refreshToken });
@@ -78,7 +92,7 @@ const refresh = async (req, res) => {
 
 // Logout and remove refresh token from database
 const logout = async (req, res) => {
-	const refreshToken = req.body?.token;
+	const refreshToken = req.cookies?.__refreshToken__ ?? req.body?.token;
 	if (!refreshToken) return res.sendStatus(401);
 	try {
 		await RefreshToken.deleteOne({ token: refreshToken });
