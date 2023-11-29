@@ -12,6 +12,7 @@ export default function ProfileUserHeader(props) {
 	const [followButtonText, setFollowButtonText] = useState("Follow");
 	const [isFriend, setIsFriend] = useState(false);
 	const [friendButtonText, setFriendButtonText] = useState("Add as friend");
+	const [isButtonVisible, setIsButtonVisible] = useState(false);
 	const [authentication] = useContext(AuthenticationContext);
 	const [addNotification] = useContext(NotificationContext);
 	const [user, setUser] = useState({});
@@ -103,20 +104,27 @@ export default function ProfileUserHeader(props) {
 	};
 
 	useEffect(() => {
+		if (!props.username) return;
+		setIsButtonVisible(authentication?.user?.userTag !== props.userTag);
+
 		fetchData();
-	}, [authentication.user, props.followers.length, isFollowing]);
+	}, [authentication.user, props.followers?.length, isFollowing]);
 
 	return (
 		<div className={style["profile-container"]}>
 			<div className={style["right-content"]}>
 				<img src={props.image} alt="" className={style["profile-pic"]} />
 				<div className={style["buttons"]}>
-					<button className={style["follow-button"]} onClick={handleFollow}>
-						{followButtonText}
-					</button>
-					<button className={style["add-to-friend"]} onClick={handleFriend}>
-						{friendButtonText}
-					</button>
+					{isButtonVisible && (
+						<button className={style["follow-button"]} onClick={handleFollow}>
+							{followButtonText}
+						</button>
+					)}
+					{isButtonVisible && (
+						<button className={style["add-to-friend"]} onClick={handleFriend}>
+							{friendButtonText}
+						</button>
+					)}
 				</div>
 			</div>
 			<div className={style["left-content"]}>
@@ -145,11 +153,11 @@ export default function ProfileUserHeader(props) {
 }
 
 ProfileUserHeader.defaultProps = {
-	username: "User name",
-	userTag: "userTag",
-	bio: "This is a profile bio text",
-	followers: -1,
-	following: -1,
-	joinDate: "December 12, 2020",
+	// username: "User name",
+	// userTag: "userTag",
+	// bio: "This is a profile bio text",
+	// followers: -1,
+	// following: -1,
+	// joinDate: "December 12, 2020",
 	image: image,
 };
