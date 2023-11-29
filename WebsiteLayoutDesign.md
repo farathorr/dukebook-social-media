@@ -14,6 +14,15 @@
 
 - Linkki: [etusivu](https://dribbble.com/shots/16140039-Social-media-website)
 
+- linkki: [explore pages](https://dribbble.com/shots/23135877-Web-Social-Platform-for-Developers)
+- kuvaus: "värit<3."
+
+- linkki: [värit](https://dribbble.com/shots/23141324-Halfsize-Script)
+
+- linkki: [värit](https://dribbble.com/shots/23134440-AWS-Monitoring-Hero)
+
+- linkki: [värit](https://www.relumedesignleague.com/)
+
 ## navigaatio (Navigation bar)
 
 - Linkki: [nav bar ](<https://www.figma.com/file/XkniAvzibrvqPT5bj16ird/Web-App-UI-Design-(Community)?type=design&node-id=188-5060&mode=design&t=BpjI3BmoBOy3qZOK-0>)
