@@ -15,6 +15,8 @@ export default function Feed() {
 	const [searchParams] = useSearchParams();
 	const [posts, setPosts] = useState([]);
 	const [postText, setPostText] = useState("");
+	const [tags, setTags] = useState("");
+	const [showTagInput, setShowTagInput] = useState(false);
 	const [updatePostContent, setUpdatePostContent] = useState(false);
 
 	const handleSubmit = async (event) => {
@@ -24,12 +26,14 @@ export default function Feed() {
 		if (postText.length < 1) return addNotification({ ...postError, message: "Post can't be empty" });
 
 		try {
-			const post = { userTag: authentication.user.userTag, postText };
+			const post = { userTag: authentication.user.userTag, postText, tags: tags.split(",").map((tag) => tag.trim()) };
 			const { status, data } = await api.createPost(post);
 			if (status == 400) return addNotification({ ...postError, message: data.message });
 
 			setUpdatePostContent((state) => !state);
 			setPostText("");
+			setTags("");
+			setShowTagInput(false);
 			addNotification({ type: "success", title: "Post successful", message: "Your post has been posted", duration: 3000 });
 		} catch (err) {}
 	};
@@ -67,9 +71,16 @@ export default function Feed() {
 						}}
 						style={{ height: "52px" }}
 					/>
+					{showTagInput && (
+						<input type="text" placeholder="Enter tags separated by commas" value={tags} onChange={(e) => setTags(e.target.value)} />
+					)}
+
 					<div className={style["button-container"]}>
 						<button className={style["post-button"]} type="submit" value="post">
 							Post
+						</button>
+						<button type="button" className={style["tags-button"]} onClick={() => setShowTagInput(!showTagInput)}>
+							{showTagInput ? "Close Tags" : "Add Tags"}
 						</button>
 						<button className={style["link-button"]} value="link">
 							<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 640 512">
