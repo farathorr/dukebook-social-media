@@ -5,13 +5,14 @@ const connectDB = require("./config/db");
 const app = express();
 const http = require("http").createServer(app);
 const socketIO = require("socket.io")(http, { cors: { origin: "http://localhost:5000" } });
+module.exports = { socketIO };
 
 connectDB();
 
 app.use(express.json());
 app.use(cors);
 
-socketIO.on("connection", require("./routes/socketRouter")(socketIO));
+socketIO.on("connection", require("./routes/socketRouter"));
 
 app.get("/", (req, res) => res.json({ message: "Welcome to the application." }));
 

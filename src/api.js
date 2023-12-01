@@ -1,6 +1,15 @@
 import axios from "axios";
+import { useEffect, useState } from "react";
+import socketIO from "socket.io-client";
+
+export const socket = socketIO("http://localhost:4000", {
+	auth: (test) => {
+		test({ token: accessToken });
+	},
+});
 
 let refreshToken = "";
+let accessToken = "";
 
 export const api = {
 	login: async ({ password, userTag, rememberPassword }) => {
@@ -13,6 +22,9 @@ export const api = {
 
 			axios.defaults.headers.common["Authorization"] = `Bearer ${response.data.accessToken}`;
 			refreshToken = response.data.refreshToken;
+			accessToken = response.data.accessToken;
+			socket.disconnect();
+			socket.connect();
 
 			return response;
 		} catch (err) {
@@ -23,14 +35,23 @@ export const api = {
 		try {
 			const response = await axios.post("http://localhost:4001/auth/refresh", { token: refreshToken }, { withCredentials: true });
 			axios.defaults.headers.common["Authorization"] = `Bearer ${response.data.accessToken}`;
+			if (accessToken === "") socket.connect();
+			accessToken = response.data.accessToken;
 			return response;
 		} catch (err) {
+			console.log(err);
 			return err.response;
 		}
 	},
 	logout: async () => {
 		try {
 			const response = await axios.post("http://localhost:4001/auth/logout", { token: refreshToken }, { withCredentials: true });
+			delete axios.defaults.headers.common["Authorization"];
+			accessToken = "";
+			refreshToken = "";
+			socket.disconnect();
+			socket.connect();
+
 			return response;
 		} catch (err) {
 			console.error(err);
@@ -114,6 +135,23 @@ export const api = {
 		const response = await axios.put(`http://localhost:4000/users/removeFriend/${userTag}`, {}, { withCredentials: true });
 		return response;
 	}),
+
+	usePostLikes: (id, props) => {
+		const value = useSocket(`post/${id}`);
+		const [dislikes, setDislikes] = useState(props?.dislikes ?? 0);
+		const [likes, setLikes] = useState(props?.likes ?? 0);
+		const [comments, setComments] = useState(props?.comments ?? 0);
+
+		useEffect(() => {
+			if (!value) return;
+
+			setLikes((v) => value.likes ?? v);
+			setDislikes((v) => value.dislikes ?? v);
+			setComments((v) => value.comments ?? v);
+		}, [value]);
+
+		return { ...value, likes, dislikes, comments, setDislikes, setLikes, setComments };
+	},
 };
 
 function requiresAuth(callback) {
@@ -134,4 +172,17 @@ function requiresAuth(callback) {
 			}
 		}
 	};
+}
+
+function useSocket(url) {
+	const [data, setData] = useState(null);
+
+	useEffect(() => {
+		const onData = (result) => setData(result);
+
+		socket.on(url, onData);
+		return () => socket.off(url, onData);
+	}, []);
+
+	return data;
 }
