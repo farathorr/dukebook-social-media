@@ -28,7 +28,7 @@ export default function Feed() {
 		try {
 			const post = { userTag: authentication.user.userTag, postText, tags: tags.split(",").map((tag) => tag.trim()) };
 			const { status, data } = await api.createPost(post);
-			if (status == 400) return addNotification({ ...postError, message: data.message });
+			if (status === 400) return addNotification({ ...postError, message: data.message });
 
 			setUpdatePostContent((state) => !state);
 			setPostText("");
