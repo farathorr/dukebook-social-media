@@ -243,6 +243,8 @@ const getComments = async (req, res) => {
 	}
 };
 
+const getFilteredComments = async (req, res) => {};
+
 const getParentPosts = async (req, res) => {
 	const nestingLevel = Math.min(Math.max(req.query?.nesting ?? 0, 0), 10);
 	const { id } = req.params;
@@ -289,4 +291,5 @@ module.exports = {
 	dislikePost,
 	replyToPost,
 	getComments,
+	getFilteredComments,
 };

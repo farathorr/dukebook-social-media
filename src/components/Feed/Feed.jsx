@@ -6,6 +6,7 @@ import { AuthenticationContext } from "../AuthenticationControls/AuthenticationC
 import PostSearch from "./PostSearch/PostSearch";
 import { useSearchParams } from "react-router-dom";
 import { api } from "../../api";
+import PostFiltering from "./PostFiltering/PostFiltering";
 
 const postError = { type: "error", title: "Post failed" };
 
@@ -37,9 +38,9 @@ export default function Feed() {
 	useEffect(() => {
 		async function fetchPosts() {
 			const url = searchParams.get("search");
-			const seach = url ? api.searchPosts : api.getPosts;
+			const search = url ? api.searchPosts : api.getPosts;
 			try {
-				const { data } = await seach(url);
+				const { data } = await search(url);
 				setPosts(data);
 			} catch (err) {}
 		}
@@ -78,6 +79,7 @@ export default function Feed() {
 						</button>
 					</div>
 				</form>
+				<PostFiltering />
 				{posts.map((post) => (
 					<PostComponent
 						key={post._id}
