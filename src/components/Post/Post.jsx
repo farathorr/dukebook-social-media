@@ -1,4 +1,3 @@
-import React from "react";
 import style from "./Post.module.scss";
 import PostComponent from "../PostComponent/PostComponent";
 import { useState, useEffect } from "react";
@@ -15,10 +14,8 @@ export default function Post() {
 	useEffect(() => {
 		const fetchServices = async () => {
 			try {
-				const parentPost = await api.getPostParent(params.id, 5);
+				const parentPost = await api.getPostParent(params.id, 2);
 				const replies = await api.getPostReplies(params.id, 7);
-
-				console.log(parentPost.data, parentPost.status);
 
 				if (parentPost.status === 200) setPostData(parentPost.data);
 				if (replies.status === 200) setReplies(replies.data);
@@ -36,47 +33,48 @@ export default function Post() {
 		<>
 			<h1 className={style["title"]}>Post</h1>
 			<main className={style["main-content"]}>
-				{postData.replyParentId && <Link to={"/post/" + postData.replyParentId._id}>{"< Back"}</Link>}
-				<PostComponent
-					key={postData._id}
-					postId={postData._id}
-					userTag={postData.user?.userTag}
-					username={postData.user?.username}
-					text={postData.postText}
-					likes={postData.likes?.length}
-					comments={postData.comments?.length}
-					dislikes={postData.dislikes?.length}
-					date={postData.createdAt}
-				/>
+				<div className={style["post-links"]}>
+					{postData.at(-1).replyParentId && <Link to={"/post/" + postData.at(-1).replyParentId}>{"< Back"}</Link>}
+					{postData.at(-1).originalPostParentId && <Link to={"/post/" + postData.at(-1).originalPostParentId}>{"To start"}</Link>}
+				</div>
+				<ParentLoop posts={postData} index={0} />
 				<ReplyForm updateInterface={setUpdatePostContent} />
 				<div className={style["main-replies"]}>
-					<LoopComments replies={repliesData} key="comments" />
+					<CommentPosts replies={repliesData} loadMore={2} />
 				</div>
 			</main>
 		</>
 	);
 
-	function LoopParents({ post }) {
+	function ParentLoop({ posts, index }) {
+		const post = posts[index];
+		if (!post?._id) return null;
 		return (
 			<PostComponent
+				key={post._id}
 				postId={post._id}
 				userTag={post.user?.userTag}
 				username={post.user?.username}
 				text={post.postText}
-				likes={post.likes.length}
-				dislikes={post.dislikes.length}
+				likes={post.likes?.length}
 				comments={post.comments?.length}
+				dislikes={post.dislikes?.length}
 				date={post.createdAt}
+				removed={post.removed}
+				onRemove={setPostData}
 			>
-				{post?.replyParentId && <LoopComments post={post?.replyParentId} />}
+				<ParentLoop posts={posts} index={index + 1} />
 			</PostComponent>
 		);
 	}
 
-	function LoopComments(props) {
+	function CommentPosts({ replies, more, startNestingLevel, loadMore }) {
+		if (!replies.length) return null;
+		if (!replies?.[0]?._id) return more;
+
 		return (
 			<>
-				{props.replies.map((reply) => (
+				{replies.map((reply) => (
 					<PostComponent
 						postId={reply._id}
 						key={reply._id}
@@ -87,11 +85,18 @@ export default function Post() {
 						dislikes={reply.dislikes.length}
 						comments={reply.comments?.length}
 						date={reply.createdAt}
+						removed={reply.removed}
 						onRemove={setReplies}
-					>
-						{reply?.comments?.[0]?.createdAt && <LoopComments key={reply._id + "comments"} replies={reply?.comments} />}
-						{reply?.comments.length !== 0 && !reply?.comments?.[0]?.createdAt && <LoadMoreComments link={reply._id} />}
-					</PostComponent>
+						children={
+							<CommentPosts
+								key={reply._id}
+								replies={reply?.comments}
+								startNestingLevel={startNestingLevel ?? reply.nestingLevel}
+								loadMore={loadMore}
+								more={reply.nestingLevel - startNestingLevel < loadMore ? <LoadMoreComments link={reply._id} /> : more}
+							/>
+						}
+					/>
 				))}
 			</>
 		);

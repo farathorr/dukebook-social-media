@@ -49,6 +49,7 @@ export default function Profile() {
 					comments={post.comments.length}
 					likes={post.likes.length}
 					dislikes={post.dislikes.length}
+					removed={post.removed}
 					onRemove={setPosts}
 				/>
 			))}

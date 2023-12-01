@@ -12,7 +12,7 @@ let refreshToken = "";
 let accessToken = "";
 
 export const api = {
-	login: async ({ password, userTag, rememberPassword }) => {
+	login: async ({ password, userTag, rememberPassword }, callback) => {
 		try {
 			const response = await axios.post(
 				"http://localhost:4001/auth/login",
@@ -26,6 +26,7 @@ export const api = {
 			socket.disconnect();
 			socket.connect();
 
+			if (callback) return callback(response) ?? response;
 			return response;
 		} catch (err) {
 			console.error(err);
@@ -136,7 +137,7 @@ export const api = {
 		return response;
 	}),
 
-	usePostLikes: (id, props) => {
+	usePostStats: (id, props) => {
 		const value = useSocket(`post/${id}`);
 		const [dislikes, setDislikes] = useState(props?.dislikes ?? 0);
 		const [likes, setLikes] = useState(props?.likes ?? 0);

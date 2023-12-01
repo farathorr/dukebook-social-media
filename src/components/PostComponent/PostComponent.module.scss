@@ -11,6 +11,23 @@
 		max-width: 700px;
 		padding: 10px;
 
+		&.removed {
+			background-color: var(--clr-primary-700);
+			border-color: var(--clr-primary-600);
+			filter: grayscale(0.85);
+
+			.post-content {
+				margin-left: 12px;
+
+				.post-text-container {
+					display: flex;
+					align-items: center;
+					gap: 10px;
+					flex-direction: row-reverse;
+				}
+			}
+		}
+
 		.post-content {
 			display: flex;
 			gap: 5px;
@@ -75,58 +92,6 @@
 					aspect-ratio: 16/9;
 					height: auto;
 					object-fit: cover;
-				}
-			}
-		}
-		.post-stats {
-			display: flex;
-			gap: 10px;
-			padding: 5px;
-			margin-left: 5px;
-
-			.stat-container {
-				display: flex;
-				justify-content: center;
-				align-items: center;
-
-				button {
-					background-color: var(--clr-secondary-500);
-					border: 2px solid var(--clr-secondary-600);
-					padding: 5px 10px;
-					border-radius: 5px;
-					display: flex;
-					gap: 10px;
-				}
-
-				.comment-button {
-					display: flex;
-					gap: 5px;
-					align-items: center;
-					text-decoration: none;
-					color: var(--clr-accent-400);
-					font-size: var(--fs-300);
-					border-bottom: 3px solid var(--clr-accent-400);
-					border-radius: 3px;
-					svg {
-						fill: var(--clr-accent-400);
-					}
-				}
-				.like-button {
-					svg {
-						fill: green;
-					}
-				}
-				.dislike-button {
-					svg {
-						fill: red;
-					}
-				}
-			}
-			.remove-button {
-				margin-left: auto;
-
-				button {
-					background-color: rgb(66, 0, 0);
 				}
 			}
 		}
