@@ -137,7 +137,7 @@ export const api = {
 		return response;
 	}),
 
-	usePostLikes: (id, props) => {
+	usePostStats: (id, props) => {
 		const value = useSocket(`post/${id}`);
 		const [dislikes, setDislikes] = useState(props?.dislikes ?? 0);
 		const [likes, setLikes] = useState(props?.likes ?? 0);
