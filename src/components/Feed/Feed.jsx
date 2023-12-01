@@ -86,6 +86,7 @@ export default function Feed() {
 						userTag={post.user?.userTag}
 						date={post.createdAt}
 						text={post.postText}
+						removed={post.removed}
 						comments={post.comments?.length}
 						dislikes={post.dislikes.length}
 						likes={post.likes.length}

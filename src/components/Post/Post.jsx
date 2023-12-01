@@ -60,6 +60,8 @@ export default function Post() {
 				comments={post.comments?.length}
 				dislikes={post.dislikes?.length}
 				date={post.createdAt}
+				removed={post.removed}
+				onRemove={setPostData}
 			>
 				<ParentLoop posts={posts} index={index + 1} />
 			</PostComponent>
@@ -83,6 +85,7 @@ export default function Post() {
 						dislikes={reply.dislikes.length}
 						comments={reply.comments?.length}
 						date={reply.createdAt}
+						removed={reply.removed}
 						onRemove={setReplies}
 						children={
 							<CommentPosts

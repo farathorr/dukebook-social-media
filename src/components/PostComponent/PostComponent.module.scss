@@ -11,6 +11,23 @@
 		max-width: 700px;
 		padding: 10px;
 
+		&.removed {
+			background-color: var(--clr-primary-700);
+			border-color: var(--clr-primary-600);
+			filter: grayscale(0.85);
+
+			.post-content {
+				margin-left: 12px;
+
+				.post-text-container {
+					display: flex;
+					align-items: center;
+					gap: 10px;
+					flex-direction: row-reverse;
+				}
+			}
+		}
+
 		.post-content {
 			display: flex;
 			gap: 5px;
