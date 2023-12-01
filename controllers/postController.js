@@ -251,15 +251,6 @@ const getParentPosts = async (req, res) => {
 	try {
 		const nesting = deepPopulate(nestingLevel, {});
 
-		// function deepPopulate(nesting, value) {
-		// 	Object.assign(value, { path: "replyParentId", model: "Post" });
-		// 	if (--nesting <= 0) return value;
-		// 	value.populate = {};
-		// 	deepPopulate(nesting, value.populate);
-
-		// 	return value;
-		// }
-
 		function deepPopulate(nesting, value) {
 			Object.assign(value, { path: "replyParentId", model: "Post", populate: [{ path: "user", model: "User" }] });
 			if (--nesting <= 0) return value;
@@ -270,7 +261,18 @@ const getParentPosts = async (req, res) => {
 		}
 
 		const post = await Post.findById(id).populate(nesting).populate("user");
-		res.status(200).json(post);
+		const parentArray = [];
+		removeNesting(post);
+
+		function removeNesting(parent) {
+			parentArray.unshift(parent);
+			if (parent.replyParentId?.comments) {
+				removeNesting(parent.replyParentId);
+				parent.replyParentId = parent.replyParentId._id;
+			}
+		}
+
+		res.status(200).json(parentArray);
 	} catch (err) {
 		res.status(500).json({ message: err.message });
 	}
