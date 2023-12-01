@@ -1,4 +1,3 @@
-import React from "react";
 import style from "./Post.module.scss";
 import PostComponent from "../PostComponent/PostComponent";
 import { useState, useEffect } from "react";
@@ -18,8 +17,6 @@ export default function Post() {
 				const parentPost = await api.getPostParent(params.id, 2);
 				const replies = await api.getPostReplies(params.id, 7);
 
-				console.log(parentPost.data);
-
 				if (parentPost.status === 200) setPostData(parentPost.data);
 				if (replies.status === 200) setReplies(replies.data);
 			} catch (err) {
@@ -36,7 +33,10 @@ export default function Post() {
 		<>
 			<h1 className={style["title"]}>Post</h1>
 			<main className={style["main-content"]}>
-				{postData.at(-1).replyParentId && <Link to={"/post/" + postData.at(-1).replyParentId}>{"< Back"}</Link>}
+				<div className={style["post-links"]}>
+					{postData.at(-1).replyParentId && <Link to={"/post/" + postData.at(-1).replyParentId}>{"< Back"}</Link>}
+					{postData.at(-1).originalPostParentId && <Link to={"/post/" + postData.at(-1).originalPostParentId}>{"To start"}</Link>}
+				</div>
 				<ParentLoop posts={postData} index={0} />
 				<ReplyForm updateInterface={setUpdatePostContent} />
 				<div className={style["main-replies"]}>

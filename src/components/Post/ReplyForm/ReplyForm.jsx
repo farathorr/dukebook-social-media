@@ -33,7 +33,7 @@ export default function ReplyForm(props) {
 	};
 
 	return (
-		<form className={style["new-post"]} onSubmit={handleSubmit}>
+		<form className={style["new-post"]} id="reply" onSubmit={handleSubmit}>
 			<p>New Reply</p>
 			<textarea
 				id="replyTextArea"
