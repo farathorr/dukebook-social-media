@@ -5,15 +5,14 @@ import PostTime from "./PostTime/PostTime";
 import { useState, useContext, useEffect } from "react";
 import { AuthenticationContext } from "../AuthenticationControls/AuthenticationControls";
 import { NotificationContext } from "../NotificationControls/NotificationControls";
-import { SocketContext } from "../SocketControls/SocketControls";
-import { api } from "../../api";
+import { api, socket } from "../../api";
 
 export default function PostComponent(props) {
-	const [socket] = useContext(SocketContext);
 	const [authentication] = useContext(AuthenticationContext);
 	const [likes, setLikes] = useState(props.likes);
 	const [dislikes, setDislikes] = useState(props.dislikes);
 	const [addNotification] = useContext(NotificationContext);
+	const test = api.usePostData(props.postId);
 
 	const dislike = async () => {
 		if (!authentication.isAuthenticated) {

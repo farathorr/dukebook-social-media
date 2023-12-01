@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Post = require("../models/posts");
 const { User } = require("../models/users");
+const { socketIO } = require("../server");
 
 // get all posts
 const getPosts = async (req, res) => {
@@ -139,15 +140,15 @@ const likePost = async (req, res) => {
 	}
 	try {
 		const post = await Post.findById(id);
-		if (post.likes.some((id) => id.toString() === userId)) {
+		if (post.likes.includes(userId)) {
 			post.likes.pull(userId);
-		} else if (post.dislikes.some((id) => id.toString() === userId)) {
+		} else {
 			post.dislikes.pull(userId);
 			post.likes.push(userId);
-		} else {
-			post.likes.push(userId);
 		}
+
 		post.save();
+		socketIO.emit("post/" + id, { likes: post.likes, dislikes: post.dislikes });
 		res.json(post);
 	} catch (err) {
 		res.status(500).json({ message: err.message });
@@ -162,16 +163,15 @@ const dislikePost = async (req, res) => {
 	}
 	try {
 		const post = await Post.findById(id);
-		console.log(post.dislikes.some((id) => id.toString() === userId));
-		if (post.dislikes.some((id) => id.toString() === userId)) {
+		if (post.dislikes.includes(userId)) {
 			post.dislikes.pull(userId);
-		} else if (post.likes.some((id) => id.toString() === userId)) {
+		} else {
 			post.likes.pull(userId);
 			post.dislikes.push(userId);
-		} else {
-			post.dislikes.push(userId);
 		}
+
 		post.save();
+		socketIO.emit("post/" + id, { likes: post.likes, dislikes: post.dislikes });
 		res.json(post);
 	} catch (err) {
 		res.status(500).json({ message: err.message });
