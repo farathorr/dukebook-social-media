@@ -37,12 +37,17 @@ export default function Feed() {
 
 	useEffect(() => {
 		async function fetchPosts() {
-			const url = searchParams.get("search");
-			const search = url ? api.searchPosts : api.getPosts;
-			try {
-				const { data } = await search(url);
-				setPosts(data);
-			} catch (err) {}
+			console.log(searchParams.get("key"));
+			if (searchParams.get("key") === "search") {
+				console.log(searchParams);
+				const url = searchParams.get("search");
+				console.log(url);
+				const search = url ? api.searchPosts : api.getPosts;
+				try {
+					const { data } = await search(url);
+					setPosts(data);
+				} catch (err) {}
+			}
 		}
 
 		fetchPosts();
