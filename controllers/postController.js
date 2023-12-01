@@ -148,7 +148,7 @@ const likePost = async (req, res) => {
 		}
 
 		post.save();
-		socketIO.emit("post/" + id, { likes: post.likes, dislikes: post.dislikes });
+		socketIO.emit("post/" + id, { likes: post.likes.length, dislikes: post.dislikes.length });
 		res.json(post);
 	} catch (err) {
 		res.status(500).json({ message: err.message });
@@ -171,7 +171,7 @@ const dislikePost = async (req, res) => {
 		}
 
 		post.save();
-		socketIO.emit("post/" + id, { likes: post.likes, dislikes: post.dislikes });
+		socketIO.emit("post/" + id, { likes: post.likes.length, dislikes: post.dislikes.length });
 		res.json(post);
 	} catch (err) {
 		res.status(500).json({ message: err.message });
@@ -195,6 +195,7 @@ const replyToPost = async (req, res) => {
 		newPost.nestingLevel = post.nestingLevel + 1;
 		post.comments.push(newPost);
 		await post.save();
+		socketIO.emit("post/" + id, { comments: post.comments.length });
 		try {
 			await newPost.save();
 		} catch (error) {

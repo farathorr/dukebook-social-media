@@ -136,28 +136,21 @@ export const api = {
 		return response;
 	}),
 
-	usePostData: async function (id) {
+	usePostLikes: (id, props) => {
 		const value = useSocket(`post/${id}`);
-		const [dislikes, setDislikes] = useState(0);
-		const [likes, setLikes] = useState(0);
-		const [fetchData, setFetchData] = useState({});
+		const [dislikes, setDislikes] = useState(props?.dislikes ?? 0);
+		const [likes, setLikes] = useState(props?.likes ?? 0);
+		const [comments, setComments] = useState(props?.comments ?? 0);
 
 		useEffect(() => {
-			if (value) {
-				setLikes(value.likes);
-				setDislikes(value.dislikes);
-			}
+			if (!value) return;
+
+			setLikes((v) => value.likes ?? v);
+			setDislikes((v) => value.dislikes ?? v);
+			setComments((v) => value.comments ?? v);
 		}, [value]);
 
-		useEffect(() => {
-			try {
-				api.getPostById(id).then(({ data }) => setFetchData(data));
-			} catch (err) {
-				console.error(err);
-			}
-		}, []);
-
-		return { ...fetchData, likes, dislikes, setDislikes, setLikes };
+		return { ...value, likes, dislikes, comments, setDislikes, setLikes, setComments };
 	},
 };
 
@@ -188,10 +181,7 @@ function useSocket(url) {
 		const onData = (result) => setData(result);
 
 		socket.on(url, onData);
-		return () => {
-			console.log("Clean up");
-			socket.off(url, onData);
-		};
+		return () => socket.off(url, onData);
 	}, []);
 
 	return data;
