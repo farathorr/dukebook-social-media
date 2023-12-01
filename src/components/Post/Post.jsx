@@ -18,6 +18,8 @@ export default function Post() {
 				const parentPost = await api.getPostParent(params.id, 5);
 				const replies = await api.getPostReplies(params.id, 7);
 
+				console.log(parentPost.data, parentPost.status);
+
 				if (parentPost.status === 200) setPostData(parentPost.data);
 				if (replies.status === 200) setReplies(replies.data);
 			} catch (err) {

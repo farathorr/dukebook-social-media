@@ -22,8 +22,8 @@ export default function ReplyForm(props) {
 
 		try {
 			const reply = { postId: params.id, postText: replyText };
-			await api.replyToPost(reply);
-
+			const { status } = await api.replyToPost(reply);
+			if (status !== 200) return addNotification({ ...postError, message: "Failed to post reply" });
 			props.updateInterface((state) => !state);
 			setReplyText("");
 			addNotification({ type: "success", title: "Reply successful", message: "Your reply has been posted", duration: 3000 });

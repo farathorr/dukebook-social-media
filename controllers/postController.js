@@ -125,7 +125,18 @@ const deletePost = async (req, res) => {
 		return res.status(404).send(`No post with id: ${id}`);
 	}
 	try {
-		await Post.findByIdAndDelete(id);
+		const post = await Post.findByIdAndUpdate(id, { user: null, postText: "", removed: true }).populate("replyParentId");
+		const parent = post.replyParentId;
+		if (!post.comments?.length) {
+			await Post.findByIdAndDelete(id);
+
+			if (parent) {
+				parent.comments.pull(id);
+				parent.save();
+				socketIO.emit("post/" + parent._id, { comments: parent.comments.length });
+			}
+		}
+
 		res.json({ message: "Post deleted successfully." });
 	} catch (err) {
 		res.status(500).json({ message: err.message });
@@ -240,17 +251,26 @@ const getParentPosts = async (req, res) => {
 	try {
 		const nesting = deepPopulate(nestingLevel, {});
 
+		// function deepPopulate(nesting, value) {
+		// 	Object.assign(value, { path: "replyParentId", model: "Post" });
+		// 	if (--nesting <= 0) return value;
+		// 	value.populate = {};
+		// 	deepPopulate(nesting, value.populate);
+
+		// 	return value;
+		// }
+
 		function deepPopulate(nesting, value) {
-			Object.assign(value, { path: "replyParentId", model: "Post" });
+			Object.assign(value, { path: "replyParentId", model: "Post", populate: [{ path: "user", model: "User" }] });
 			if (--nesting <= 0) return value;
-			value.populate = {};
-			deepPopulate(nesting, value.populate);
+			value.populate.push({});
+			deepPopulate(nesting, value.populate.at(-1));
 
 			return value;
 		}
 
-		const post = await Post.findById(id).populate(nesting);
-		res.json(post);
+		const post = await Post.findById(id).populate(nesting).populate("user");
+		res.status(200).json(post);
 	} catch (err) {
 		res.status(500).json({ message: err.message });
 	}
