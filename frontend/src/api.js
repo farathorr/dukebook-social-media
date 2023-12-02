@@ -63,6 +63,10 @@ export const api = {
 		const response = await axios.post("http://localhost:4000/posts", { postText }, { withCredentials: true });
 		return response;
 	}),
+	updatePost: requiresAuth(async ({ postId, postText }) => {
+		const response = await axios.patch(`http://localhost:4000/posts/${postId}`, { postText }, { withCredentials: true });
+		return response;
+	}),
 	getPosts: async () => {
 		const response = await axios.get("http://localhost:4000/posts");
 		return response;
