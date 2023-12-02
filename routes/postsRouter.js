@@ -16,7 +16,7 @@ router.put("/:id/like", weakAuthentication, postController.likePost);
 router.put("/:id/dislike", weakAuthentication, postController.dislikePost);
 router.patch("/:id/reply", weakAuthentication, postController.replyToPost);
 
-router.get("/filter/:filter", postController.getFilteredPosts);
+router.get("/filter/:filter", weakAuthentication, postController.getFilteredPosts);
 router.get("/:id/replies", postController.getComments);
 router.get("/:id/parents", postController.getParentPosts);
 

@@ -244,21 +244,26 @@ const getComments = async (req, res) => {
 };
 
 const getFilteredPosts = async (req, res) => {
-	const { type } = req.params;
+	const { filter } = req.params;
 	const { userId } = req.user;
 	if (!mongoose.Types.ObjectId.isValid(userId)) return res.status(404).send(`No user with id: ${userId}`);
-	const user = User.findById(userId);
+	const user = await User.findById(userId);
 	try {
-		if (type === "followed") {
-			user.populate("following");
-			const posts = await Post.find({ user: { $in: user.following } });
-			console.log(posts);
-			posts.sort((a, b) => a.createdAt - b.createdAt);
+		if (filter === "followed") {
+			user.populate("followedIds");
+			let posts = await Post.find({ user: { $in: user.followedIds }, nestingLevel: 0 })
+				.sort({ createdAt: -1, _id: 1 })
+				.populate("user");
 			res.json(posts);
 		}
-		if (type === "friends") {
-		}
-		if (type === "newest") {
+		if (filter === "friends") {
+			console.log("FRIENDS", user.friendList);
+			user.populate("friendList");
+			let posts = await Post.find({ user: { $in: user.friendList }, nestingLevel: 0 })
+				.sort({ createdAt: -1, _id: 1 })
+				.populate("user");
+
+			res.json(posts);
 		}
 	} catch (err) {
 		res.status(500).json({ message: err.message });
