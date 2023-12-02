@@ -6,7 +6,6 @@
 		"@testing-library/jest-dom": "^5.17.0",
 		"@testing-library/react": "^13.4.0",
 		"@testing-library/user-event": "^13.5.0",
-		"axios": "^1.6.2",
 		"bcryptjs": "^2.4.3",
 		"cookie-parser": "^1.4.6",
 		"cors": "^2.8.5",
@@ -14,26 +13,16 @@
 		"express": "^4.18.2",
 		"jsonwebtoken": "^9.0.2",
 		"mongoose": "^8.0.1",
-		"react": "^18.2.0",
-		"react-dom": "^18.2.0",
-		"react-router-dom": "^6.20.0",
-		"react-scripts": "5.0.1",
-		"sass": "^1.69.5",
 		"socket-io": "^1.0.0",
 		"socket.io": "^4.7.2",
-		"socket.io-client": "^4.7.2",
-		"web-vitals": "^2.1.4"
+		"socket.io-client": "^4.7.2"
 	},
 	"scripts": {
-		"start": "set PORT=5000 && react-scripts start",
-		"build": "react-scripts build",
-		"test": "react-scripts test",
-		"eject": "react-scripts eject",
 		"dev-server": "nodemon server.js",
 		"server": "node server.js",
 		"authServer": "node authServer.js",
 		"dev-authServer": "nodemon authServer.js",
-		"all": "npm-run-all --parallel start dev-server dev-authServer"
+		"all": "npm-run-all --parallel dev-server dev-authServer"
 	},
 	"eslintConfig": {
 		"extends": [
