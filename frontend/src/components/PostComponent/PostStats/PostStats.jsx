@@ -5,7 +5,7 @@ import { AuthenticationContext } from "../../AuthenticationControls/Authenticati
 import { NotificationContext } from "../../NotificationControls/NotificationControls";
 import { api } from "../../../api";
 
-export default function PostStats({ postId, likes, dislikes, comments, onRemove, userTag }) {
+export default function PostStats({ postId, likes, dislikes, comments, userTag, onUpdate }) {
 	const [authentication] = useContext(AuthenticationContext);
 	const [addNotification] = useContext(NotificationContext);
 	const stats = api.usePostStats(postId, { likes, dislikes, comments });
@@ -36,7 +36,11 @@ export default function PostStats({ postId, likes, dislikes, comments, onRemove,
 		if (status !== 200) return addNotification({ type: "error", message: "Failed to remove post", title: "Post removal failed" });
 
 		addNotification({ type: "success", message: "Post removed", title: "Post removed" });
-		onRemove?.((posts) => posts.filter((post) => post._id !== postId));
+		onUpdate?.((posts) => posts.filter((post) => post._id !== postId));
+	};
+
+	const editPost = async () => {
+		
 	};
 
 	return (
@@ -65,9 +69,14 @@ export default function PostStats({ postId, likes, dislikes, comments, onRemove,
 					<span>{stats.comments}</span>
 				</Link>
 			</div>
-			{authentication.isAuthenticated && authentication.user.userTag === userTag && onRemove ? (
+			{authentication.isAuthenticated && authentication.user.userTag === userTag && onUpdate ? (
 				<div className={style["stat-container"] + " " + style["remove-button"]}>
 					<button onClick={removePost}>Remove</button>
+				</div>
+			) : null}
+			{authentication.isAuthenticated && authentication.user.userTag === userTag && onUpdate ? (
+				<div className={style["stat-container"] + " " + style["edit-button"]}>
+					<button onClick={editPost}>Edit</button>
 				</div>
 			) : null}
 		</div>

@@ -110,7 +110,7 @@ const updatePost = async (req, res) => {
 		return res.status(404).send(`No post with id: ${id}`);
 	}
 	try {
-		const updatedPost = await Post.findByIdAndUpdate(id, { postText }, { new: true });
+		const updatedPost = await Post.findByIdAndUpdate(id, { postText, edited: true }, { new: true });
 		res.json(updatedPost);
 	} catch (err) {
 		res.status(500).json({ message: err.message });
