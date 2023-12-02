@@ -43,7 +43,7 @@ const searchPosts = async (req, res) => {
 		const wordCount = decodeURI(search).split(" ").length;
 
 		if (wordCount > 1) {
-			const posts = await Post.find({ $text: { $search: search } }, { score: { $meta: "textScore" } })
+			const posts = await Post.find({ $text: { $search: search }, removed: false }, { score: { $meta: "textScore" } })
 				.sort({
 					score: { $meta: "textScore" },
 					createdAt: -1,
@@ -53,7 +53,7 @@ const searchPosts = async (req, res) => {
 				.populate("user");
 			return res.json(posts);
 		} else {
-			const posts = await Post.find({ postText: { $regex: search, $options: "i" } })
+			const posts = await Post.find({ postText: { $regex: search, $options: "i" }, removed: false })
 				.sort({
 					createdAt: -1,
 					_id: 1,
