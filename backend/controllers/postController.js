@@ -6,10 +6,7 @@ const { socketIO } = require("../server");
 // get all posts
 const getPosts = async (req, res) => {
 	try {
-		const posts = await Post.find({ originalPostParentId: { $exists: false } })
-			.sort({ createdAt: -1, _id: 1 })
-			.limit(100)
-			.populate("user");
+		const posts = await customFind(Post, { isOriginalPost: true }).populate("user");
 		res.json(posts);
 	} catch (err) {
 		res.status(500).json({ message: err.message });
@@ -40,28 +37,8 @@ const getPostById = async (req, res) => {
 const searchPosts = async (req, res) => {
 	const { search } = req.params;
 	try {
-		const wordCount = decodeURI(search).split(" ").length;
-
-		if (wordCount > 1) {
-			const posts = await Post.find({ $text: { $search: search }, removed: false }, { score: { $meta: "textScore" } })
-				.sort({
-					score: { $meta: "textScore" },
-					createdAt: -1,
-					_id: 1,
-				})
-				.limit(100)
-				.populate("user");
-			return res.json(posts);
-		} else {
-			const posts = await Post.find({ postText: { $regex: search, $options: "i" }, removed: false })
-				.sort({
-					createdAt: -1,
-					_id: 1,
-				})
-				.limit(100)
-				.populate("user");
-			return res.json(posts);
-		}
+		const posts = await customFind(Post, { search }).populate("user");
+		return res.json(posts);
 	} catch (err) {
 		res.status(500).json({ message: err.message });
 	}
@@ -305,6 +282,43 @@ const getParentPosts = async (req, res) => {
 		res.status(500).json({ message: err.message });
 	}
 };
+
+function customFind(schema, { limit, _id, search, isComment, isOriginalPost, followedByUser, friendsWithUser, ...query }) {
+	const find = [{}];
+	const sort = { createdAt: -1, _id: 1 };
+	limit ??= 100;
+
+	try {
+		if (_id) return schema.findById(_id);
+
+		if (search) {
+			const wordCount = search.split(" ").length;
+			find[0].removed = false;
+
+			if (wordCount < 2) find[0].postText = { $regex: search, $options: "i" };
+			else {
+				find[0].$text = { $search: search };
+				find.push({ score: { $meta: "textScore" } });
+				sort.score = { $meta: "textScore" };
+			}
+		}
+
+		if (isComment) find[0].nestingLevel = { $gt: 0 };
+		else if (isOriginalPost) find[0].nestingLevel = 0;
+
+		if (followedByUser || friendsWithUser) find[0].user = [];
+		if (followedByUser) find[0].user.push({ $in: followedByUser.followedIds });
+		if (friendsWithUser) find[0].user.push({ $in: friendsWithUser.friendList });
+
+		return schema
+			.find(...find)
+			.sort(sort)
+			.limit(limit);
+	} catch (err) {
+		console.log(err);
+		return err;
+	}
+}
 
 module.exports = {
 	getPosts,
