@@ -43,8 +43,8 @@ export default function Feed() {
 					const { data } = await api.searchPosts(url);
 					setPosts(data);
 				} catch (err) {}
-			}
-			else if (searchParams.has("filter")) {
+			} else if (searchParams.has("filter")) {
+				if (!authentication.isAuthenticated) return;
 				const filterType = searchParams.get("filter");
 				if (filterType === "newest") {
 					try {
@@ -66,7 +66,7 @@ export default function Feed() {
 		}
 
 		fetchPosts();
-	}, [searchParams, updatePostContent]);
+	}, [searchParams, updatePostContent, authentication.isAuthenticated]);
 
 	return (
 		<>
