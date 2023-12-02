@@ -87,8 +87,8 @@ export const api = {
 		const response = await axios.get(`http://localhost:4000/posts/search/${search}`);
 		return response;
 	},
-	getFilteredPosts: requiresAuth(async (filter) => {
-		const response = await axios.get(`http://localhost:4000/posts/filter/${filter}`, { withCredentials: true });
+	getFilteredPosts: requiresAuth(async (query) => {
+		const response = await axios.get(`http://localhost:4000/posts?${query}`, { withCredentials: true });
 		return response;
 	}),
 	replyToPost: requiresAuth(async ({ postId, postText }) => {

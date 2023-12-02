@@ -1,9 +1,9 @@
 const express = require("express");
 const postController = require("../controllers/postController");
 const router = express.Router();
-const { weakAuthentication } = require("../middleware/authenticateToken");
+const { optionalAuthentication, weakAuthentication } = require("../middleware/authenticateToken");
 
-router.get("/", postController.getPosts);
+router.get("/", optionalAuthentication, postController.getPosts);
 router.get("/:id", postController.getPostById);
 
 router.get("/search/:search", postController.searchPosts);
@@ -16,7 +16,6 @@ router.put("/:id/like", weakAuthentication, postController.likePost);
 router.put("/:id/dislike", weakAuthentication, postController.dislikePost);
 router.patch("/:id/reply", weakAuthentication, postController.replyToPost);
 
-router.get("/filter/:filter", weakAuthentication, postController.getFilteredPosts);
 router.get("/:id/replies", postController.getComments);
 router.get("/:id/parents", postController.getParentPosts);
 

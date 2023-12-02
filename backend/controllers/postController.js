@@ -5,8 +5,18 @@ const { socketIO } = require("../server");
 
 // get all posts
 const getPosts = async (req, res) => {
+	const { filter } = req.query;
+	const userId = req.user?.userId;
+
+	const options = { isOriginalPost: true };
+	if (userId) {
+		const user = await User.findById(userId);
+		if (filter?.includes("followed")) options.followedByUser = user;
+		if (filter?.includes("friends")) options.friendsWithUser = user;
+	}
+
 	try {
-		const posts = await customFind(Post, { isOriginalPost: true }).populate("user");
+		const posts = await customFind(Post, options).populate("user");
 		res.json(posts);
 	} catch (err) {
 		res.status(500).json({ message: err.message });
@@ -221,33 +231,6 @@ const getComments = async (req, res) => {
 	}
 };
 
-const getFilteredPosts = async (req, res) => {
-	const { filter } = req.params;
-	const { userId } = req.user;
-	if (!mongoose.Types.ObjectId.isValid(userId)) return res.status(404).send(`No user with id: ${userId}`);
-	const user = await User.findById(userId);
-	try {
-		if (filter === "followed") {
-			user.populate("followedIds");
-			let posts = await Post.find({ user: { $in: user.followedIds }, nestingLevel: 0 })
-				.sort({ createdAt: -1, _id: 1 })
-				.populate("user");
-			res.json(posts);
-		}
-		if (filter === "friends") {
-			console.log("FRIENDS", user.friendList);
-			user.populate("friendList");
-			let posts = await Post.find({ user: { $in: user.friendList }, nestingLevel: 0 })
-				.sort({ createdAt: -1, _id: 1 })
-				.populate("user");
-
-			res.json(posts);
-		}
-	} catch (err) {
-		res.status(500).json({ message: err.message });
-	}
-};
-
 const getParentPosts = async (req, res) => {
 	const nestingLevel = Math.min(Math.max(req.query?.nesting ?? 0, 0), 10);
 	const { id } = req.params;
@@ -306,9 +289,9 @@ function customFind(schema, { limit, _id, search, isComment, isOriginalPost, fol
 		if (isComment) find[0].nestingLevel = { $gt: 0 };
 		else if (isOriginalPost) find[0].nestingLevel = 0;
 
-		if (followedByUser || friendsWithUser) find[0].user = [];
-		if (followedByUser) find[0].user.push({ $in: followedByUser.followedIds });
-		if (friendsWithUser) find[0].user.push({ $in: friendsWithUser.friendList });
+		if (followedByUser || friendsWithUser) find[0].$and = [];
+		if (followedByUser) find[0].$and.push({ user: { $in: followedByUser.followedIds } });
+		if (friendsWithUser) find[0].$and.push({ user: { $in: friendsWithUser.friendList } });
 
 		return schema
 			.find(...find)
@@ -333,5 +316,4 @@ module.exports = {
 	dislikePost,
 	replyToPost,
 	getComments,
-	getFilteredPosts,
 };

@@ -53,7 +53,7 @@ export default function Feed() {
 					} catch (err) {}
 				} else {
 					try {
-						const { data } = await api.getFilteredPosts(filterType);
+						const { data } = await api.getFilteredPosts(searchParams.toString());
 						setPosts(data);
 					} catch (err) {}
 				}
