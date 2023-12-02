@@ -6,6 +6,7 @@ import { AuthenticationContext } from "../AuthenticationControls/AuthenticationC
 import PostSearch from "./PostSearch/PostSearch";
 import { useSearchParams } from "react-router-dom";
 import { api } from "../../api";
+import PostFiltering from "./PostFiltering/PostFiltering";
 
 const postError = { type: "error", title: "Post failed" };
 
@@ -36,16 +37,36 @@ export default function Feed() {
 
 	useEffect(() => {
 		async function fetchPosts() {
-			const url = searchParams.get("search");
-			const seach = url ? api.searchPosts : api.getPosts;
-			try {
-				const { data } = await seach(url);
-				setPosts(data);
-			} catch (err) {}
+			if (searchParams.has("search")) {
+				const url = searchParams.get("search");
+				try {
+					const { data } = await api.searchPosts(url);
+					setPosts(data);
+				} catch (err) {}
+			} else if (searchParams.has("filter")) {
+				if (!authentication.isAuthenticated) return;
+				const filterType = searchParams.get("filter");
+				if (filterType === "newest") {
+					try {
+						const { data } = await api.getPosts();
+						setPosts(data);
+					} catch (err) {}
+				} else {
+					try {
+						const { data } = await api.getFilteredPosts(filterType);
+						setPosts(data);
+					} catch (err) {}
+				}
+			} else {
+				try {
+					const { data } = await api.getPosts();
+					setPosts(data);
+				} catch (err) {}
+			}
 		}
 
 		fetchPosts();
-	}, [searchParams, updatePostContent]);
+	}, [searchParams, updatePostContent, authentication.isAuthenticated]);
 
 	return (
 		<>
@@ -78,6 +99,7 @@ export default function Feed() {
 						</button>
 					</div>
 				</form>
+				<PostFiltering />
 				{posts.map((post) => (
 					<PostComponent
 						key={post._id}

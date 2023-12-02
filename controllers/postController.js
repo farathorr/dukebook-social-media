@@ -244,6 +244,33 @@ const getComments = async (req, res) => {
 	}
 };
 
+const getFilteredPosts = async (req, res) => {
+	const { filter } = req.params;
+	const { userId } = req.user;
+	if (!mongoose.Types.ObjectId.isValid(userId)) return res.status(404).send(`No user with id: ${userId}`);
+	const user = await User.findById(userId);
+	try {
+		if (filter === "followed") {
+			user.populate("followedIds");
+			let posts = await Post.find({ user: { $in: user.followedIds }, nestingLevel: 0 })
+				.sort({ createdAt: -1, _id: 1 })
+				.populate("user");
+			res.json(posts);
+		}
+		if (filter === "friends") {
+			console.log("FRIENDS", user.friendList);
+			user.populate("friendList");
+			let posts = await Post.find({ user: { $in: user.friendList }, nestingLevel: 0 })
+				.sort({ createdAt: -1, _id: 1 })
+				.populate("user");
+
+			res.json(posts);
+		}
+	} catch (err) {
+		res.status(500).json({ message: err.message });
+	}
+};
+
 const getParentPosts = async (req, res) => {
 	const nestingLevel = Math.min(Math.max(req.query?.nesting ?? 0, 0), 10);
 	const { id } = req.params;
@@ -292,4 +319,5 @@ module.exports = {
 	dislikePost,
 	replyToPost,
 	getComments,
+	getFilteredPosts,
 };
