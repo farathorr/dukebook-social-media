@@ -29,16 +29,7 @@ const getPostById = async (req, res) => {
 	if (!mongoose.Types.ObjectId.isValid(id)) {
 		return res.status(404).send(`No post with id: ${id}`);
 	}
-	const post = await Post.findById(id)
-		.populate("user")
-		.populate("comments")
-		.populate({
-			path: "comments",
-			populate: {
-				path: "user",
-				model: "User",
-			},
-		});
+	const post = await Post.findById(id).populate("user");
 	console.log(post);
 	res.status(200).json(post);
 };
@@ -49,8 +40,8 @@ const getPostsByAuthor = async (req, res) => {
 	try {
 		const user = await User.findOne({ userTag });
 		if (!user) return res.status(400).json({ message: "User does not exist." });
-		const posts = await Post.find({ user: user._id });
-		res.json(posts);
+		const posts = await customFind(Post, { postByUserId: user._id }).populate("user");
+		res.status(200).json(posts);
 	} catch (err) {
 		res.status(500).json({ message: err.message });
 	}
@@ -214,7 +205,7 @@ const getComments = async (req, res) => {
 		}
 
 		const post = await Post.findById(id).populate(nesting);
-		res.json(post.comments);
+		res.status(200).json(post.comments);
 	} catch (err) {
 		res.status(500).json({ message: err.message });
 	}
@@ -255,13 +246,17 @@ const getParentPosts = async (req, res) => {
 	}
 };
 
-function customFind(schema, { limit, _id, search, isComment, isOriginalPost, followedByUser, friendsWithUser, ...query }) {
+function customFind(
+	schema,
+	{ limit, id, search, isComment, isOriginalPost, followedByUser, friendsWithUser, postByUserId, ...query } = {}
+) {
 	const find = [{}];
 	const sort = { createdAt: -1, _id: 1 };
 	limit ??= 100;
 
 	try {
-		if (_id) return schema.findById(_id);
+		if (id) return schema.findById(id);
+		if (postByUserId) find[0].user = postByUserId;
 
 		if (search) {
 			const wordCount = search.split(" ").length;

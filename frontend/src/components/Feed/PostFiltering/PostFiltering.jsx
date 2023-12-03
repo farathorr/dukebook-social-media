@@ -1,13 +1,17 @@
+import { useEffect, useState } from "react";
 import style from "./PostFiltering.module.scss";
 import { useSearchParams } from "react-router-dom";
 
 export default function PostFiltering() {
+	const [reset, setReset] = useState(false);
 	const [, setSearchParams] = useSearchParams();
 
-	const handleSort = async (value) => {
+	const handleSort = (event, value) => {
 		setSearchParams((search) => {
-			if (value == "newest") search.delete("filter");
-			else if (search.has("filter", value)) search.delete("filter", value);
+			if (value == "reset") {
+				search.delete("filter");
+				setReset((reset) => !reset);
+			} else if (search.has("filter", value)) search.delete("filter", value);
 			else search.append("filter", value);
 			return search;
 		});
@@ -16,13 +20,31 @@ export default function PostFiltering() {
 	return (
 		<>
 			<div className={style["filter-container"]}>
-				<span>Sort by:</span>
+				<span>Filter by:</span>
 				<div className={style["button-container"]}>
-					<button onClick={() => handleSort("followed")}>Followed</button>
-					<button onClick={() => handleSort("friends")}>Friends</button>
-					<button onClick={() => handleSort("newest")}>Newest</button>
+					<Checkbox label="followed" reset={reset} onClick={(e) => handleSort(e, "followed")} />
+					<Checkbox label="friends" reset={reset} onClick={(e) => handleSort(e, "friends")} />
+
+					<button className={style.button} onClick={(e) => handleSort(e, "reset")}>
+						Reset
+					</button>
 				</div>
 			</div>
 		</>
 	);
 }
+
+const Checkbox = ({ label, reset, ...props }) => {
+	const [checked, setChecked] = useState(false);
+
+	useEffect(() => {
+		setChecked(false);
+	}, [reset]);
+
+	return (
+		<label className={`${style.button} ${checked ? style.active : ""}`}>
+			<input type="checkbox" checked={checked} onChange={(e) => setChecked(e.target.checked)} {...props} />
+			{label}
+		</label>
+	);
+};
