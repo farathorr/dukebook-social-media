@@ -7,7 +7,7 @@
 	padding: 10px;
 	margin-top: 10px;
 	margin-bottom: 10px;
-	border-radius: 50px;
+	border-radius: 10px;
 	background-color: var(--clr-primary-700);
 
 	span {
@@ -25,16 +25,29 @@
 		align-items: center;
 		margin-bottom: 1rem;
 		border-radius: 10px;
+		gap: 10px;
 
-		button {
+		.button {
+			border: none;
 			background: var(--clr-primary-500);
 			font-size: var(--fs-300);
+			accent-color: var(--clr-accent-400);
 			cursor: pointer;
 			transition: all 0.2s ease-in-out;
 			border-radius: 20px;
 			padding: 10px;
-			&:hover {
+
+			input[type="checkbox"] {
+				background-color: var(--clr-primary-500);
+			}
+
+			&.active {
 				background: var(--clr-accent-600);
+			}
+
+			&:hover,
+			&:checked {
+				background: var(--clr-accent-500);
 			}
 		}
 	}

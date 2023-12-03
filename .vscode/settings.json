@@ -13,7 +13,7 @@
 	],
 	"liveSassCompile.settings.excludeList": ["/src/**"],
 	"liveSassCompile.settings.showOutputWindowOn": "None",
-	"liveSassCompile.settings.watchOnLaunch": true,
+	"liveSassCompile.settings.watchOnLaunch": false,
 	"[scss]": {
 		"editor.suggest.insertMode": "replace",
 		"editor.defaultFormatter": "esbenp.prettier-vscode"
