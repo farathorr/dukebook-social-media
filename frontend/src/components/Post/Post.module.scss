@@ -24,7 +24,14 @@
 		grid-column: content;
 	}
 
-	> div {
+	.main-replies {
 		width: 100%;
+		display: grid;
+		gap: 10px;
+
+		> div:not(:last-of-type) {
+			padding-bottom: 15px;
+			border-bottom: 3px dotted rgba(255, 255, 255, 0.1);
+		}
 	}
 }
