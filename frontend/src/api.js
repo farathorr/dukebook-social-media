@@ -60,7 +60,7 @@ export const api = {
 	},
 
 	createPost: requiresAuth(async ({ postText }) => {
-		const response = await axios.post("http://localhost:4000/posts", { postText }, { withCredentials: true });
+		const response = await axios.post("http://localhost:4000/posts", { postText });
 		return response;
 	}),
 	getPosts: requiresAuth(async (query = "") => {
@@ -83,24 +83,20 @@ export const api = {
 		const response = await axios.get(`http://localhost:4000/posts/${postId}/parents?nesting=${nesting ?? 3}`);
 		return response;
 	},
-	getFilteredPosts: requiresAuth(async (query) => {
-		const response = await axios.get(`http://localhost:4000/posts?${query}`, { withCredentials: true });
-		return response;
-	}),
 	replyToPost: requiresAuth(async ({ postId, postText }) => {
-		const response = await axios.patch(`http://localhost:4000/posts/${postId}/reply`, { postText }, { withCredentials: true });
+		const response = await axios.patch(`http://localhost:4000/posts/${postId}/reply`, { postText });
 		return response;
 	}),
 	dislikePost: requiresAuth(async (postId) => {
-		const response = await axios.put(`http://localhost:4000/posts/${postId}/dislike`, {}, { withCredentials: true });
+		const response = await axios.put(`http://localhost:4000/posts/${postId}/dislike`, {});
 		return response;
 	}),
 	likePost: requiresAuth(async (postId) => {
-		const response = await axios.put(`http://localhost:4000/posts/${postId}/like`, {}, { withCredentials: true });
+		const response = await axios.put(`http://localhost:4000/posts/${postId}/like`, {});
 		return response;
 	}),
 	removePost: requiresAuth(async (postId) => {
-		const response = await axios.delete(`http://localhost:4000/posts/${postId}`, { withCredentials: true });
+		const response = await axios.delete(`http://localhost:4000/posts/${postId}`);
 		return response;
 	}),
 
@@ -121,19 +117,19 @@ export const api = {
 		return response;
 	},
 	followUser: requiresAuth(async (userTag) => {
-		const response = await axios.put(`http://localhost:4000/users/follow/${userTag}`, {}, { withCredentials: true });
+		const response = await axios.put(`http://localhost:4000/users/follow/${userTag}`, {});
 		return response;
 	}),
 	unfollowUser: requiresAuth(async (userTag) => {
-		const response = await axios.put(`http://localhost:4000/users/unfollow/${userTag}`, {}, { withCredentials: true });
+		const response = await axios.put(`http://localhost:4000/users/unfollow/${userTag}`, {});
 		return response;
 	}),
 	addFriend: requiresAuth(async (userTag) => {
-		const response = await axios.put(`http://localhost:4000/users/addFriend/${userTag}`, {}, { withCredentials: true });
+		const response = await axios.put(`http://localhost:4000/users/addFriend/${userTag}`, {});
 		return response;
 	}),
 	removeFriend: requiresAuth(async (userTag) => {
-		const response = await axios.put(`http://localhost:4000/users/removeFriend/${userTag}`, {}, { withCredentials: true });
+		const response = await axios.put(`http://localhost:4000/users/removeFriend/${userTag}`, {});
 		return response;
 	}),
 
