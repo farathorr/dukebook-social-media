@@ -5,11 +5,18 @@ const { socketIO } = require("../server");
 
 // get all posts
 const getPosts = async (req, res) => {
+	const { filter, search } = req.query;
+	const userId = req.user?.userId;
+
+	const options = { search, isOriginalPost: true };
+	if (userId) {
+		const user = await User.findById(userId);
+		if (filter?.includes("followed")) options.followedByUser = user;
+		if (filter?.includes("friends")) options.friendsWithUser = user;
+	}
+
 	try {
-		const posts = await Post.find({ originalPostParentId: { $exists: false } })
-			.sort({ createdAt: -1, _id: 1 })
-			.limit(100)
-			.populate("user");
+		const posts = await customFind(Post, options).populate("user");
 		res.json(posts);
 	} catch (err) {
 		res.status(500).json({ message: err.message });
@@ -34,37 +41,6 @@ const getPostById = async (req, res) => {
 		});
 	console.log(post);
 	res.status(200).json(post);
-};
-
-// search posts by text
-const searchPosts = async (req, res) => {
-	const { search } = req.params;
-	try {
-		const wordCount = decodeURI(search).split(" ").length;
-
-		if (wordCount > 1) {
-			const posts = await Post.find({ $text: { $search: search } }, { score: { $meta: "textScore" } })
-				.sort({
-					score: { $meta: "textScore" },
-					createdAt: -1,
-					_id: 1,
-				})
-				.limit(100)
-				.populate("user");
-			return res.json(posts);
-		} else {
-			const posts = await Post.find({ postText: { $regex: search, $options: "i" } })
-				.sort({
-					createdAt: -1,
-					_id: 1,
-				})
-				.limit(100)
-				.populate("user");
-			return res.json(posts);
-		}
-	} catch (err) {
-		res.status(500).json({ message: err.message });
-	}
 };
 
 //get posts by userTag
@@ -244,33 +220,6 @@ const getComments = async (req, res) => {
 	}
 };
 
-const getFilteredPosts = async (req, res) => {
-	const { filter } = req.params;
-	const { userId } = req.user;
-	if (!mongoose.Types.ObjectId.isValid(userId)) return res.status(404).send(`No user with id: ${userId}`);
-	const user = await User.findById(userId);
-	try {
-		if (filter === "followed") {
-			user.populate("followedIds");
-			let posts = await Post.find({ user: { $in: user.followedIds }, nestingLevel: 0 })
-				.sort({ createdAt: -1, _id: 1 })
-				.populate("user");
-			res.json(posts);
-		}
-		if (filter === "friends") {
-			console.log("FRIENDS", user.friendList);
-			user.populate("friendList");
-			let posts = await Post.find({ user: { $in: user.friendList }, nestingLevel: 0 })
-				.sort({ createdAt: -1, _id: 1 })
-				.populate("user");
-
-			res.json(posts);
-		}
-	} catch (err) {
-		res.status(500).json({ message: err.message });
-	}
-};
-
 const getParentPosts = async (req, res) => {
 	const nestingLevel = Math.min(Math.max(req.query?.nesting ?? 0, 0), 10);
 	const { id } = req.params;
@@ -306,10 +255,46 @@ const getParentPosts = async (req, res) => {
 	}
 };
 
+function customFind(schema, { limit, _id, search, isComment, isOriginalPost, followedByUser, friendsWithUser, ...query }) {
+	const find = [{}];
+	const sort = { createdAt: -1, _id: 1 };
+	limit ??= 100;
+
+	try {
+		if (_id) return schema.findById(_id);
+
+		if (search) {
+			const wordCount = search.split(" ").length;
+			find[0].removed = false;
+
+			if (wordCount < 2) find[0].postText = { $regex: search, $options: "i" };
+			else {
+				find[0].$text = { $search: search };
+				find.push({ score: { $meta: "textScore" } });
+				sort.score = { $meta: "textScore" };
+			}
+		}
+
+		if (isComment) find[0].nestingLevel = { $gt: 0 };
+		else if (isOriginalPost) find[0].nestingLevel = 0;
+
+		if (followedByUser || friendsWithUser) find[0].$and = [];
+		if (followedByUser) find[0].$and.push({ user: { $in: followedByUser.followedIds } });
+		if (friendsWithUser) find[0].$and.push({ user: { $in: friendsWithUser.friendList } });
+
+		return schema
+			.find(...find)
+			.sort(sort)
+			.limit(limit);
+	} catch (err) {
+		console.log(err);
+		return err;
+	}
+}
+
 module.exports = {
 	getPosts,
 	getPostById,
-	searchPosts,
 	getPostsByAuthor,
 	createPost,
 	updatePost,
@@ -319,5 +304,4 @@ module.exports = {
 	dislikePost,
 	replyToPost,
 	getComments,
-	getFilteredPosts,
 };
