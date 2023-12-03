@@ -5,10 +5,10 @@ const { socketIO } = require("../server");
 
 // get all posts
 const getPosts = async (req, res) => {
-	const { filter } = req.query;
+	const { filter, search } = req.query;
 	const userId = req.user?.userId;
 
-	const options = { isOriginalPost: true };
+	const options = { search, isOriginalPost: true };
 	if (userId) {
 		const user = await User.findById(userId);
 		if (filter?.includes("followed")) options.followedByUser = user;
@@ -41,17 +41,6 @@ const getPostById = async (req, res) => {
 		});
 	console.log(post);
 	res.status(200).json(post);
-};
-
-// search posts by text
-const searchPosts = async (req, res) => {
-	const { search } = req.params;
-	try {
-		const posts = await customFind(Post, { search }).populate("user");
-		return res.json(posts);
-	} catch (err) {
-		res.status(500).json({ message: err.message });
-	}
 };
 
 //get posts by userTag
@@ -306,7 +295,6 @@ function customFind(schema, { limit, _id, search, isComment, isOriginalPost, fol
 module.exports = {
 	getPosts,
 	getPostById,
-	searchPosts,
 	getPostsByAuthor,
 	createPost,
 	updatePost,

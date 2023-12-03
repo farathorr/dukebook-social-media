@@ -1,10 +1,16 @@
 import style from "./PostFiltering.module.scss";
-import { useNavigate } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
 export default function PostFiltering() {
-	const navigate = useNavigate();
-	const handleSort = async (filter) => {
-		navigate(`/feed?filter=${filter}`);
+	const [, setSearchParams] = useSearchParams();
+
+	const handleSort = async (value) => {
+		setSearchParams((search) => {
+			if (value == "newest") search.delete("filter");
+			else if (search.has("filter", value)) search.delete("filter", value);
+			else search.append("filter", value);
+			return search;
+		});
 	};
 
 	return (

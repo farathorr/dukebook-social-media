@@ -6,7 +6,7 @@ const optionalAuthentication = (req, res, next) => {
 	if (!token) return next();
 
 	jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-		if (err) return next();
+		if (err) return res.sendStatus(403);
 		req.user = user;
 		next();
 	});

@@ -6,7 +6,6 @@ const { optionalAuthentication, weakAuthentication } = require("../middleware/au
 router.get("/", optionalAuthentication, postController.getPosts);
 router.get("/:id", postController.getPostById);
 
-router.get("/search/:search", postController.searchPosts);
 router.get("/author/:userTag", postController.getPostsByAuthor);
 router.post("/", weakAuthentication, postController.createPost);
 router.patch("/:id", weakAuthentication, postController.updatePost);

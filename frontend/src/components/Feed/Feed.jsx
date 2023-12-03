@@ -37,36 +37,14 @@ export default function Feed() {
 
 	useEffect(() => {
 		async function fetchPosts() {
-			if (searchParams.has("search")) {
-				const url = searchParams.get("search");
-				try {
-					const { data } = await api.searchPosts(url);
-					setPosts(data);
-				} catch (err) {}
-			} else if (searchParams.has("filter")) {
-				if (!authentication.isAuthenticated) return;
-				const filterType = searchParams.get("filter");
-				if (filterType === "newest") {
-					try {
-						const { data } = await api.getPosts();
-						setPosts(data);
-					} catch (err) {}
-				} else {
-					try {
-						const { data } = await api.getFilteredPosts(searchParams.toString());
-						setPosts(data);
-					} catch (err) {}
-				}
-			} else {
-				try {
-					const { data } = await api.getPosts();
-					setPosts(data);
-				} catch (err) {}
-			}
+			try {
+				const { data } = await api.getPosts(searchParams.toString());
+				setPosts(data);
+			} catch (err) {}
 		}
 
 		fetchPosts();
-	}, [searchParams, updatePostContent, authentication.isAuthenticated]);
+	}, [searchParams, updatePostContent, authentication]);
 
 	return (
 		<>
