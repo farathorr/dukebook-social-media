@@ -1,34 +1,34 @@
-import React from "react";
+import { useContext, useEffect, useState } from "react";
 import style from "./Chat.module.scss";
 import image from "../../images/Duke3D.png";
 import FriendRow from "./FriendRow/FriendRow";
 import MessageRow from "./MessageRow/MessageRow";
 import MessageSeparator from "./MessageSeparator/MessageSeparator";
+import { AuthenticationContext } from "../AuthenticationControls/AuthenticationControls";
+import { api } from "../../api";
 
 export default function Chat() {
+	const [authentication] = useContext(AuthenticationContext);
+	const [friendList, setFriendList] = useState([]);
+
+	useEffect(() => {
+		if (!authentication.isAuthenticated) return;
+		const fetchServices = async () => {
+			const { status, data } = await api.getFriends(authentication.user.userTag);
+			if (status === 200) setFriendList(data);
+		};
+
+		fetchServices();
+	}, [authentication]);
+
+	if (!authentication.isAuthenticated) return null;
 	return (
 		<div className={style["chat-page"]}>
 			<main className={style["page-content"]}>
 				<div className={style["friend-list"]}>
-					<FriendRow name="Duke" lastMessage="asasd" image={image} />
-					<FriendRow name="Testing long name asdasdasd" lastMessage="asasd" image={image} />
-					<FriendRow name="Duke 1" lastMessage="asasd" image={image} />
-					<FriendRow name="Duke 2" lastMessage="asasd" image={image} />
-					<FriendRow name="Duke 3" image={image} />
-					<FriendRow />
-					<FriendRow />
-					<FriendRow />
-					<FriendRow />
-					<FriendRow />
-					<FriendRow />
-					<FriendRow />
-					<FriendRow />
-					<FriendRow />
-					<FriendRow />
-					<FriendRow />
-					<FriendRow />
-					<FriendRow />
-					<FriendRow />
+					{friendList.map((friend) => (
+						<FriendRow key={friend._id} name={friend.userTag} lastMessage={friend.lastMessage} image={image} />
+					))}
 				</div>
 				<div className={style["chat-frame"]}>
 					<div className={style["chat-bar"]}>

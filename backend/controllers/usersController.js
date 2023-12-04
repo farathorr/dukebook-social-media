@@ -172,10 +172,9 @@ const unfollowUserByUserTag = async (req, res) => {
 const getFriendsByUserTag = async (req, res) => {
 	const { userTag } = req.params;
 	try {
-		const user = await User.findOne({ userTag: userTag });
+		const user = await User.findOne({ userTag }).populate("friendList");
 		if (!user) return res.status(404).json({ message: `User ${userTag} not found.` });
-		const friends = await User.find({ _id: { $in: user.friendList } });
-		res.status(200).json(friends);
+		res.status(200).json(user.friendList);
 	} catch (err) {
 		res.status(404).json({ message: err.message });
 	}

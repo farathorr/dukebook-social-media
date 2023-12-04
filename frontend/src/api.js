@@ -132,6 +132,10 @@ export const api = {
 		const response = await axios.put(`http://localhost:4000/users/removeFriend/${userTag}`, {});
 		return response;
 	}),
+	getFriends: async (userTag) => {
+		const response = await axios.get(`http://localhost:4000/users/friends/${userTag}`);
+		return response;
+	},
 
 	usePostStats: (id, props) => {
 		const value = useSocket(`post/${id}`);
