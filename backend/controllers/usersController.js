@@ -159,10 +159,10 @@ const unfollowUserByUserTag = async (req, res) => {
 		if (!followedUser.followerIds.some((id) => id.toString() === followerUser._id.toString())) {
 			return res.status(404).json({ message: `User ${followerUserTag} is not following user ${followedUserTag}.` });
 		}
-		await followedUser.followerIds.pull(followerUser._id);
+		followedUser.followerIds.pull(followerUser._id);
 		followerUser.followedIds.pull(followedUser._id);
-		followedUser.save();
-		followerUser.save();
+		await followedUser.save();
+		await followerUser.save();
 		res.status(200).json(followedUser);
 	} catch (err) {
 		res.status(404).json({ message: err.message });
@@ -196,7 +196,7 @@ const addFriendByUserTag = async (req, res) => {
 			return res.status(404).json({ message: `User ${req.user.userTag} is already friends with user ${friendUserTag}.` });
 		}
 		user.friendList.push(friendUser._id);
-		const group = await MessageGroup.findOne({ participants: [user, friendUser] });
+		const group = await MessageGroup.findOne({ participants: { $all: [user, friendUser] } });
 		if (!group) await MessageGroup.create({ participants: [user, friendUser] });
 		await user.save();
 		res.status(200).json(user);

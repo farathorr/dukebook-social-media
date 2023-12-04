@@ -79,14 +79,16 @@ export default function Chat() {
 					))}
 				</div>
 				<div className={style["chat-frame"]}>
-					<div className={style["chat-bar"]}>
-						<img className={style["profile-pic"]} src={image} alt="Profile picture" width={40} height={40} />
-						<div className={style["bar-user-info-container"]}>
-							<span className={style["user-name"]}>{group?.name}</span>
-							<div className={style["user-status-indicator"]} />
-							<span className={style["user-status"]}>Online</span>
+					{group && (
+						<div className={style["chat-bar"]}>
+							<img className={style["profile-pic"]} src={image} alt="Profile picture" width={40} height={40} />
+							<div className={style["bar-user-info-container"]}>
+								<span className={style["user-name"]}>{group?.name}</span>
+								<div className={style["user-status-indicator"]} />
+								<span className={style["user-status"]}>Online</span>
+							</div>
 						</div>
-					</div>
+					)}
 					<div className={style["message-box"]} onScroll={handleScroll} ref={messagesBoxRef}>
 						{messages.map((message) => (
 							<MessageRow key={message._id} name={message.sender.userTag} date={message.date} messages={message.messages} />
@@ -94,7 +96,7 @@ export default function Chat() {
 
 						{/* <MessageSeparator date="18 November 2023" /> */}
 					</div>
-					<ChatField groupId={group?._id} setUpdate={addNewMessage} />
+					{group && <ChatField groupId={group?._id} setUpdate={addNewMessage} />}
 				</div>
 			</main>
 		</div>

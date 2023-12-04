@@ -19,6 +19,10 @@ export default function ChatField({ groupId, setUpdate }) {
 		<form className={style["chat-input"]} onSubmit={handleSubmit}>
 			<textarea
 				className={style["text-field"]}
+				autocomplete="off"
+				autocorrect="off"
+				spellcheck="false"
+				autocapitalize="off"
 				name="message"
 				placeholder="Type a message..."
 				onInput={(e) => {
