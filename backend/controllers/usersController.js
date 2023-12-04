@@ -196,7 +196,8 @@ const addFriendByUserTag = async (req, res) => {
 			return res.status(404).json({ message: `User ${req.user.userTag} is already friends with user ${friendUserTag}.` });
 		}
 		user.friendList.push(friendUser._id);
-		const group = await MessageGroup.create({ participants: [user, friendUser] });
+		const group = await MessageGroup.findOne({ participants: [user, friendUser] });
+		if (!group) await MessageGroup.create({ participants: [user, friendUser] });
 		await user.save();
 		res.status(200).json(user);
 	} catch (err) {

@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const { User } = require("../models/users");
 const { Message, MessageGroup } = require("../models/message");
 const customFind = require("../utils/customFind");
+const { socketIO } = require("../server");
 
 const createMessageGroup = async (req, res) => {
 	const { participants } = req.body;
@@ -46,6 +47,8 @@ const sendMessage = async (req, res) => {
 		if (!group) return res.status(400).json({ message: "Message group does not exist." });
 
 		const message = await Message.create({ sender: userId, text, groupId });
+		await message.populate("sender", "userTag");
+		socketIO.emit(`message/${groupId}`, message);
 		res.status(201).json(message);
 	} catch (err) {
 		res.status(500).json({ message: err.message });

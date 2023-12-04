@@ -10,7 +10,7 @@ export default function ChatField({ groupId, setUpdate }) {
 		if (!fieldText || !groupId) return;
 		try {
 			const { data, status } = await api.sendMessage({ groupId: groupId, text: fieldText });
-			if (status === 201) setUpdate((state) => !state);
+			if (status === 201) setUpdate(data);
 			setFieldText("");
 		} catch (err) {}
 	};

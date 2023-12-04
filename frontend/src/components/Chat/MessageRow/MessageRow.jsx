@@ -8,7 +8,7 @@ export default function MessageRow(props) {
 				<span className={style["message-user-name"]}>{props.name} </span>
 				<span className={style["message-date"]}>{formatDate(props.date)}</span>
 				{props.messages.map((message, index) => (
-					<pre key={index}>{message}</pre>
+					<pre key={index}>{message.text}</pre>
 				))}
 			</div>
 		</div>

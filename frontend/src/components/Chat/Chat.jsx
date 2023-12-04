@@ -14,8 +14,25 @@ export default function Chat() {
 	const [messageGroups, setMessageGroups] = useState([]);
 	const [messages, setMessages] = useState([]);
 	const [group, setGroup] = useState(null);
+	const [newMessage, changeGroup] = api.useMessage(group?._id);
 	const [update, setUpdate] = useState(false);
 	const messagesBoxRef = useRef(null);
+
+	const addNewMessage = ({ createdAt, text, ...message }) => {
+		if (!group) return;
+		if (message.groupId !== group._id) return;
+
+		const lastMessage = messages.at(-1);
+		const lastTime = lastMessage?.messages?.at(-1)?.date ?? null;
+		const [aTime, bTime] = [new Date(lastTime), new Date(createdAt)];
+		const deltaTime = Math.abs(bTime - aTime) / 1000;
+
+		if (deltaTime < 60 * 5 && lastMessage?.sender._id === message.sender._id) {
+			lastMessage.messages.push({ date: createdAt, text });
+		} else messages.push({ ...message, messages: [{ date: createdAt, text }], name: message.sender.userTag, date: createdAt });
+
+		setMessages([...messages]);
+	};
 
 	useEffect(() => {
 		if (!authentication.isAuthenticated) return;
@@ -32,10 +49,17 @@ export default function Chat() {
 		const fetchServices = async () => {
 			const { status, data } = await api.getMessages(group._id);
 			if (status === 200) setMessages(formatMessages(data));
+			changeGroup(group._id);
 		};
 
 		fetchServices();
-	}, [group, update]);
+	}, [group]);
+
+	useEffect(() => {
+		if (!newMessage) return;
+		if (newMessage?.sender?._id === authentication.user?.userId) return;
+		addNewMessage(newMessage);
+	}, [newMessage]);
 
 	useEffect(() => {
 		if (scrolledAtBottom && messagesBoxRef.current) messagesBoxRef.current.scrollTop = messagesBoxRef.current.scrollHeight;
@@ -70,7 +94,7 @@ export default function Chat() {
 
 						{/* <MessageSeparator date="18 November 2023" /> */}
 					</div>
-					<ChatField groupId={group?._id} setUpdate={setUpdate} />
+					<ChatField groupId={group?._id} setUpdate={addNewMessage} />
 				</div>
 			</main>
 		</div>
@@ -87,11 +111,11 @@ function formatMessages(messages) {
 		lastDate = createdAt;
 
 		if (deltaTime < 60 * 5 && lastMessage?.sender._id === message.sender._id) {
-			lastMessage.messages.push(text);
+			lastMessage.messages.push({ date: createdAt, text });
 			return;
 		}
 
-		formattedMessages.push({ ...message, messages: [text], name: message.sender.userTag, date: createdAt });
+		formattedMessages.push({ ...message, messages: [{ date: createdAt, text }], name: message.sender.userTag, date: createdAt });
 	});
 
 	return formattedMessages;

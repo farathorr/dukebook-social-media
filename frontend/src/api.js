@@ -152,7 +152,7 @@ export const api = {
 	}),
 
 	usePostStats: (id, props) => {
-		const value = useSocket(`post/${id}`);
+		const [value] = useSocket(`post/${id}`);
 		const [dislikes, setDislikes] = useState(props?.dislikes ?? 0);
 		const [likes, setLikes] = useState(props?.likes ?? 0);
 		const [comments, setComments] = useState(props?.comments ?? 0);
@@ -166,6 +166,12 @@ export const api = {
 		}, [value]);
 
 		return { ...value, likes, dislikes, comments, setDislikes, setLikes, setComments };
+	},
+	useMessage: (baseId) => {
+		const [message, setUrl] = useSocket(`message/${baseId}`);
+		const updateGroup = (id) => setUrl(`message/${id}`);
+
+		return [message, updateGroup];
 	},
 };
 
@@ -189,15 +195,16 @@ function requiresAuth(callback) {
 	};
 }
 
-function useSocket(url) {
+function useSocket(baseUrl) {
 	const [data, setData] = useState(null);
+	const [url, setUrl] = useState(baseUrl);
 
 	useEffect(() => {
 		const onData = (result) => setData(result);
-
 		socket.on(url, onData);
-		return () => socket.off(url, onData);
-	}, []);
 
-	return data;
+		return () => socket.off(url, onData);
+	}, [url]);
+
+	return [data, setUrl];
 }
