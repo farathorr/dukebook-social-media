@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const { User, SensitiveData } = require("../models/users");
+const { MessageGroup } = require("../models/message");
 const Post = require("../models/posts");
 const bcrypt = require("bcryptjs");
 
@@ -191,10 +192,11 @@ const addFriendByUserTag = async (req, res) => {
 		if (!friendUser) return res.status(404).json({ message: `User ${friendUser} not found.` });
 		if (!user) return res.status(404).json({ message: `User ${user} not found.` });
 
-		if (user.friendList.some((id) => id.toString() === friendUser._id.toString())) {
+		if (user.friendList.includes(friendUser._id)) {
 			return res.status(404).json({ message: `User ${req.user.userTag} is already friends with user ${friendUserTag}.` });
 		}
 		user.friendList.push(friendUser._id);
+		const group = await MessageGroup.create({ participants: [user, friendUser] });
 		await user.save();
 		res.status(200).json(user);
 	} catch (err) {

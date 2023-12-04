@@ -23,7 +23,7 @@ const getMessageGroups = async (req, res) => {
 	try {
 		const groups = await MessageGroup.find({ participants: userId }).lean().populate("participants", "userTag");
 		groups.forEach((group) => {
-			group.name ??= group.participants.find((user) => user._id != userId) ?? "Empty Group";
+			group.name ??= group.participants.find((user) => user._id != userId)?.userTag ?? "Empty Group";
 		});
 		res.status(200).json(groups);
 	} catch (err) {
@@ -61,7 +61,7 @@ const getMessages = async (req, res) => {
 	try {
 		const group = await MessageGroup.findById(groupId);
 		if (!group?.participants.includes(userId)) return res.status(400).json({ message: "User doesn't belong to the group" });
-		const messages = await Message.find({ groupId }).populate("sender").sort({ createdAt: -1 });
+		const messages = await Message.find({ groupId }).populate("sender").sort({ createdAt: 1 });
 		res.status(200).json(messages);
 	} catch (err) {
 		res.status(500).json({ message: err.message });

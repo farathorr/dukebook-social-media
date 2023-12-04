@@ -1,17 +1,21 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import style from "./Chat.module.scss";
 import image from "../../images/Duke3D.png";
 import FriendRow from "./FriendRow/FriendRow";
 import MessageRow from "./MessageRow/MessageRow";
 import MessageSeparator from "./MessageSeparator/MessageSeparator";
+import ChatField from "./ChatField/ChatField";
 import { AuthenticationContext } from "../AuthenticationControls/AuthenticationControls";
 import { api } from "../../api";
 
+let scrolledAtBottom = true;
 export default function Chat() {
 	const [authentication] = useContext(AuthenticationContext);
 	const [messageGroups, setMessageGroups] = useState([]);
 	const [messages, setMessages] = useState([]);
-	const [groupId, setGroupId] = useState(null);
+	const [group, setGroup] = useState(null);
+	const [update, setUpdate] = useState(false);
+	const messagesBoxRef = useRef(null);
 
 	useEffect(() => {
 		if (!authentication.isAuthenticated) return;
@@ -24,16 +28,22 @@ export default function Chat() {
 	}, [authentication]);
 
 	useEffect(() => {
-		if (!groupId) return;
+		if (!group) return;
 		const fetchServices = async () => {
-			const { status, data } = await api.getMessages(groupId);
-			console.log(data);
-			console.log(formatMessages(data));
+			const { status, data } = await api.getMessages(group._id);
 			if (status === 200) setMessages(formatMessages(data));
 		};
 
 		fetchServices();
-	}, [groupId]);
+	}, [group, update]);
+
+	useEffect(() => {
+		if (scrolledAtBottom && messagesBoxRef.current) messagesBoxRef.current.scrollTop = messagesBoxRef.current.scrollHeight;
+	});
+
+	const handleScroll = ({ target }) => {
+		scrolledAtBottom = target.scrollHeight < target.scrollTop + target.clientHeight + 10;
+	};
 
 	if (!authentication.isAuthenticated) return null;
 	return (
@@ -41,76 +51,26 @@ export default function Chat() {
 			<main className={style["page-content"]}>
 				<div className={style["friend-list"]}>
 					{messageGroups.map((group) => (
-						<FriendRow
-							key={group._id}
-							onClick={() => setGroupId(group._id)}
-							name={group.name}
-							lastMessage={group.lastMessage}
-							image={image}
-						/>
+						<FriendRow key={group._id} onClick={() => setGroup(group)} name={group.name} lastMessage={group.lastMessage} image={image} />
 					))}
 				</div>
 				<div className={style["chat-frame"]}>
 					<div className={style["chat-bar"]}>
 						<img className={style["profile-pic"]} src={image} alt="Profile picture" width={40} height={40} />
 						<div className={style["bar-user-info-container"]}>
-							<span className={style["user-name"]}>Duke</span>
+							<span className={style["user-name"]}>{group?.name}</span>
 							<div className={style["user-status-indicator"]} />
 							<span className={style["user-status"]}>Online</span>
 						</div>
 					</div>
-					<div className={style["message-box"]}>
+					<div className={style["message-box"]} onScroll={handleScroll} ref={messagesBoxRef}>
 						{messages.map((message) => (
 							<MessageRow key={message._id} name={message.sender.userTag} date={message.date} messages={message.messages} />
 						))}
-						{/* <MessageRow name="Kassu" date="Today at 15:20" messages={["k", "lol"]} />
-						<MessageRow
-							name="Duke"
-							date="Today at 15:23"
-							messages={[
-								"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nisl urna, porta vitae mauris nec, feugiat placerat ante. Vestibulum vitae dui id",
-								"euismod. Nam et mauris laoreet dolor accumsan volutpat non sit amet diam. Maecenas aliquet nibh justo, eget vulputate ante eleifend ut.",
-								"Proin bibendum in",
-								"Sed lobortis vel magna a mattis. Cras tempus elit eget enim maximus, at egestas ipsum volutpat. Nullam pharetra condimentum eros, ac luctus dui malesuada at. Vestibulum nunc sem, ullamcorper vitae augue sit amet, varius finibus felis. Donec non auctor dui. Sed eleifend sit amet mauris nec mollis. Vivamus ac metus id tortor imperdiet varius non ac enim. Ut bibendum neque ut ligula ornare pellentesque. Nullam congue massa ac nisi molestie suscipit. Proin dapibus dui libero, eget mollis velit malesuada eget. Morbi sem justo, maximus nec tristique eget, laoreet nec nisl. Nam nec purus lorem. Nam ut justo eget dolor malesuada lacinia. Vivamus sollicitudin dui non tempor semper. Praesent ut venenatis ipsum. Ut eget mi et orci ultrices porttitor.",
-							]}
-						/>
-						<MessageRow name="Slayer69" date="Today at 15:55" messages={["k nerd."]} />
-						<MessageSeparator date="17 November 2023" />
-						<MessageRow name="Kassu" date="Today at 15:20" messages={["k", "lol"]} />
 
-						<MessageRow
-							name="Duke"
-							date="Today at 15:23"
-							messages={[
-								"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nisl urna, porta vitae mauris nec, feugiat placerat ante. Vestibulum vitae dui id",
-								"euismod. Nam et mauris laoreet dolor accumsan volutpat non sit amet diam. Maecenas aliquet nibh justo, eget vulputate ante eleifend ut.",
-								"Proin bibendum in",
-								"Sed lobortis vel magna a mattis. Cras tempus elit eget enim maximus, at egestas ipsum volutpat. Nullam pharetra condimentum eros, ac luolestie suscipit. Proin dlesuada lacinia. Vivamus sollicitudin dui non tempor semper. Praesent ut venenatis ipsum. Ut eget mi et orci ultrices porttitor.",
-							]}
-						/>
-						<MessageSeparator date="18 November 2023" />
-						<MessageRow name="Slayer69" date="Today at 15:55" messages={["k nerd."]} />
-						<MessageRow name="Slayer69" date="Today at 15:56" messages={["k nerd."]} />
-						<MessageRow name="Slayer69" date="Today at 15:57" messages={["k nerd."]} />
-						<MessageRow name="Slayer69" date="Today at 15:58" messages={["k nerd."]} />
-						<MessageRow name="Slayer69" date="Today at 15:59" messages={["k nerd."]} />
-						<MessageRow name="Slayer69" date="Today at 16:00" messages={["k nerd."]} /> */}
+						{/* <MessageSeparator date="18 November 2023" /> */}
 					</div>
-					<form className={style["chat-input"]}>
-						<textarea
-							className={style["text-field"]}
-							name="message"
-							placeholder="Type a message..."
-							onInput={(e) => {
-								const input = e.target;
-								input.style.height = "";
-								input.style.height = input.scrollHeight + "px";
-							}}
-							defaultValue={""}
-						/>
-						<button className={style["send-button"]}>Send</button>
-						<button className={style["attach-button"]}>Attach</button>
-					</form>
+					<ChatField groupId={group?._id} setUpdate={setUpdate} />
 				</div>
 			</main>
 		</div>
@@ -122,17 +82,16 @@ function formatMessages(messages) {
 	let lastDate = null;
 	messages.forEach(({ createdAt, text, ...message }) => {
 		const lastMessage = formattedMessages.at(-1);
+		const [aTime, bTime] = [new Date(lastDate), new Date(createdAt)];
+		const deltaTime = Math.abs(bTime - aTime) / 1000;
+		lastDate = createdAt;
 
-		if (!lastMessage || lastMessage?.sender._id !== message.sender._id) {
-			formattedMessages.push({ ...message, messages: [text], name: message.sender.userTag, date: createdAt });
-		} else {
-			const [aTime, bTime] = [new Date(lastDate), new Date(createdAt)];
-			const deltaTime = Math.abs(bTime - aTime) / 1000;
-
-			if (deltaTime < 60 * 5) lastMessage.messages.push(text);
+		if (deltaTime < 60 * 5 && lastMessage?.sender._id === message.sender._id) {
+			lastMessage.messages.push(text);
+			return;
 		}
 
-		lastDate = createdAt;
+		formattedMessages.push({ ...message, messages: [text], name: message.sender.userTag, date: createdAt });
 	});
 
 	return formattedMessages;

@@ -146,6 +146,10 @@ export const api = {
 		const response = await axios.get(`http://localhost:4000/messages?groupId=${groupId}`);
 		return response;
 	}),
+	sendMessage: requiresAuth(async ({ groupId, text }) => {
+		const response = await axios.post(`http://localhost:4000/messages`, { groupId, text });
+		return response;
+	}),
 
 	usePostStats: (id, props) => {
 		const value = useSocket(`post/${id}`);
