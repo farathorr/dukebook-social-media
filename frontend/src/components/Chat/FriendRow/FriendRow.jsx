@@ -3,7 +3,7 @@ import style from "./FriendRow.module.scss";
 
 export default function FriendList(props) {
 	return (
-		<div className={style["friend-row"]}>
+		<div className={style["friend-row"]} onClick={props.onClick}>
 			<img className={style["profile-pic"]} src={props.image} alt="Profile picture" width={40} height={40} />
 			<div className={style["friend-info-container"]}>
 				<span className={style["user-name"]}>{props.name}</span>

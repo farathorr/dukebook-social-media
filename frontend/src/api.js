@@ -132,6 +132,24 @@ export const api = {
 		const response = await axios.put(`http://localhost:4000/users/removeFriend/${userTag}`, {});
 		return response;
 	}),
+	getFriends: async (userTag) => {
+		const response = await axios.get(`http://localhost:4000/users/friends/${userTag}`);
+		return response;
+	},
+
+	getMessageGroups: requiresAuth(async () => {
+		const response = await axios.get("http://localhost:4000/messages/groups");
+		return response;
+	}),
+
+	getMessages: requiresAuth(async (groupId) => {
+		const response = await axios.get(`http://localhost:4000/messages?groupId=${groupId}`);
+		return response;
+	}),
+	sendMessage: requiresAuth(async ({ groupId, text }) => {
+		const response = await axios.post(`http://localhost:4000/messages`, { groupId, text });
+		return response;
+	}),
 
 	usePostStats: (id, props) => {
 		const value = useSocket(`post/${id}`);
