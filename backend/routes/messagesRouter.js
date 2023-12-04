@@ -6,7 +6,7 @@ const router = express.Router();
 router.get("/", weakAuthentication, messageController.getMessages);
 router.post("/", weakAuthentication, messageController.sendMessage);
 
-router.get("/groups", messageController.getMessageGroups);
-router.post("/groups", messageController.createMessageGroup);
+router.get("/groups", weakAuthentication, messageController.getMessageGroups);
+router.post("/groups", weakAuthentication, messageController.createMessageGroup);
 
 module.exports = router;

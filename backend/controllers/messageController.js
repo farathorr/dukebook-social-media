@@ -18,11 +18,13 @@ const createMessageGroup = async (req, res) => {
 };
 
 const getMessageGroups = async (req, res) => {
-	// const { userId } = req.user;
-	// if (!userId) return res.status(400).json({ message: "UserTag is required." });
+	const { userId } = req.user;
 
 	try {
-		const groups = await MessageGroup.find();
+		const groups = await MessageGroup.find({ participants: userId }).lean().populate("participants", "userTag");
+		groups.forEach((group) => {
+			group.name ??= group.participants.find((user) => user._id != userId) ?? "Empty Group";
+		});
 		res.status(200).json(groups);
 	} catch (err) {
 		res.status(500).json({ message: err.message });
@@ -52,11 +54,14 @@ const sendMessage = async (req, res) => {
 
 const getMessages = async (req, res) => {
 	const { userId } = req.user;
-	const { groupId } = req.body;
+	const { groupId } = req.query;
 	if (!userId) return res.status(400).json({ message: "UserTag is required." });
+	if (!groupId) return res.status(400).json({ message: "Message group is required." });
 
 	try {
-		const messages = await Message.find({ groupId }).sort({ createdAt: -1 });
+		const group = await MessageGroup.findById(groupId);
+		if (!group?.participants.includes(userId)) return res.status(400).json({ message: "User doesn't belong to the group" });
+		const messages = await Message.find({ groupId }).populate("sender").sort({ createdAt: -1 });
 		res.status(200).json(messages);
 	} catch (err) {
 		res.status(500).json({ message: err.message });

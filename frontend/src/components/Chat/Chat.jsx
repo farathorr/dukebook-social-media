@@ -9,25 +9,45 @@ import { api } from "../../api";
 
 export default function Chat() {
 	const [authentication] = useContext(AuthenticationContext);
-	const [friendList, setFriendList] = useState([]);
+	const [messageGroups, setMessageGroups] = useState([]);
+	const [messages, setMessages] = useState([]);
+	const [groupId, setGroupId] = useState(null);
 
 	useEffect(() => {
 		if (!authentication.isAuthenticated) return;
 		const fetchServices = async () => {
-			const { status, data } = await api.getFriends(authentication.user.userTag);
-			if (status === 200) setFriendList(data);
+			const { status, data } = await api.getMessageGroups();
+			if (status === 200) setMessageGroups(data);
 		};
 
 		fetchServices();
 	}, [authentication]);
+
+	useEffect(() => {
+		if (!groupId) return;
+		const fetchServices = async () => {
+			const { status, data } = await api.getMessages(groupId);
+			console.log(data);
+			console.log(formatMessages(data));
+			if (status === 200) setMessages(formatMessages(data));
+		};
+
+		fetchServices();
+	}, [groupId]);
 
 	if (!authentication.isAuthenticated) return null;
 	return (
 		<div className={style["chat-page"]}>
 			<main className={style["page-content"]}>
 				<div className={style["friend-list"]}>
-					{friendList.map((friend) => (
-						<FriendRow key={friend._id} name={friend.userTag} lastMessage={friend.lastMessage} image={image} />
+					{messageGroups.map((group) => (
+						<FriendRow
+							key={group._id}
+							onClick={() => setGroupId(group._id)}
+							name={group.name}
+							lastMessage={group.lastMessage}
+							image={image}
+						/>
 					))}
 				</div>
 				<div className={style["chat-frame"]}>
@@ -40,7 +60,10 @@ export default function Chat() {
 						</div>
 					</div>
 					<div className={style["message-box"]}>
-						<MessageRow name="Kassu" date="Today at 15:20" messages={["k", "lol"]} />
+						{messages.map((message) => (
+							<MessageRow key={message._id} name={message.sender.userTag} date={message.date} messages={message.messages} />
+						))}
+						{/* <MessageRow name="Kassu" date="Today at 15:20" messages={["k", "lol"]} />
 						<MessageRow
 							name="Duke"
 							date="Today at 15:23"
@@ -71,7 +94,7 @@ export default function Chat() {
 						<MessageRow name="Slayer69" date="Today at 15:57" messages={["k nerd."]} />
 						<MessageRow name="Slayer69" date="Today at 15:58" messages={["k nerd."]} />
 						<MessageRow name="Slayer69" date="Today at 15:59" messages={["k nerd."]} />
-						<MessageRow name="Slayer69" date="Today at 16:00" messages={["k nerd."]} />
+						<MessageRow name="Slayer69" date="Today at 16:00" messages={["k nerd."]} /> */}
 					</div>
 					<form className={style["chat-input"]}>
 						<textarea
@@ -92,4 +115,25 @@ export default function Chat() {
 			</main>
 		</div>
 	);
+}
+
+function formatMessages(messages) {
+	const formattedMessages = [];
+	let lastDate = null;
+	messages.forEach(({ createdAt, text, ...message }) => {
+		const lastMessage = formattedMessages.at(-1);
+
+		if (!lastMessage || lastMessage?.sender._id !== message.sender._id) {
+			formattedMessages.push({ ...message, messages: [text], name: message.sender.userTag, date: createdAt });
+		} else {
+			const [aTime, bTime] = [new Date(lastDate), new Date(createdAt)];
+			const deltaTime = Math.abs(bTime - aTime) / 1000;
+
+			if (deltaTime < 60 * 5) lastMessage.messages.push(text);
+		}
+
+		lastDate = createdAt;
+	});
+
+	return formattedMessages;
 }

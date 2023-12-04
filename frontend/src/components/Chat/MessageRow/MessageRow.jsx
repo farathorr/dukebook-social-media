@@ -6,13 +6,21 @@ export default function MessageRow(props) {
 			<img className={style["profile-pic"]} src={props.image} alt="Profile picture" width={40} height={40} />
 			<div className={style["message-content"]}>
 				<span className={style["message-user-name"]}>{props.name} </span>
-				<span className={style["message-date"]}>{props.date}</span>
+				<span className={style["message-date"]}>{formatDate(props.date)}</span>
 				{props.messages.map((message, index) => (
 					<pre key={index}>{message}</pre>
 				))}
 			</div>
 		</div>
 	);
+}
+
+function formatDate(utcTime) {
+	if (!utcTime) return utcTime;
+
+	const options = { year: "numeric", month: "numeric", day: "numeric", hour: "numeric", minute: "numeric" };
+	const time = new Date(utcTime);
+	return time.toLocaleDateString("en-US", options);
 }
 
 MessageRow.defaultProps = {

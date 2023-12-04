@@ -41,6 +41,10 @@ const messageGroupSchema = new mongoose.Schema(
 			],
 			default: [],
 		},
+		name: {
+			type: String,
+			max: 50,
+		},
 	},
 	{ timestamps: true }
 );
