@@ -7,15 +7,15 @@ import MessageSeparator from "./MessageSeparator/MessageSeparator";
 import ChatField from "./ChatField/ChatField";
 import { AuthenticationContext } from "../AuthenticationControls/AuthenticationControls";
 import { api } from "../../api";
+import { Link } from "react-router-dom";
 
 let scrolledAtBottom = true;
 export default function Chat() {
 	const [authentication] = useContext(AuthenticationContext);
 	const [messageGroups, setMessageGroups] = useState([]);
 	const [messages, setMessages] = useState([]);
-	const [group, setGroup] = useState(null);
+	const [group, setGroup] = useState(JSON.parse(sessionStorage.getItem("lastGroup")) || null);
 	const [newMessage, changeGroup] = api.useMessage(group?._id);
-	const [update, setUpdate] = useState(false);
 	const messagesBoxRef = useRef(null);
 
 	const addNewMessage = ({ createdAt, text, ...message }) => {
@@ -50,6 +50,7 @@ export default function Chat() {
 			const { status, data } = await api.getMessages(group._id);
 			if (status === 200) setMessages(formatMessages(data));
 			changeGroup(group._id);
+			sessionStorage.setItem("lastGroup", JSON.stringify(group));
 		};
 
 		fetchServices();
@@ -83,7 +84,9 @@ export default function Chat() {
 						<div className={style["chat-bar"]}>
 							<img className={style["profile-pic"]} src={image} alt="Profile picture" width={40} height={40} />
 							<div className={style["bar-user-info-container"]}>
-								<span className={style["user-name"]}>{group?.name}</span>
+								<Link className={style["user-name"]} to={`/user/${group?.name}`}>
+									@{group?.name}
+								</Link>
 								<div className={style["user-status-indicator"]} />
 								<span className={style["user-status"]}>Online</span>
 							</div>

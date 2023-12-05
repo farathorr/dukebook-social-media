@@ -1,3 +1,9 @@
+.friend-row:hover {
+	background-color: var(--clr-primary-700);
+	padding: 0px 10px;
+	border: 1px solid var(--clr-primary-500);
+}
+
 .friend-row {
 	height: 50px;
 	border-radius: 5px;
