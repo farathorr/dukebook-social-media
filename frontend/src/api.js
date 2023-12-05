@@ -11,7 +11,7 @@ export const socket = socketIO("http://localhost:4000", {
 let refreshToken = "";
 let accessToken = "";
 
-export const api = {
+const apiObject = {
 	login: async ({ password, userTag, rememberPassword }, callback) => {
 		try {
 			const response = await axios.post(
@@ -30,6 +30,7 @@ export const api = {
 			return response;
 		} catch (err) {
 			console.error(err);
+			return err.response;
 		}
 	},
 	refreshToken: async () => {
@@ -56,6 +57,7 @@ export const api = {
 			return response;
 		} catch (err) {
 			console.error(err);
+			return err.response;
 		}
 	},
 	updatePost: requiresAuth(async ({ postId, postText }) => {
@@ -178,6 +180,33 @@ export const api = {
 		return [message, updateGroup];
 	},
 };
+
+export const api = new Proxy(apiObject, {
+	get: (target, prop) => {
+		const callback = target[prop];
+		console.log(callback.constructor.name);
+
+		if (callback.constructor.name === "AsyncFunction") {
+			return async (...settings) => {
+				try {
+					return await callback(...settings);
+				} catch (err) {
+					console.log(err);
+					return err.response;
+				}
+			};
+		} else {
+			return (...settings) => {
+				try {
+					return callback(...settings);
+				} catch (err) {
+					console.log(err);
+					return err.response;
+				}
+			};
+		}
+	},
+});
 
 function requiresAuth(callback) {
 	return async function (...settings) {
