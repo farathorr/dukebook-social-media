@@ -30,6 +30,12 @@ export default function ChatField({ groupId, setUpdate }) {
 					input.style.height = "";
 					input.style.height = input.scrollHeight + "px";
 				}}
+				onKeyDown={(e) => {
+					if (e.key === "Enter" && !e.shiftKey) {
+						e.preventDefault();
+						handleSubmit(e);
+					}
+				}}
 				onChange={(e) => setFieldText(e.target.value)}
 				value={fieldText}
 			/>
