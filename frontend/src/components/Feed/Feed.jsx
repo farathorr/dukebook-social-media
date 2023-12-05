@@ -27,8 +27,7 @@ export default function Feed() {
 		if (postText.length < 1) return addNotification({ ...postError, message: "Post can't be empty" });
 
 		try {
-			const splitTags = tags.split(" ").map((tag) => tag.trim());
-			console.log("____________", splitTags);
+			const splitTags = tags.trim().length ? tags.split(" ") : [];
 			const post = { userTag: authentication.user.userTag, postText, tags: splitTags };
 			const { status, data } = await api.createPost(post);
 

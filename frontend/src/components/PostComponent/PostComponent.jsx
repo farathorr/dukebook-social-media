@@ -26,7 +26,7 @@ export default function PostComponent(props) {
 						{props.images.map((image, index) => (
 							<img className={style["post-image"]} src={image} key={index} alt="Picture" />
 						))}
-						{props.tags.length ? (
+						{props.tags.length > 0 ? (
 							<div className={style["post-tags"]}>
 								{props.tags.map((tag, index) => (
 									<span className={style["post-tag"]}>{tag}</span>
