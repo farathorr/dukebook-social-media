@@ -60,17 +60,13 @@ export const api = {
 	},
 
 	createPost: requiresAuth(async ({ postText }) => {
-		const response = await axios.post("http://localhost:4000/posts", { postText }, { withCredentials: true });
+		const response = await axios.post("http://localhost:4000/posts", { postText });
 		return response;
 	}),
-	updatePost: requiresAuth(async ({ postId, postText }) => {
-		const response = await axios.patch(`http://localhost:4000/posts/${postId}`, { postText }, { withCredentials: true });
+	getPosts: requiresAuth(async (query = "") => {
+		const response = await axios.get(`http://localhost:4000/posts?${query}`);
 		return response;
 	}),
-	getPosts: async () => {
-		const response = await axios.get("http://localhost:4000/posts");
-		return response;
-	},
 	getPostById: async (postId) => {
 		const response = await axios.get(`http://localhost:4000/posts/${postId}`);
 		return response;
@@ -87,28 +83,20 @@ export const api = {
 		const response = await axios.get(`http://localhost:4000/posts/${postId}/parents?nesting=${nesting ?? 3}`);
 		return response;
 	},
-	searchPosts: async (search) => {
-		const response = await axios.get(`http://localhost:4000/posts/search/${search}`);
-		return response;
-	},
-	getFilteredPosts: requiresAuth(async (filter) => {
-		const response = await axios.get(`http://localhost:4000/posts/filter/${filter}`, { withCredentials: true });
-		return response;
-	}),
 	replyToPost: requiresAuth(async ({ postId, postText }) => {
-		const response = await axios.patch(`http://localhost:4000/posts/${postId}/reply`, { postText }, { withCredentials: true });
+		const response = await axios.patch(`http://localhost:4000/posts/${postId}/reply`, { postText });
 		return response;
 	}),
 	dislikePost: requiresAuth(async (postId) => {
-		const response = await axios.put(`http://localhost:4000/posts/${postId}/dislike`, {}, { withCredentials: true });
+		const response = await axios.put(`http://localhost:4000/posts/${postId}/dislike`, {});
 		return response;
 	}),
 	likePost: requiresAuth(async (postId) => {
-		const response = await axios.put(`http://localhost:4000/posts/${postId}/like`, {}, { withCredentials: true });
+		const response = await axios.put(`http://localhost:4000/posts/${postId}/like`, {});
 		return response;
 	}),
 	removePost: requiresAuth(async (postId) => {
-		const response = await axios.delete(`http://localhost:4000/posts/${postId}`, { withCredentials: true });
+		const response = await axios.delete(`http://localhost:4000/posts/${postId}`);
 		return response;
 	}),
 
@@ -129,24 +117,42 @@ export const api = {
 		return response;
 	},
 	followUser: requiresAuth(async (userTag) => {
-		const response = await axios.put(`http://localhost:4000/users/follow/${userTag}`, {}, { withCredentials: true });
+		const response = await axios.put(`http://localhost:4000/users/follow/${userTag}`, {});
 		return response;
 	}),
 	unfollowUser: requiresAuth(async (userTag) => {
-		const response = await axios.put(`http://localhost:4000/users/unfollow/${userTag}`, {}, { withCredentials: true });
+		const response = await axios.put(`http://localhost:4000/users/unfollow/${userTag}`, {});
 		return response;
 	}),
 	addFriend: requiresAuth(async (userTag) => {
-		const response = await axios.put(`http://localhost:4000/users/addFriend/${userTag}`, {}, { withCredentials: true });
+		const response = await axios.put(`http://localhost:4000/users/addFriend/${userTag}`, {});
 		return response;
 	}),
 	removeFriend: requiresAuth(async (userTag) => {
-		const response = await axios.put(`http://localhost:4000/users/removeFriend/${userTag}`, {}, { withCredentials: true });
+		const response = await axios.put(`http://localhost:4000/users/removeFriend/${userTag}`, {});
+		return response;
+	}),
+	getFriends: async (userTag) => {
+		const response = await axios.get(`http://localhost:4000/users/friends/${userTag}`);
+		return response;
+	},
+
+	getMessageGroups: requiresAuth(async () => {
+		const response = await axios.get("http://localhost:4000/messages/groups");
+		return response;
+	}),
+
+	getMessages: requiresAuth(async (groupId) => {
+		const response = await axios.get(`http://localhost:4000/messages?groupId=${groupId}`);
+		return response;
+	}),
+	sendMessage: requiresAuth(async ({ groupId, text }) => {
+		const response = await axios.post(`http://localhost:4000/messages`, { groupId, text });
 		return response;
 	}),
 
 	usePostStats: (id, props) => {
-		const value = useSocket(`post/${id}`);
+		const [value] = useSocket(`post/${id}`);
 		const [dislikes, setDislikes] = useState(props?.dislikes ?? 0);
 		const [likes, setLikes] = useState(props?.likes ?? 0);
 		const [comments, setComments] = useState(props?.comments ?? 0);
@@ -160,6 +166,12 @@ export const api = {
 		}, [value]);
 
 		return { ...value, likes, dislikes, comments, setDislikes, setLikes, setComments };
+	},
+	useMessage: (baseId) => {
+		const [message, setUrl] = useSocket(`message/${baseId}`);
+		const updateGroup = (id) => setUrl(`message/${id}`);
+
+		return [message, updateGroup];
 	},
 };
 
@@ -183,15 +195,16 @@ function requiresAuth(callback) {
 	};
 }
 
-function useSocket(url) {
+function useSocket(baseUrl) {
 	const [data, setData] = useState(null);
+	const [url, setUrl] = useState(baseUrl);
 
 	useEffect(() => {
 		const onData = (result) => setData(result);
-
 		socket.on(url, onData);
-		return () => socket.off(url, onData);
-	}, []);
 
-	return data;
+		return () => socket.off(url, onData);
+	}, [url]);
+
+	return [data, setUrl];
 }

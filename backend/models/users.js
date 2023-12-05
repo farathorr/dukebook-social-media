@@ -28,27 +28,57 @@ const userSchema = new mongoose.Schema(
 			max: 200,
 		},
 		likedPosts: {
-			type: Array,
+			type: [
+				{
+					type: mongoose.Schema.Types.ObjectId,
+					ref: "Post",
+				},
+			],
 			default: [],
 		},
 		dislikedPosts: {
-			type: Array,
+			type: [
+				{
+					type: mongoose.Schema.Types.ObjectId,
+					ref: "Post",
+				},
+			],
 			default: [],
 		},
 		sharedPosts: {
-			type: Array,
+			type: [
+				{
+					type: mongoose.Schema.Types.ObjectId,
+					ref: "Post",
+				},
+			],
 			default: [],
 		},
 		followerIds: {
-			type: Array,
+			type: [
+				{
+					type: mongoose.Schema.Types.ObjectId,
+					ref: "User",
+				},
+			],
 			default: [],
 		},
 		followedIds: {
-			type: Array,
+			type: [
+				{
+					type: mongoose.Schema.Types.ObjectId,
+					ref: "User",
+				},
+			],
 			default: [],
 		},
 		friendList: {
-			type: Array,
+			type: [
+				{
+					type: mongoose.Schema.Types.ObjectId,
+					ref: "User",
+				},
+			],
 			default: [],
 		},
 		bio: {

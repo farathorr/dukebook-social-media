@@ -2,14 +2,22 @@ const mongoose = require("mongoose");
 const Post = require("../models/posts");
 const { User } = require("../models/users");
 const { socketIO } = require("../server");
+const customFind = require("../utils/customFind");
 
 // get all posts
 const getPosts = async (req, res) => {
+	const { filter, search } = req.query;
+	const userId = req.user?.userId;
+
+	const options = { search, isOriginalPost: true };
+	if (userId) {
+		const user = await User.findById(userId);
+		if (filter?.includes("followed")) options.followedByUser = user;
+		if (filter?.includes("friends")) options.friendsWithUser = user;
+	}
+
 	try {
-		const posts = await Post.find({ originalPostParentId: { $exists: false } })
-			.sort({ createdAt: -1, _id: 1 })
-			.limit(100)
-			.populate("user");
+		const posts = await customFind(Post, options).populate("user");
 		res.json(posts);
 	} catch (err) {
 		res.status(500).json({ message: err.message });
@@ -22,49 +30,9 @@ const getPostById = async (req, res) => {
 	if (!mongoose.Types.ObjectId.isValid(id)) {
 		return res.status(404).send(`No post with id: ${id}`);
 	}
-	const post = await Post.findById(id)
-		.populate("user")
-		.populate("comments")
-		.populate({
-			path: "comments",
-			populate: {
-				path: "user",
-				model: "User",
-			},
-		});
+	const post = await Post.findById(id).populate("user");
 	console.log(post);
 	res.status(200).json(post);
-};
-
-// search posts by text
-const searchPosts = async (req, res) => {
-	const { search } = req.params;
-	try {
-		const wordCount = decodeURI(search).split(" ").length;
-
-		if (wordCount > 1) {
-			const posts = await Post.find({ $text: { $search: search } }, { score: { $meta: "textScore" } })
-				.sort({
-					score: { $meta: "textScore" },
-					createdAt: -1,
-					_id: 1,
-				})
-				.limit(100)
-				.populate("user");
-			return res.json(posts);
-		} else {
-			const posts = await Post.find({ postText: { $regex: search, $options: "i" } })
-				.sort({
-					createdAt: -1,
-					_id: 1,
-				})
-				.limit(100)
-				.populate("user");
-			return res.json(posts);
-		}
-	} catch (err) {
-		res.status(500).json({ message: err.message });
-	}
 };
 
 //get posts by userTag
@@ -73,8 +41,8 @@ const getPostsByAuthor = async (req, res) => {
 	try {
 		const user = await User.findOne({ userTag });
 		if (!user) return res.status(400).json({ message: "User does not exist." });
-		const posts = await Post.find({ user: user._id });
-		res.json(posts);
+		const posts = await customFind(Post, { postByUserId: user._id }).populate("user");
+		res.status(200).json(posts);
 	} catch (err) {
 		res.status(500).json({ message: err.message });
 	}
@@ -236,34 +204,7 @@ const getComments = async (req, res) => {
 		}
 
 		const post = await Post.findById(id).populate(nesting);
-		res.json(post.comments);
-	} catch (err) {
-		res.status(500).json({ message: err.message });
-	}
-};
-
-const getFilteredPosts = async (req, res) => {
-	const { filter } = req.params;
-	const { userId } = req.user;
-	if (!mongoose.Types.ObjectId.isValid(userId)) return res.status(404).send(`No user with id: ${userId}`);
-	const user = await User.findById(userId);
-	try {
-		if (filter === "followed") {
-			user.populate("followedIds");
-			let posts = await Post.find({ user: { $in: user.followedIds }, nestingLevel: 0 })
-				.sort({ createdAt: -1, _id: 1 })
-				.populate("user");
-			res.json(posts);
-		}
-		if (filter === "friends") {
-			console.log("FRIENDS", user.friendList);
-			user.populate("friendList");
-			let posts = await Post.find({ user: { $in: user.friendList }, nestingLevel: 0 })
-				.sort({ createdAt: -1, _id: 1 })
-				.populate("user");
-
-			res.json(posts);
-		}
+		res.status(200).json(post.comments);
 	} catch (err) {
 		res.status(500).json({ message: err.message });
 	}
@@ -307,7 +248,6 @@ const getParentPosts = async (req, res) => {
 module.exports = {
 	getPosts,
 	getPostById,
-	searchPosts,
 	getPostsByAuthor,
 	createPost,
 	updatePost,
@@ -317,5 +257,4 @@ module.exports = {
 	dislikePost,
 	replyToPost,
 	getComments,
-	getFilteredPosts,
 };

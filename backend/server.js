@@ -16,6 +16,7 @@ socketIO.on("connection", require("./routes/socketRouter"));
 
 app.get("/", (req, res) => res.json({ message: "Welcome to the application." }));
 
+app.use("/messages", require("./routes/messagesRouter"));
 app.use("/users", require("./routes/usersRouter"));
 app.use("/posts", require("./routes/postsRouter"));
 
