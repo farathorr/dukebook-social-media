@@ -12,7 +12,8 @@ export default function PostStats({ postId, likes, dislikes, comments, userTag, 
 	const stats = api.usePostStats(postId, { likes, dislikes, comments });
 
 	const optionConstructor = (option, apiFetch) => async () => {
-		if (removed) return addNotification({ type: "error", message: "You can't like a removed post", title: `${option} failed` });
+		if (removed)
+			return addNotification({ type: "error", message: `You can't ${option.toLowerCase()} a removed post`, title: `${option} failed` });
 		if (!authentication.isAuthenticated)
 			return addNotification({
 				type: "error",
