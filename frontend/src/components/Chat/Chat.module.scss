@@ -43,6 +43,8 @@
 
 					.user-name {
 						grid-column: 1 / -1;
+						color: var(--clr-text-500);
+						text-decoration: none;
 					}
 
 					.user-status-indicator {
