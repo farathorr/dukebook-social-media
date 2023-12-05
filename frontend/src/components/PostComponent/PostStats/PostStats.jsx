@@ -5,13 +5,14 @@ import { AuthenticationContext } from "../../AuthenticationControls/Authenticati
 import { NotificationContext } from "../../NotificationControls/NotificationControls";
 import { api } from "../../../api";
 
-export default function PostStats({ postId, likes, dislikes, comments, userTag, onUpdate, text }) {
+export default function PostStats({ postId, likes, dislikes, comments, userTag, onUpdate, text, removed }) {
 	const [authentication] = useContext(AuthenticationContext);
 	const [addNotification] = useContext(NotificationContext);
 	const [editable, setEditable] = useState(false);
 	const stats = api.usePostStats(postId, { likes, dislikes, comments });
 
 	const optionConstructor = (option, apiFetch) => async () => {
+		if (removed) return addNotification({ type: "error", message: "You can't like a removed post", title: `${option} failed` });
 		if (!authentication.isAuthenticated)
 			return addNotification({
 				type: "error",
