@@ -62,6 +62,7 @@ export default function Post() {
 				date={post.createdAt}
 				removed={post.removed}
 				onUpdate={setPostData}
+				edited={post.edited}
 			>
 				<ParentLoop posts={posts} index={index + 1} />
 			</PostComponent>
@@ -86,7 +87,8 @@ export default function Post() {
 						comments={reply.comments?.length}
 						date={reply.createdAt}
 						removed={reply.removed}
-						onUpdate={setPostData}
+						onUpdate={setReplies}
+						edited={reply.edited}
 						children={
 							<CommentPosts
 								key={reply._id}
