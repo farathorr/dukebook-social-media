@@ -26,6 +26,7 @@ export default function PostComponent(props) {
 						{props.images.map((image, index) => (
 							<img className={style["post-image"]} src={image} key={index} alt="Picture" />
 						))}
+						
 						{edited ? <span className={style["edited"]}>(Edited)</span> : null}
 					</div>
 				</div>

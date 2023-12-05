@@ -51,7 +51,7 @@ const getPostsByAuthor = async (req, res) => {
 // create post
 const createPost = async (req, res) => {
 	const { userId } = req.user;
-	const { postText } = req.body;
+	const { postText, tags } = req.body;
 	if (!userId) return res.status(400).json({ message: "UserTag is required." });
 	if (!postText) return res.status(400).json({ message: "Post text is required." });
 
@@ -59,7 +59,7 @@ const createPost = async (req, res) => {
 		const user = await User.findById(userId);
 		if (!user) return res.status(400).json({ message: "User does not exist." });
 		try {
-			const newPost = new Post({ postText, user });
+			const newPost = new Post({ postText, user, tags });
 			newPost.populate("user");
 			await newPost.save();
 			res.status(201).json(newPost);
