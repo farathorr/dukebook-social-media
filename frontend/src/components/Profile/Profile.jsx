@@ -50,7 +50,8 @@ export default function Profile() {
 					likes={post.likes.length}
 					dislikes={post.dislikes.length}
 					removed={post.removed}
-					onRemove={setPosts}
+					onUpdate={setPosts}
+					edited={post.edited}
 				/>
 			))}
 		</div>
