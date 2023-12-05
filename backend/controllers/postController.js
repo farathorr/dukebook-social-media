@@ -73,14 +73,12 @@ const createPost = async (req, res) => {
 
 const updatePost = async (req, res) => {
 	const { id } = req.params;
-	const { userTag: postAuthor, ...post } = req.body;
+	const { postText } = req.body;
 	if (!mongoose.Types.ObjectId.isValid(id)) {
 		return res.status(404).send(`No post with id: ${id}`);
 	}
 	try {
-		const user = await User.findOne({ userTag: postAuthor });
-		if (!user) return res.status(400).json({ message: "User does not exist." });
-		const updatedPost = await Post.findByIdAndUpdate(id, { ...post, userId: user._id, userTag: postAuthor }, { new: true });
+		const updatedPost = await Post.findByIdAndUpdate(id, { postText, edited: true }, { new: true });
 		res.json(updatedPost);
 	} catch (err) {
 		res.status(500).json({ message: err.message });

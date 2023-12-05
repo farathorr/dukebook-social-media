@@ -58,6 +58,10 @@ export const api = {
 			console.error(err);
 		}
 	},
+	updatePost: requiresAuth(async ({ postId, postText }) => {
+		const response = await axios.patch(`http://localhost:4000/posts/${postId}`, { postText });
+		return response;
+	}),
 
 	createPost: requiresAuth(async ({ postText }) => {
 		const response = await axios.post("http://localhost:4000/posts", { postText });

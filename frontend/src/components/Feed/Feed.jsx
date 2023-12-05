@@ -90,7 +90,8 @@ export default function Feed() {
 						comments={post.comments?.length}
 						dislikes={post.dislikes.length}
 						likes={post.likes.length}
-						onRemove={setPosts}
+						onUpdate={setPosts}
+						edited={post.edited}
 					/>
 				))}
 			</section>
