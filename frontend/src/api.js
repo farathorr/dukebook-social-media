@@ -65,8 +65,8 @@ const apiObject = {
 		return response;
 	}),
 
-	createPost: requiresAuth(async ({ postText }) => {
-		const response = await axios.post("http://localhost:4000/posts", { postText });
+	createPost: requiresAuth(async ({ postText, tags }) => {
+		const response = await axios.post("http://localhost:4000/posts", { postText, tags });
 		return response;
 	}),
 	getPosts: requiresAuth(async (query = "") => {
