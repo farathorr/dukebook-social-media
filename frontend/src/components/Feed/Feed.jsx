@@ -107,6 +107,7 @@ export default function Feed() {
 						likes={post.likes.length}
 						onUpdate={setPosts}
 						edited={post.edited}
+						tags={post.tags}
 					/>
 				))}
 			</section>

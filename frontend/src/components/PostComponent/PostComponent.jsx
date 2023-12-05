@@ -4,8 +4,8 @@ import PostTime from "./PostTime/PostTime";
 import PostStats from "./PostStats/PostStats";
 
 export default function PostComponent(props) {
-	const { postId, likes, dislikes, comments, onUpdate, userTag, text, edited, removed } = props;
-	const stats = { postId, likes, dislikes, comments, onUpdate, userTag, text, removed };
+	const { postId, likes, dislikes, comments, onUpdate, userTag, text, edited, removed, tags } = props;
+	const stats = { postId, likes, dislikes, comments, onUpdate, userTag, text, removed, tags };
 
 	return (
 		<div className={style["post-container"]} id={postId}>
@@ -26,7 +26,13 @@ export default function PostComponent(props) {
 						{props.images.map((image, index) => (
 							<img className={style["post-image"]} src={image} key={index} alt="Picture" />
 						))}
-						
+						{props.tags.length ? (
+							<div className={style["post-tags"]}>
+								{props.tags.map((tag, index) => (
+									<span className={style["post-tag"]}>{tag}</span>
+								))}
+							</div>
+						) : null}
 						{edited ? <span className={style["edited"]}>(Edited)</span> : null}
 					</div>
 				</div>
