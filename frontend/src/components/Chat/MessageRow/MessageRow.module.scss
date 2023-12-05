@@ -15,10 +15,19 @@
 		background: var(--clr-primary-500);
 		padding: 0px 10px 10px 10px;
 		border-radius: 5px;
+
+		img {
+			position: relative;
+			display: block;
+			width: 100%;
+			max-width: 700px;
+		}
+
 		pre {
 			font-family: inherit;
 			font-size: inherit;
 			white-space: pre-wrap;
+			word-break: break-word;
 			margin: 0px;
 		}
 	}
