@@ -1,4 +1,4 @@
-const domains = ["http://localhost:5000"];
+const domains = ["http://localhost:3000", "http://localhost:5000"];
 
 const cors = (req, res, next) => {
 	const origin = req.headers.origin;
