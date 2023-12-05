@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import style from "./MessageRow.module.scss";
 
 export default function MessageRow(props) {
@@ -7,13 +8,43 @@ export default function MessageRow(props) {
 			<div className={style["message-content"]}>
 				<span className={style["message-user-name"]}>{props.name} </span>
 				<span className={style["message-date"]}>{formatDate(props.date)}</span>
+
 				{props.messages.map((message, index) => (
-					<pre key={index}>{message.text}</pre>
+					<MessageText key={index} text={message.text} tooltip={message.date} />
 				))}
 			</div>
 		</div>
 	);
 }
+
+function MessageText({ text, tooltip }) {
+	const linkRegex = /(https?:\/\/[^ \n]+)/g;
+	const [, time] = new Date(tooltip).toLocaleDateString("en-US", { hour: "numeric", minute: "numeric" }).split(", ");
+
+	return (
+		<pre custom-tooltip={time}>
+			{text.split(linkRegex).map((text, i) => {
+				if (i % 2 === 0) return <span key={i}>{text}</span>;
+				else return <LinkToImage key={i} link={text} />;
+			})}
+		</pre>
+	);
+}
+
+const LinkToImage = ({ link }) => {
+	const image = new Image();
+	const [loaded, setLoaded] = useState(false);
+
+	useEffect(() => {
+		image.src = link;
+		image.onload = () => {
+			setLoaded(true);
+		};
+	}, []);
+
+	if (loaded) return <img className={style["image"]} src={link} alt="Image" />;
+	else return <a href={link}>{link}</a>;
+};
 
 function formatDate(utcTime) {
 	if (!utcTime) return utcTime;

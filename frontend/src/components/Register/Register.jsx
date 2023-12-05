@@ -32,12 +32,11 @@ export default function Register() {
 		else if (status === 201) {
 			addNotification({ type: "success", message: "Registration successful", title: "Registration successful" });
 			navigate("/login");
+			setUsername("");
+			setEmail("");
+			setPassword("");
+			setConfirmPassword("");
 		}
-
-		setUsername("");
-		setEmail("");
-		setPassword("");
-		setConfirmPassword("");
 	};
 	return (
 		<div className={style["main-content"]}>

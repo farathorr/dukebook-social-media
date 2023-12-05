@@ -184,7 +184,6 @@ const apiObject = {
 export const api = new Proxy(apiObject, {
 	get: (target, prop) => {
 		const callback = target[prop];
-		console.log(callback.constructor.name);
 
 		if (callback.constructor.name === "AsyncFunction") {
 			return async (...settings) => {
