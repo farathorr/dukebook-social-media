@@ -91,6 +91,7 @@ export default function Feed() {
 						dislikes={post.dislikes.length}
 						likes={post.likes.length}
 						onUpdate={setPosts}
+						edited={post.edited}
 					/>
 				))}
 			</section>

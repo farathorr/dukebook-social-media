@@ -50,3 +50,42 @@
 		}
 	}
 }
+.edit-form {
+	position: relative;
+	width: 100%;
+	padding-inline: 50px;
+	display: grid;
+	place-items: center;
+
+	.edit-area {
+		width: 80%;
+		height: 100px;
+		border: 2px solid var(--clr-accent-400);
+		border-radius: 5px;
+		padding: 10px;
+		font-size: var(--fs-300);
+		color: var(--clr-text-100);
+		background-color: var(--clr-accent-500);
+		resize: none;
+
+		&::placeholder {
+			color: var(--clr-accent-400);
+			opacity: 1;
+		}
+
+		&:focus {
+			outline: none;
+			border: 2px solid var(--clr-accent-400);
+		}
+	}
+	button {
+		top: 10px;
+		right: 10px;
+		background-color: var(--clr-secondary-400);
+		border: 2px solid var(--clr-dark-500);
+		border-radius: 5px;
+		padding: 5px 10px;
+		color: var(--clr-text-100);
+		font-size: var(--fs-300);
+	}
+}
