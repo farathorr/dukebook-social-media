@@ -8,22 +8,24 @@ export default function MessageRow(props) {
 			<div className={style["message-content"]}>
 				<span className={style["message-user-name"]}>{props.name} </span>
 				<span className={style["message-date"]}>{formatDate(props.date)}</span>
+
 				{props.messages.map((message, index) => (
-					<MessageText key={index} text={message.text} />
+					<MessageText key={index} text={message.text} tooltip={message.date} />
 				))}
 			</div>
 		</div>
 	);
 }
 
-function MessageText(props) {
+function MessageText({ text, tooltip }) {
 	const linkRegex = /(https?:\/\/[^ \n]+)/g;
+	const [, time] = new Date(tooltip).toLocaleDateString("en-US", { hour: "numeric", minute: "numeric" }).split(", ");
 
 	return (
-		<pre>
-			{props.text.split(linkRegex).map((text, i) => {
+		<pre custom-tooltip={time}>
+			{text.split(linkRegex).map((text, i) => {
 				if (i % 2 === 0) return <span key={i}>{text}</span>;
-				else return <LinkToImage key={i} link={text}></LinkToImage>;
+				else return <LinkToImage key={i} link={text} />;
 			})}
 		</pre>
 	);
@@ -42,28 +44,6 @@ const LinkToImage = ({ link }) => {
 
 	if (loaded) return <img className={style["image"]} src={link} alt="Image" />;
 	else return <a href={link}>{link}</a>;
-
-	// const [image, setImage] = useState(null);
-	// const [error, setError] = useState(false);
-
-	// useEffect(() => {
-	// 	const fetchImage = async () => {
-	// 		try {
-	// 			const response = await fetch(link);
-	// 			if (!response.ok) throw new Error("Image not found");
-	// 			const blob = await response.blob();
-	// 			setImage(URL.createObjectURL(blob));
-	// 		} catch (err) {
-	// 			setError(true);
-	// 		}
-	// 	};
-	// 	fetchImage();
-	// }, [link]);
-
-	// if (error) return null;
-	// if (!image) return <div className={style["image-placeholder"]} />;
-
-	// return <img className={style["image"]} src={image} alt="Image" />;
 };
 
 function formatDate(utcTime) {

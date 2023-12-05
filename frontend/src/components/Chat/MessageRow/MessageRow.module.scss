@@ -16,7 +16,7 @@
 		padding: 0px 10px 10px 10px;
 		border-radius: 5px;
 
-		img {
+		.image {
 			position: relative;
 			display: block;
 			width: 100%;
@@ -24,11 +24,31 @@
 		}
 
 		pre {
+			position: relative;
 			font-family: inherit;
 			font-size: inherit;
 			white-space: pre-wrap;
 			word-break: break-word;
 			margin: 0px;
+
+			&::before {
+				position: absolute;
+				color: transparent;
+				transition: color 0.1s;
+				content: attr(custom-tooltip);
+				display: block;
+				right: calc(100% + 15px);
+				width: max-content;
+				opacity: 0.25;
+			}
+
+			&:not(:first-of-type):hover::before {
+				color: var(--clr-text-500);
+			}
+
+			&:hover {
+				background: var(--clr-primary-400);
+			}
 		}
 	}
 }
