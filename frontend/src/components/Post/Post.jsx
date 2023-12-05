@@ -38,7 +38,7 @@ export default function Post() {
 					{postData.at(-1).originalPostParentId && <Link to={"/post/" + postData.at(-1).originalPostParentId}>{"To start"}</Link>}
 				</div>
 				<ParentLoop posts={postData} index={0} />
-				<ReplyForm updateInterface={setUpdatePostContent} />
+				<ReplyForm updateInterface={setUpdatePostContent} disabled={postData.at(-1).removed} />
 				<div className={style["main-replies"]}>
 					<CommentPosts replies={repliesData} loadMore={2} />
 				</div>
@@ -61,7 +61,7 @@ export default function Post() {
 				dislikes={post.dislikes?.length}
 				date={post.createdAt}
 				removed={post.removed}
-				onRemove={setPostData}
+				onUpdate={setPostData}
 			>
 				<ParentLoop posts={posts} index={index + 1} />
 			</PostComponent>
@@ -86,7 +86,7 @@ export default function Post() {
 						comments={reply.comments?.length}
 						date={reply.createdAt}
 						removed={reply.removed}
-						onRemove={setReplies}
+						onUpdate={setPostData}
 						children={
 							<CommentPosts
 								key={reply._id}
