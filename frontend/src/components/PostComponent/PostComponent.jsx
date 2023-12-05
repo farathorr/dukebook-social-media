@@ -4,8 +4,8 @@ import PostTime from "./PostTime/PostTime";
 import PostStats from "./PostStats/PostStats";
 
 export default function PostComponent(props) {
-	const { postId, likes, dislikes, comments, onUpdate, userTag, text, edited } = props;
-	const stats = { postId, likes, dislikes, comments, onUpdate, userTag, text };
+	const { postId, likes, dislikes, comments, onUpdate, userTag, text, edited, removed } = props;
+	const stats = { postId, likes, dislikes, comments, onUpdate, userTag, text, removed };
 
 	return (
 		<div className={style["post-container"]} id={postId}>

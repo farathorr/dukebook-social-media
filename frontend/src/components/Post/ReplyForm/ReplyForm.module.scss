@@ -51,3 +51,13 @@
 		}
 	}
 }
+.disabled {
+	filter: grayscale(1);
+
+	button {
+		cursor: not-allowed;
+	}
+	textarea {
+		cursor: not-allowed;
+	}
+}
