@@ -52,6 +52,7 @@ export default function Profile() {
 					removed={post.removed}
 					onUpdate={setPosts}
 					edited={post.edited}
+					tags={post.tags}
 				/>
 			))}
 		</div>

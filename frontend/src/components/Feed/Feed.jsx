@@ -27,7 +27,8 @@ export default function Feed() {
 		if (postText.length < 1) return addNotification({ ...postError, message: "Post can't be empty" });
 
 		try {
-			const post = { userTag: authentication.user.userTag, postText, tags: tags.split(",").map((tag) => tag.trim()) };
+			const splitTags = tags.trim().length ? tags.split(" ") : [];
+			const post = { userTag: authentication.user.userTag, postText, tags: splitTags };
 			const { status, data } = await api.createPost(post);
 
 			if (status === 400) return addNotification({ ...postError, message: data.message });
@@ -105,6 +106,7 @@ export default function Feed() {
 						likes={post.likes.length}
 						onUpdate={setPosts}
 						edited={post.edited}
+						tags={post.tags}
 					/>
 				))}
 			</section>
