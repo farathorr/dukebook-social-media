@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import style from "./PostTime.module.scss";
+import { formatDate } from "../../../utils/formatDate";
 
 export default function PostTime(props) {
 	const [time, setTime] = useState(deltaTime(props.time));
@@ -13,7 +14,7 @@ export default function PostTime(props) {
 	}, []);
 
 	return (
-		<span className={style.time} title={formatDate(props.time)}>
+		<span className={style.time} title={formatDate(props.time).longFullDate}>
 			{time}
 		</span>
 	);
@@ -31,12 +32,4 @@ function deltaTime(time) {
 	if (delta < 2628000) return Math.floor(delta / 604800) + "w";
 	if (delta < 31536000) return Math.floor(delta / 2628000) + "M";
 	if (delta >= 31536000) return Math.floor(delta / 31536000) + "y";
-}
-
-function formatDate(utcTime) {
-	if (!utcTime) return utcTime;
-
-	const options = { year: "numeric", month: "long", day: "numeric", hour: "numeric", minute: "numeric" };
-	const time = new Date(utcTime);
-	return time.toLocaleDateString("en-US", options);
 }

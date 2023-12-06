@@ -5,6 +5,7 @@ import ProfileUserHeader from "./ProfileUserHeader/ProfileUserHeader";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { api } from "../../api";
+import { formatDate } from "../../utils/formatDate";
 
 export default function Profile() {
 	const params = useParams();
@@ -35,7 +36,7 @@ export default function Profile() {
 				bio={profileData?.bio}
 				followers={profileData?.followerIds}
 				following={profileData?.followedIds.length}
-				joinDate={formatDate(profileData?.updatedAt)}
+				joinDate={formatDate(profileData?.updatedAt)?.longDate}
 				followerCount={profileData?.followerIds?.length}
 			/>
 			{posts.map((post) => (
@@ -57,12 +58,4 @@ export default function Profile() {
 			))}
 		</div>
 	);
-}
-
-function formatDate(utcTime) {
-	if (!utcTime) return utcTime;
-
-	const options = { year: "numeric", month: "long", day: "numeric" };
-	const time = new Date(utcTime);
-	return time.toLocaleDateString("en-US", options);
 }
