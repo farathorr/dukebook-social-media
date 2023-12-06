@@ -59,8 +59,8 @@ export default function Chat() {
 		if (!group) return;
 		const fetchServices = async () => {
 			const { status, data } = await api.getMessages(group._id);
-			firstRender = true;
 			if (status === 200) setMessages(formatMessages(data));
+			firstRender = true;
 			changeGroup(group._id);
 			sessionStorage.setItem("lastGroup", JSON.stringify(group));
 		};
@@ -70,6 +70,7 @@ export default function Chat() {
 
 	useEffect(() => {
 		if (!newMessage) return;
+		firstRender = false;
 		if (newMessage?.sender?._id === authentication.user?.userId) return;
 		addNewMessage(newMessage);
 	}, [newMessage]);
@@ -82,7 +83,7 @@ export default function Chat() {
 		scrolledAtBottom = event.target.scrollHeight < event.target.scrollTop + event.target.clientHeight + 10;
 	};
 
-	useEffect(() => scrollToBottom);
+	useEffect(() => scrollToBottom());
 
 	if (!authentication.isAuthenticated) return null;
 	return (
