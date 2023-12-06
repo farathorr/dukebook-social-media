@@ -164,14 +164,14 @@ const apiObject = {
 		const response = await axios.get("http://localhost:4000/profile");
 		return response;
 	}),
-	updateAuthUser: requiresAuth(async ({ username, userTag, email, password, profilePicture, profileDescription }) => {
+	updateAuthUser: requiresAuth(async ({ username, userTag, email, password, profilePicture, bio }) => {
 		const response = await axios.patch("http://localhost:4000/profile", {
 			username,
 			userTag,
 			email,
 			password,
 			profilePicture,
-			profileDescription,
+			bio,
 		});
 		return response;
 	}),
@@ -209,7 +209,6 @@ export const api = new Proxy(apiObject, {
 				try {
 					return await callback(...settings);
 				} catch (err) {
-					console.log(err);
 					return err.response;
 				}
 			};
@@ -218,7 +217,6 @@ export const api = new Proxy(apiObject, {
 				try {
 					return callback(...settings);
 				} catch (err) {
-					console.log(err);
 					return err.response;
 				}
 			};

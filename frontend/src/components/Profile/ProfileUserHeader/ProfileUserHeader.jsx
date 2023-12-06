@@ -5,6 +5,7 @@ import { useState, useEffect, useContext } from "react";
 import { AuthenticationContext } from "../../AuthenticationControls/AuthenticationControls";
 import { NotificationContext } from "../../NotificationControls/NotificationControls";
 import { api } from "../../../api";
+import { Link } from "react-router-dom";
 
 export default function ProfileUserHeader(props) {
 	const [isFollowing, setIsFollowing] = useState(false);
@@ -19,6 +20,7 @@ export default function ProfileUserHeader(props) {
 
 	const fetchData = async () => {
 		if (!props.userId) return;
+
 		try {
 			const { data } = await api.getUserById(props.userId);
 			setFollowers(data.followerIds.length);
@@ -27,7 +29,7 @@ export default function ProfileUserHeader(props) {
 		}
 		try {
 			const currentUser = authentication.user;
-			if (!currentUser) return;
+			if (!currentUser?.userId) return;
 			const { data } = await api.getUserById(currentUser.userId);
 			setUser(data);
 			const isAlreadyFollowed = data.followedIds?.some((id) => id === props.userId);
@@ -124,6 +126,11 @@ export default function ProfileUserHeader(props) {
 						<button className={style["add-to-friend"]} onClick={handleFriend}>
 							{friendButtonText}
 						</button>
+					)}
+					{!isButtonVisible && (
+						<Link to="/profile">
+							<button>Edit proile</button>
+						</Link>
 					)}
 				</div>
 			</div>

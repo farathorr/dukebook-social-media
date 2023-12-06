@@ -8,8 +8,8 @@ const getAuthUserInfo = async (req, res) => {
 
 const updateAuthUser = async (req, res) => {
 	const { userId: id } = req.user;
-	const { username, userTag, email, password, profilePicture, profileDescription } = req.body;
-	const updatedUser = { username, userTag, email, password, profilePicture, profileDescription, _id: id };
+	const { username, userTag, email, password, profilePicture, bio } = req.body;
+	const updatedUser = { username, userTag, email, password, profilePicture, bio, _id: id };
 	const user = await User.findByIdAndUpdate(id, updatedUser, { new: true });
 
 	if (!user) return res.status(404).send(`No user with id: ${id}`);

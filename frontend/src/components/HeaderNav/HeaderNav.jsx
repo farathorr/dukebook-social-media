@@ -11,7 +11,6 @@ export default function HeaderNav() {
 		<nav className={style["header-nav"]}>
 			<img src={logo} alt="logo" />
 			<div className={style.links}>
-				<Link to="/authentication">Authentication</Link>
 				<Link to="/">home</Link>
 				{authentication.isAuthenticated && <Link to={`/user/${authentication.user.userTag}`}>profile</Link>}
 				<Link to="/feed">feed</Link>

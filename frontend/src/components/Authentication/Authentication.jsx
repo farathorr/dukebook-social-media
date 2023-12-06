@@ -2,13 +2,30 @@ import { useContext, useEffect, useState } from "react";
 import { AuthenticationContext } from "../AuthenticationControls/AuthenticationControls";
 import { api } from "../../api";
 import style from "./Authentication.module.scss";
+import { NotificationContext } from "../NotificationControls/NotificationControls";
 
 export default function Authentication() {
-	const { authentication } = useContext(AuthenticationContext);
+	const [addNotification] = useContext(NotificationContext);
+	const { authentication, dispatchAuthentication } = useContext(AuthenticationContext);
 	const [password, setPassword] = useState("");
 
-	const handleSubmit = (event) => {
+	const handleSubmit = async (event) => {
 		event.preventDefault();
+		const { status } = await api.login({
+			userTag: authentication.user.userTag,
+			password: password,
+			rememberPassword: authentication.rememberPassword,
+		});
+
+		if (status !== 200) {
+			setPassword("");
+			return addNotification({ type: "error", message: "Wrong password", title: "Authentication failed", duration: 2000 });
+		}
+
+		authentication.callback?.();
+
+		dispatchAuthentication({ type: "callback", callback: null });
+		addNotification({ type: "success", message: "Authentication successful", title: "Authentication successful", duration: 2000 });
 	};
 
 	useEffect(() => {});

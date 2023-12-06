@@ -13,7 +13,7 @@ const login = async (req, res) => {
 		const correctPassword = await bcrypt.compare(password, user.sensitiveData.password);
 		if (!correctPassword) return res.status(400).json({ message: "Invalid credentials.", isMatch: false });
 
-		const tokenUser = { userId: user._id, type: "login", userTag: user.userTag, username: user.username };
+		const tokenUser = { userId: user._id, type: "login" };
 
 		const accessToken = jwt.sign(tokenUser, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "20s" });
 		const refreshToken = jwt.sign({ ...tokenUser, type: "refresh" }, process.env.REFRESH_TOKEN_SECRET);
