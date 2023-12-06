@@ -54,6 +54,7 @@ export default function Chat() {
 		if (!group) return;
 		const fetchServices = async () => {
 			const { status, data } = await api.getMessages(group._id);
+			console.log(status, data);
 			if (status === 200) setMessages(formatMessages(data));
 			changeGroup(group._id);
 			sessionStorage.setItem("lastGroup", JSON.stringify(group));

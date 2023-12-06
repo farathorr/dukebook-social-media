@@ -29,7 +29,9 @@ export default function PostComponent(props) {
 						{props.tags.length > 0 ? (
 							<div className={style["post-tags"]}>
 								{props.tags.map((tag, index) => (
-									<span className={style["post-tag"]}>{tag}</span>
+									<span className={style["post-tag"]} key={tag + index}>
+										{tag}
+									</span>
 								))}
 							</div>
 						) : null}
