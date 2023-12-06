@@ -19,6 +19,7 @@ app.get("/", (req, res) => res.json({ message: "Welcome to the application." }))
 app.use("/messages", require("./routes/messagesRouter"));
 app.use("/users", require("./routes/usersRouter"));
 app.use("/posts", require("./routes/postsRouter"));
+app.use("/profile", require("./routes/profileRouter"));
 
 const PORT = process.env.PORT || 4000;
 http.listen(PORT, () => console.log(`Server is running on port ${PORT}.`));

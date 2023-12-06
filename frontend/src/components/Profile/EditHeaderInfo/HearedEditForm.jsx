@@ -1,50 +1,50 @@
 import { useState, useEffect, useContext } from "react";
 import style from "./HeaderEditForm.module.scss";
-import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { NotificationContext } from "../../NotificationControls/NotificationControls";
 import { AuthenticationContext } from "../../AuthenticationControls/AuthenticationControls";
+import { api } from "../../../api";
 
-export default function HeaderEditForm(props) {
+export default function HeaderEditForm() {
 	const [addNotification] = useContext(NotificationContext);
-	const [authentication, setAuthentication] = useContext(AuthenticationContext);
-	const params = useParams();
+	const { authentication, dispatchAuthentication } = useContext(AuthenticationContext);
 	const [username, setUsername] = useState("");
 	const [userTag, setUserTag] = useState("");
 	const [bio, setBio] = useState("");
+	const navigate = useNavigate();
 
 	useEffect(() => {
-		const fetchServices = async () => {
-			try {
-				console.log(authentication);
-				if (!authentication.isAuthenticated) return;
-				const { data } = await axios.get(`http://localhost:4000/users/${authentication.user.userid}`);
-				if (!data) return;
+		if (!authentication.user) return;
 
-				setUsername(data.username);
-				setUserTag(data.userTag);
-				setBio(data.bio);
-			} catch (error) {}
-		};
-		fetchServices();
+		setUsername(authentication.user.username);
+		setUserTag(authentication.user.userTag);
+		setBio(authentication.user.bio);
 	}, [authentication]);
+
+	const callback = async () => {
+		const userData = { username, userTag, bio };
+		const { status } = await api.updateAuthUser(userData);
+		if (status === 403) {
+			dispatchAuthentication({ type: "callback", callback });
+			navigate("/authentication");
+			return;
+		}
+		if (status !== 200) return;
+		addNotification({ type: "success", message: "Settings updated succesfully", title: "Authentication successful", duration: 2000 });
+
+		const { status: status2, data } = await api.getAuthUserInfo();
+		if (status2 !== 200)
+			return addNotification({ type: "error", message: "Failed to get user info", title: "Failed to get user info", duration: 5000 });
+
+		dispatchAuthentication({ type: "update", user: data });
+		navigate("/profile");
+	};
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
-		const user = { username, userTag, bio };
-		if (!username || !userTag)
-			return addNotification({ type: "info", title: "Empty fields", message: "Username and user tag are required" });
 
-		console.log(authentication.user);
-		try {
-			if (userTag !== authentication.user.userTag) {
-				const user = (await axios.get(`http://localhost:4000/users/userTag/${userTag}`)).data;
-				if (user) return addNotification({ type: "info", title: "Duplicate name", message: "User tag is already in use!!!" });
-			}
-
-			await axios.patch(`http://localhost:4000/users/${authentication.user.userid}`, user);
-			addNotification({ type: "success", title: "Success", message: "User info updated successfully" });
-		} catch (err) {}
+		callback();
 	};
 
 	return (

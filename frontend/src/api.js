@@ -160,6 +160,22 @@ const apiObject = {
 		return response;
 	}),
 
+	getAuthUserInfo: requiresAuth(async () => {
+		const response = await axios.get("http://localhost:4000/profile");
+		return response;
+	}),
+	updateAuthUser: requiresAuth(async ({ username, userTag, email, password, profilePicture, bio }) => {
+		const response = await axios.patch("http://localhost:4000/profile", {
+			username,
+			userTag,
+			email,
+			password,
+			profilePicture,
+			bio,
+		});
+		return response;
+	}),
+
 	usePostStats: (id, props) => {
 		const [value] = useSocket(`post/${id}`);
 		const [dislikes, setDislikes] = useState(props?.dislikes ?? 0);
@@ -193,7 +209,6 @@ export const api = new Proxy(apiObject, {
 				try {
 					return await callback(...settings);
 				} catch (err) {
-					console.log(err);
 					return err.response;
 				}
 			};
@@ -202,7 +217,6 @@ export const api = new Proxy(apiObject, {
 				try {
 					return callback(...settings);
 				} catch (err) {
-					console.log(err);
 					return err.response;
 				}
 			};

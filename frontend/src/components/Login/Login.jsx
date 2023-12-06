@@ -8,7 +8,7 @@ import { api } from "../../api";
 
 export default function Login() {
 	const [addNotification] = useContext(NotificationContext);
-	const [authentication, setAuthentication] = useContext(AuthenticationContext);
+	const { dispatchAuthentication } = useContext(AuthenticationContext);
 	const navigate = useNavigate();
 	const [userTag, setUsertag] = useState("");
 	const [password, setPassword] = useState("");
@@ -18,15 +18,16 @@ export default function Login() {
 		e.preventDefault();
 		const user = { userTag, password, rememberPassword };
 		try {
-			const { status, data } = await api.login(user);
+			const { status } = await api.login(user);
 			if (status === 400) {
 				addNotification({ type: "error", message: "Wrong password", title: "Login failed", duration: 5000 });
 			} else if (status === 404) {
 				addNotification({ type: "error", message: "User not found", title: "Login failed", duration: 5000 });
 			} else if (status === 200) {
-				authentication.isAuthenticated = true;
-				Object.assign(authentication, data);
-				setAuthentication({ ...authentication, rememberPassword });
+				const { status, data } = await api.getAuthUserInfo();
+				if (status !== 200) return;
+
+				dispatchAuthentication({ type: "login", user: data, rememberPassword });
 				addNotification({ type: "success", message: "Login successful", title: "Login successful", duration: 2000 });
 				navigate(`/user/${userTag}`);
 			}

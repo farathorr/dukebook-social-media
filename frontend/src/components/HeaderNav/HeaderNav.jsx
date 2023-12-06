@@ -6,7 +6,7 @@ import logo from "../../images/logo.png";
 import { AuthenticationContext } from "../AuthenticationControls/AuthenticationControls";
 
 export default function HeaderNav() {
-	const [authentication] = useContext(AuthenticationContext);
+	const { authentication } = useContext(AuthenticationContext);
 	return (
 		<nav className={style["header-nav"]}>
 			<img src={logo} alt="logo" />

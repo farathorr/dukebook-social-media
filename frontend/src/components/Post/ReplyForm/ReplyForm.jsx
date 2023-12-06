@@ -9,7 +9,7 @@ import { api } from "../../../api";
 const postError = { type: "error", title: "Post failed" };
 
 export default function ReplyForm(props) {
-	const [authentication] = useContext(AuthenticationContext);
+	const { authentication } = useContext(AuthenticationContext);
 	const [addNotification] = useContext(NotificationContext);
 	const params = useParams();
 	const [replyText, setReplyText] = useState("");

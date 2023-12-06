@@ -12,7 +12,7 @@ const postError = { type: "error", title: "Post failed" };
 
 export default function Feed() {
 	const [addNotification] = useContext(NotificationContext);
-	const [authentication] = useContext(AuthenticationContext);
+	const { authentication } = useContext(AuthenticationContext);
 	const [searchParams] = useSearchParams();
 	const [posts, setPosts] = useState([]);
 	const [postText, setPostText] = useState("");

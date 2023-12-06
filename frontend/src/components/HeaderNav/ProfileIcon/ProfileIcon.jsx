@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { api } from "../../../api";
 
 export default function ProfileIcon() {
-	const [authentication, setAuthentication] = useContext(AuthenticationContext);
+	const { authentication, dispatchAuthentication } = useContext(AuthenticationContext);
 	const navigate = useNavigate();
 	if (!authentication.isAuthenticated)
 		return (
@@ -24,11 +24,7 @@ export default function ProfileIcon() {
 
 	function logout() {
 		api.logout();
-
-		authentication.isAuthenticated = false;
-		authentication.accessToken = null;
-		authentication.refreshToken = null;
-		setAuthentication({ ...authentication });
+		dispatchAuthentication({ type: "logout" });
 		navigate("/");
 	}
 }

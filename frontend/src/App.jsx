@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import HeaderNav from "./components/HeaderNav/HeaderNav";
 import Chat from "./components/Chat/Chat";
 import Feed from "./components/Feed/Feed";
@@ -9,30 +9,30 @@ import Login from "./components/Login/Login";
 import Register from "./components/Register/Register";
 import NotificationControls from "./components/NotificationControls/NotificationControls";
 import NotificationContainer from "./components/NotificationControls/NotificationContainer/NotificationContainer";
-import AuthenticationControls from "./components/AuthenticationControls/AuthenticationControls";
+import { AuthenticationContext } from "./components/AuthenticationControls/AuthenticationControls";
 import Home from "./components/Home/Home";
+import Authentication from "./components/Authentication/Authentication";
 import "./App.scss";
+import { useContext } from "react";
 
 export default function App() {
+	const { authentication } = useContext(AuthenticationContext);
 	return (
-		<NotificationControls>
-			<AuthenticationControls>
-				<BrowserRouter>
-					<HeaderNav />
-					<NotificationContainer />
-					<Routes>
-						<Route path="/" element={<Home />} />
-						<Route path="/user/:userTag" element={<Profile />} />
-						<Route path="/user/editinfo" element={<HearedEditForm />} />
-						<Route path="/feed" element={<Feed />} />
-						<Route path="/login" element={<Login />} />
-						<Route path="/register" element={<Register />} />
-						<Route path="/post" element={<Post />} />
-						<Route path="/chat" element={<Chat />} />
-						<Route path="/post/:id" element={<Post />} />
-					</Routes>
-				</BrowserRouter>
-			</AuthenticationControls>
-		</NotificationControls>
+		<BrowserRouter>
+			<HeaderNav />
+			<NotificationContainer />
+			<Routes>
+				<Route path="/" element={<Home />} />
+				<Route path="/user/:userTag" element={<Profile />} />
+				<Route path="/authentication" element={authentication.isAuthenticated ? <Authentication /> : <Navigate to="/login" />} />
+				<Route path="/profile" element={<HearedEditForm />} />
+				<Route path="/feed" element={<Feed />} />
+				<Route path="/login" element={<Login />} />
+				<Route path="/register" element={<Register />} />
+				<Route path="/post" element={<Post />} />
+				<Route path="/chat" element={<Chat />} />
+				<Route path="/post/:id" element={<Post />} />
+			</Routes>
+		</BrowserRouter>
 	);
 }

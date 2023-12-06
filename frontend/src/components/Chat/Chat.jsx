@@ -16,7 +16,7 @@ export const ChatContext = createContext(null);
 let firstRender = true;
 let scrolledAtBottom = true;
 export default function Chat() {
-	const [authentication] = useContext(AuthenticationContext);
+	const { authentication } = useContext(AuthenticationContext);
 	const [messageGroups, setMessageGroups] = useState([]);
 	const [messages, setMessages] = useState([]);
 	const [group, setGroup] = useState(JSON.parse(sessionStorage.getItem("lastGroup")) || null);
