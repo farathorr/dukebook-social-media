@@ -1,7 +1,10 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import style from "./MessageRow.module.scss";
+import { ChatContext } from "../Chat";
 
 export default function MessageRow({ image, name, date, messages }) {
+	const { scrollToBottom } = useContext(ChatContext);
+
 	return (
 		<div className={style["message-row"]}>
 			<img className={style["profile-pic"]} src={image} alt="Profile picture" width={40} height={40} />
@@ -15,33 +18,34 @@ export default function MessageRow({ image, name, date, messages }) {
 			</div>
 		</div>
 	);
+
+	function MessageText({ text, tooltip }) {
+		const linkRegex = /(https?:\/\/[^ \n]+)/g;
+
+		return (
+			<pre custom-tooltip={tooltip}>
+				{text.split(linkRegex).map((text, i) => {
+					if (!text.length) return null;
+					if (i % 2 === 0) return <span key={i}>{text}</span>;
+					else return <LinkToImage key={i} link={text} />;
+				})}
+			</pre>
+		);
+	}
+
+	function LinkToImage({ link }) {
+		const image = new Image();
+		const [loaded, setLoaded] = useState(false);
+
+		useEffect(() => {
+			image.src = link;
+			image.onload = () => setLoaded(true);
+		}, []);
+
+		if (loaded) return <img className={style["image"]} src={link} alt="Image" onLoad={scrollToBottom} />;
+		else return <a href={link}>{link}</a>;
+	}
 }
-
-function MessageText({ text, tooltip }) {
-	const linkRegex = /(https?:\/\/[^ \n]+)/g;
-
-	return (
-		<pre custom-tooltip={tooltip}>
-			{text.split(linkRegex).map((text, i) => {
-				if (i % 2 === 0) return <span key={i}>{text}</span>;
-				else return <LinkToImage key={i} link={text} />;
-			})}
-		</pre>
-	);
-}
-
-const LinkToImage = ({ link }) => {
-	const image = new Image();
-	const [loaded, setLoaded] = useState(false);
-
-	useEffect(() => {
-		image.src = link;
-		image.onload = () => setLoaded(true);
-	}, []);
-
-	if (loaded) return <img className={style["image"]} src={link} alt="Image" />;
-	else return <a href={link}>{link}</a>;
-};
 
 MessageRow.defaultProps = {
 	image: require("../../../images/Duke3D.png"),

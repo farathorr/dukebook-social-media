@@ -24,5 +24,6 @@ export const formatDate = (utcTime) => {
 		shortFullDate,
 		longFullDate,
 		longDate,
+		raw: utcTime,
 	};
 };
