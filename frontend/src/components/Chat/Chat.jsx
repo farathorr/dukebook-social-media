@@ -13,6 +13,7 @@ import { createContext } from "react";
 
 export const ChatContext = createContext(null);
 
+let firstRender = true;
 let scrolledAtBottom = true;
 export default function Chat() {
 	const [authentication] = useContext(AuthenticationContext);
@@ -25,6 +26,7 @@ export default function Chat() {
 	const addNewMessage = ({ createdAt, text, ...message }) => {
 		if (!group) return;
 		if (message.groupId !== group._id) return;
+		firstRender = false;
 
 		const lastMessage = messages.at(-1);
 		const lastTime = lastMessage?.messages?.at(-1)?.date.raw ?? null;
@@ -57,6 +59,7 @@ export default function Chat() {
 		if (!group) return;
 		const fetchServices = async () => {
 			const { status, data } = await api.getMessages(group._id);
+			firstRender = true;
 			if (status === 200) setMessages(formatMessages(data));
 			changeGroup(group._id);
 			sessionStorage.setItem("lastGroup", JSON.stringify(group));
@@ -72,7 +75,7 @@ export default function Chat() {
 	}, [newMessage]);
 
 	const scrollToBottom = () => {
-		if (scrolledAtBottom && messagesBoxRef.current) messagesBoxRef.current.scrollTop = messagesBoxRef.current.scrollHeight;
+		if (messagesBoxRef.current && (firstRender || scrolledAtBottom)) messagesBoxRef.current.scrollTop = messagesBoxRef.current.scrollHeight;
 	};
 
 	const handleScroll = (event) => {
@@ -107,7 +110,7 @@ export default function Chat() {
 						<div className={style["message-box"]} onScroll={handleScroll} ref={messagesBoxRef}>
 							{messages.map((message) => {
 								if (message.type === "separator") return <MessageSeparator key={message._id} date={message.date} />;
-								return <MessageRow key={message._id} name={message.sender?.userTag} date={message.date} messages={message.messages} />;
+								return <MessageRow key={message._id} id={message._id} name={message.sender?.userTag} {...message} />;
 							})}
 						</div>
 						{group && <ChatField groupId={group?._id} />}

@@ -54,7 +54,7 @@
 				transition: color 0.1s;
 				content: attr(custom-tooltip);
 				display: block;
-				right: calc(100% + 15px);
+				right: calc(100% + 5px);
 				width: max-content;
 				opacity: 0.25;
 			}

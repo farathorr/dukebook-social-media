@@ -1,64 +1,71 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import style from "./MessageRow.module.scss";
 import { ChatContext } from "../Chat";
 
-export default function MessageRow({ image, name, date, messages }) {
-	const { scrollToBottom } = useContext(ChatContext);
-
-	return (
-		<div className={style["message-row"]}>
-			<img className={style["profile-pic"]} src={image} alt="Profile picture" width={40} height={40} />
-
-			<MessageContent name={name} date={date} messages={messages} />
-		</div>
-	);
-
-	function MessageContent({ name, date, messages }) {
-		const [firstMessage, ...restMessages] = messages;
+export default function MessageRow({ id, image, name, date, messages }) {
+	const memorizedMessageRow = useMemo(() => {
 		return (
-			<div className={style["message-content"]}>
-				<pre>
-					<div className={style["message-header"]}>
-						<span className={style["message-user-name"]}>{name} </span>
-						<span className={style["message-date"]}>{date.shortFullDate}</span>
-					</div>
-					<MessageText text={firstMessage.text} />
-				</pre>
-				{restMessages.map((message, i) => (
-					<pre custom-tooltip={message.date.time} key={i}>
-						<MessageText text={message.text} />
-					</pre>
-				))}
+			<div className={style["message-row"]}>
+				<img className={style["profile-pic"]} src={image} alt="Profile picture" width={40} height={40} />
+
+				<MessageContent name={name} date={date} messages={messages} />
 			</div>
 		);
-	}
+	}, [id, messages.length]);
 
-	function MessageText({ text }) {
-		const linkRegex = /(https?:\/\/[^ \n]+)/g;
+	return <>{memorizedMessageRow}</>;
+}
 
-		return (
-			<>
-				{text.split(linkRegex).map((text, i) => {
-					if (!text.length) return null;
-					if (i % 2 === 0) return <span key={i}>{text}</span>;
-					else return <LinkToImage key={i} link={text} />;
-				})}
-			</>
-		);
-	}
+function MessageContent({ name, date, messages }) {
+	const [firstMessage, ...restMessages] = messages;
+	return (
+		<div className={style["message-content"]}>
+			<pre>
+				<div className={style["message-header"]}>
+					<span className={style["message-user-name"]}>{name} </span>
+					<span className={style["message-date"]}>{date.shortFullDate}</span>
+				</div>
+				<MessageText text={firstMessage.text} />
+			</pre>
+			{restMessages.map((message, i) => (
+				<pre custom-tooltip={message.date.time} key={i}>
+					<MessageText text={message.text} />
+				</pre>
+			))}
+		</div>
+	);
+}
 
-	function LinkToImage({ link }) {
-		const image = new Image();
-		const [loaded, setLoaded] = useState(false);
+function MessageText({ text }) {
+	const linkRegex = /(https?:\/\/[^ \n]+)/g;
 
-		useEffect(() => {
-			image.src = link;
-			image.onload = () => setLoaded(true);
-		}, []);
+	return (
+		<>
+			{text.split(linkRegex).map((text, i) => {
+				if (!text.length) return null;
+				if (i % 2 === 0) return <span key={i}>{text}</span>;
+				else return <MemorizedLinkToImage key={i} link={text} />;
+			})}
+		</>
+	);
+}
 
-		if (loaded) return <img className={style["image"]} src={link} alt="Image" onLoad={scrollToBottom} />;
-		else return <a href={link}>{link}</a>;
-	}
+function MemorizedLinkToImage({ link }) {
+	return useMemo(() => <LinkToImage link={link} />, [link]);
+}
+
+function LinkToImage({ link }) {
+	const { scrollToBottom } = useContext(ChatContext);
+	const image = new Image();
+	const [loaded, setLoaded] = useState(false);
+
+	useEffect(() => {
+		image.src = link;
+		image.onload = () => setLoaded(true);
+	}, []);
+
+	if (loaded) return <img className={style["image"]} src={link} alt="Image" onLoad={scrollToBottom} />;
+	else return <a href={link}>{link}</a>;
 }
 
 MessageRow.defaultProps = {
