@@ -8,7 +8,7 @@ import { api } from "../../api";
 
 export default function Login() {
 	const [addNotification] = useContext(NotificationContext);
-	const [authentication, setAuthentication] = useContext(AuthenticationContext);
+	const { authentication, setAuthentication } = useContext(AuthenticationContext);
 	const navigate = useNavigate();
 	const [userTag, setUsertag] = useState("");
 	const [password, setPassword] = useState("");

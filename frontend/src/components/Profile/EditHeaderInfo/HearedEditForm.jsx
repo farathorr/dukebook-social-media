@@ -4,10 +4,11 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { NotificationContext } from "../../NotificationControls/NotificationControls";
 import { AuthenticationContext } from "../../AuthenticationControls/AuthenticationControls";
+import { api } from "../../../api";
 
 export default function HeaderEditForm(props) {
 	const [addNotification] = useContext(NotificationContext);
-	const [authentication, setAuthentication] = useContext(AuthenticationContext);
+	const { authentication } = useContext(AuthenticationContext);
 	const params = useParams();
 	const [username, setUsername] = useState("");
 	const [userTag, setUserTag] = useState("");
@@ -15,19 +16,15 @@ export default function HeaderEditForm(props) {
 
 	useEffect(() => {
 		const fetchServices = async () => {
-			try {
-				console.log(authentication);
-				if (!authentication.isAuthenticated) return;
-				const { data } = await axios.get(`http://localhost:4000/users/${authentication.user.userid}`);
-				if (!data) return;
-
-				setUsername(data.username);
-				setUserTag(data.userTag);
-				setBio(data.bio);
-			} catch (error) {}
+			const { data, status } = await api.getAuthUserInfo();
+			console.log(data);
+			setUsername(data.username);
+			setUserTag(data.userTag);
+			setBio(data.bio);
 		};
+
 		fetchServices();
-	}, [authentication]);
+	}, []);
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();

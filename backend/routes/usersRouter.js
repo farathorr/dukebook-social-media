@@ -7,7 +7,6 @@ router.get("/", usersController.getUsers);
 router.post("/", usersController.createUser);
 
 router.get("/:id", usersController.getUserById);
-router.patch("/:id", usersController.updateUserById);
 router.delete("/:id", usersController.deleteUserById);
 
 router.get("/userTag/:userTag", usersController.getUserByUserTag);

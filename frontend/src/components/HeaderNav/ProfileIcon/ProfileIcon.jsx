@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { api } from "../../../api";
 
 export default function ProfileIcon() {
-	const [authentication, setAuthentication] = useContext(AuthenticationContext);
+	const { authentication, setAuthentication } = useContext(AuthenticationContext);
 	const navigate = useNavigate();
 	if (!authentication.isAuthenticated)
 		return (

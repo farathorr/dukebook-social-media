@@ -13,11 +13,11 @@ export default function AuthenticationControls(props) {
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const { data } = await api.refreshToken();
-				if (!data?.accessToken) return;
+				const { data, status } = await api.getAuthUserInfo();
+				if (status !== 200) return;
 				authentication.isAuthenticated = true;
 
-				Object.assign(authentication, data);
+				Object.assign(authentication, { user: data });
 				setAuthentication({ ...authentication });
 			} catch (err) {}
 		};
@@ -25,5 +25,5 @@ export default function AuthenticationControls(props) {
 		fetchData();
 	}, []);
 
-	return <AuthenticationContext.Provider value={[authentication, setAuthentication]} {...props} />;
+	return <AuthenticationContext.Provider value={{ authentication, setAuthentication }} {...props} />;
 }

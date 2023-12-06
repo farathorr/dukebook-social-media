@@ -6,7 +6,7 @@ import { NotificationContext } from "../../NotificationControls/NotificationCont
 import { api } from "../../../api";
 
 export default function PostStats({ postId, likes, dislikes, comments, userTag, onUpdate, text, removed }) {
-	const [authentication] = useContext(AuthenticationContext);
+	const { authentication } = useContext(AuthenticationContext);
 	const [addNotification] = useContext(NotificationContext);
 	const [editable, setEditable] = useState(false);
 	const stats = api.usePostStats(postId, { likes, dislikes, comments });

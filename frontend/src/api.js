@@ -160,6 +160,22 @@ const apiObject = {
 		return response;
 	}),
 
+	getAuthUserInfo: requiresAuth(async () => {
+		const response = await axios.get("http://localhost:4000/profile");
+		return response;
+	}),
+	updateAuthUser: requiresAuth(async ({ username, userTag, email, password, profilePicture, profileDescription }) => {
+		const response = await axios.patch("http://localhost:4000/profile", {
+			username,
+			userTag,
+			email,
+			password,
+			profilePicture,
+			profileDescription,
+		});
+		return response;
+	}),
+
 	usePostStats: (id, props) => {
 		const [value] = useSocket(`post/${id}`);
 		const [dislikes, setDislikes] = useState(props?.dislikes ?? 0);

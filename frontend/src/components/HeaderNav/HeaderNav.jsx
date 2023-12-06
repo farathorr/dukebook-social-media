@@ -6,11 +6,12 @@ import logo from "../../images/logo.png";
 import { AuthenticationContext } from "../AuthenticationControls/AuthenticationControls";
 
 export default function HeaderNav() {
-	const [authentication] = useContext(AuthenticationContext);
+	const { authentication } = useContext(AuthenticationContext);
 	return (
 		<nav className={style["header-nav"]}>
 			<img src={logo} alt="logo" />
 			<div className={style.links}>
+				<Link to="/authentication">Authentication</Link>
 				<Link to="/">home</Link>
 				{authentication.isAuthenticated && <Link to={`/user/${authentication.user.userTag}`}>profile</Link>}
 				<Link to="/feed">feed</Link>

@@ -13,7 +13,7 @@ export default function ProfileUserHeader(props) {
 	const [isFriend, setIsFriend] = useState(false);
 	const [friendButtonText, setFriendButtonText] = useState("Add as friend");
 	const [isButtonVisible, setIsButtonVisible] = useState(false);
-	const [authentication] = useContext(AuthenticationContext);
+	const { authentication } = useContext(AuthenticationContext);
 	const [addNotification] = useContext(NotificationContext);
 	const [user, setUser] = useState({});
 

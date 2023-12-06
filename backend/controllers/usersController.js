@@ -56,18 +56,6 @@ const createUser = async (req, res) => {
 	}
 };
 
-// update user by id
-const updateUserById = async (req, res) => {
-	const { id } = req.params;
-	const { username, userTag, email, password, profilePicture, profileDescription } = req.body;
-	if (!mongoose.Types.ObjectId.isValid(id)) {
-		return res.status(404).send(`No user with id: ${id}`);
-	}
-	const updatedUser = { username, userTag, email, password, profilePicture, profileDescription, _id: id };
-	await User.findByIdAndUpdate(id, updatedUser, { new: true });
-	res.status(200).json(updatedUser);
-};
-
 // delete user by id
 const deleteUserById = async (req, res) => {
 	const { id } = req.params;
@@ -232,7 +220,6 @@ module.exports = {
 	getUsers,
 	getUserById,
 	createUser,
-	updateUserById,
 	deleteUserById,
 	getFollowersByUserTag,
 	getFollowingByUserTag,
