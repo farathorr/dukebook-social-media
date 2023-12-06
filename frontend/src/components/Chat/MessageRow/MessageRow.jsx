@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 import style from "./MessageRow.module.scss";
 
-export default function MessageRow(props) {
+export default function MessageRow({ image, name, date, messages }) {
 	return (
 		<div className={style["message-row"]}>
-			<img className={style["profile-pic"]} src={props.image} alt="Profile picture" width={40} height={40} />
+			<img className={style["profile-pic"]} src={image} alt="Profile picture" width={40} height={40} />
 			<div className={style["message-content"]}>
-				<span className={style["message-user-name"]}>{props.name} </span>
-				<span className={style["message-date"]}>{formatDate(props.date)}</span>
+				<span className={style["message-user-name"]}>{name} </span>
+				<span className={style["message-date"]}>{date.shortFullDate}</span>
 
-				{props.messages.map((message, index) => (
-					<MessageText key={index} text={message.text} tooltip={message.date} />
+				{messages.map((message, index) => (
+					<MessageText key={index} text={message.text} tooltip={message.date.time} />
 				))}
 			</div>
 		</div>
@@ -19,10 +19,9 @@ export default function MessageRow(props) {
 
 function MessageText({ text, tooltip }) {
 	const linkRegex = /(https?:\/\/[^ \n]+)/g;
-	const [, time] = new Date(tooltip).toLocaleDateString("en-US", { hour: "numeric", minute: "numeric" }).split(", ");
 
 	return (
-		<pre custom-tooltip={time}>
+		<pre custom-tooltip={tooltip}>
 			{text.split(linkRegex).map((text, i) => {
 				if (i % 2 === 0) return <span key={i}>{text}</span>;
 				else return <LinkToImage key={i} link={text} />;
@@ -37,22 +36,12 @@ const LinkToImage = ({ link }) => {
 
 	useEffect(() => {
 		image.src = link;
-		image.onload = () => {
-			setLoaded(true);
-		};
+		image.onload = () => setLoaded(true);
 	}, []);
 
 	if (loaded) return <img className={style["image"]} src={link} alt="Image" />;
 	else return <a href={link}>{link}</a>;
 };
-
-function formatDate(utcTime) {
-	if (!utcTime) return utcTime;
-
-	const options = { year: "numeric", month: "numeric", day: "numeric", hour: "numeric", minute: "numeric" };
-	const time = new Date(utcTime);
-	return time.toLocaleDateString("en-US", options);
-}
 
 MessageRow.defaultProps = {
 	image: require("../../../images/Duke3D.png"),
