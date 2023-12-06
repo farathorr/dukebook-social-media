@@ -3,13 +3,14 @@ import { useEffect, useState } from "react";
 import socketIO from "socket.io-client";
 
 export const socket = socketIO("http://localhost:4000", {
-	auth: (test) => {
-		test({ token: accessToken });
+	auth: (token) => {
+		token({ token: accessToken });
 	},
 });
 
-let refreshToken = "";
-let accessToken = "";
+let refreshPromise = null;
+let refreshToken = null;
+let accessToken = null;
 
 const apiObject = {
 	login: async ({ password, userTag, rememberPassword }, callback) => {
@@ -35,10 +36,13 @@ const apiObject = {
 	},
 	refreshToken: async () => {
 		try {
-			const response = await axios.post("http://localhost:4001/auth/refresh", { token: refreshToken }, { withCredentials: true });
+			refreshPromise ??= axios.post("http://localhost:4001/auth/refresh", { token: refreshToken }, { withCredentials: true });
+			const response = await refreshPromise;
+
 			axios.defaults.headers.common["Authorization"] = `Bearer ${response.data.accessToken}`;
-			if (accessToken === "") socket.connect();
+			if (!accessToken) socket.connect();
 			accessToken = response.data.accessToken;
+			setTimeout(() => (refreshPromise = null), 1000);
 			return response;
 		} catch (err) {
 			console.log(err);
@@ -49,8 +53,7 @@ const apiObject = {
 		try {
 			const response = await axios.post("http://localhost:4001/auth/logout", { token: refreshToken }, { withCredentials: true });
 			delete axios.defaults.headers.common["Authorization"];
-			accessToken = "";
-			refreshToken = "";
+			accessToken = refreshToken = null;
 			socket.disconnect();
 			socket.connect();
 
@@ -213,7 +216,7 @@ function requiresAuth(callback) {
 			const response = await callback(...settings);
 			return response;
 		} catch (err) {
-			if (err.response?.status === 403) {
+			if (err.response?.status === 403 || !accessToken) {
 				const response = await api.refreshToken();
 				if (response?.status === 200) {
 					return await callback(...settings);

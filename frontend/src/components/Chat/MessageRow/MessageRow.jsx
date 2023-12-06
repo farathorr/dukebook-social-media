@@ -1,57 +1,71 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import style from "./MessageRow.module.scss";
+import { ChatContext } from "../Chat";
 
-export default function MessageRow(props) {
-	return (
-		<div className={style["message-row"]}>
-			<img className={style["profile-pic"]} src={props.image} alt="Profile picture" width={40} height={40} />
-			<div className={style["message-content"]}>
-				<span className={style["message-user-name"]}>{props.name} </span>
-				<span className={style["message-date"]}>{formatDate(props.date)}</span>
+export default function MessageRow({ id, image, name, date, messages }) {
+	const memorizedMessageRow = useMemo(() => {
+		return (
+			<div className={style["message-row"]}>
+				<img className={style["profile-pic"]} src={image} alt="Profile picture" width={40} height={40} />
 
-				{props.messages.map((message, index) => (
-					<MessageText key={index} text={message.text} tooltip={message.date} />
-				))}
+				<MessageContent name={name} date={date} messages={messages} />
 			</div>
+		);
+	}, [id, messages.length]);
+
+	return <>{memorizedMessageRow}</>;
+}
+
+function MessageContent({ name, date, messages }) {
+	const [firstMessage, ...restMessages] = messages;
+	return (
+		<div className={style["message-content"]}>
+			<pre>
+				<div className={style["message-header"]}>
+					<span className={style["message-user-name"]}>{name} </span>
+					<span className={style["message-date"]}>{date.shortFullDate}</span>
+				</div>
+				<MessageText text={firstMessage.text} />
+			</pre>
+			{restMessages.map((message, i) => (
+				<pre custom-tooltip={message.date.time} key={i}>
+					<MessageText text={message.text} />
+				</pre>
+			))}
 		</div>
 	);
 }
 
-function MessageText({ text, tooltip }) {
+function MessageText({ text }) {
 	const linkRegex = /(https?:\/\/[^ \n]+)/g;
-	const [, time] = new Date(tooltip).toLocaleDateString("en-US", { hour: "numeric", minute: "numeric" }).split(", ");
 
 	return (
-		<pre custom-tooltip={time}>
+		<>
 			{text.split(linkRegex).map((text, i) => {
+				if (!text.length) return null;
 				if (i % 2 === 0) return <span key={i}>{text}</span>;
-				else return <LinkToImage key={i} link={text} />;
+				else return <MemorizedLinkToImage key={i} link={text} />;
 			})}
-		</pre>
+		</>
 	);
 }
 
-const LinkToImage = ({ link }) => {
+function MemorizedLinkToImage({ link }) {
+	return useMemo(() => <LinkToImage link={link} />, [link]);
+}
+
+function LinkToImage({ link }) {
+	const { scrollToBottom } = useContext(ChatContext);
 	const image = new Image();
 	const [loaded, setLoaded] = useState(false);
 
 	useEffect(() => {
 		image.src = link;
-		image.onload = () => {
-			setLoaded(true);
-		};
+		image.onload = () => setLoaded(true);
 	}, []);
 
-	if (loaded) return <img className={style["image"]} src={link} alt="Image" />;
+	if (loaded) return <img className={style["image"]} src={link} alt="Image" onLoad={scrollToBottom} />;
 	else return <a href={link}>{link}</a>;
-};
-
-function formatDate(utcTime) {
-	if (!utcTime) return utcTime;
-
-	const options = { year: "numeric", month: "numeric", day: "numeric", hour: "numeric", minute: "numeric" };
-	const time = new Date(utcTime);
-	return time.toLocaleDateString("en-US", options);
 }
 
 MessageRow.defaultProps = {

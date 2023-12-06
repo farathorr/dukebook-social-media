@@ -1,8 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import style from "./ChatField.module.scss";
 import { api } from "../../../api";
+import { ChatContext } from "../Chat";
 
-export default function ChatField({ groupId, setUpdate }) {
+export default function ChatField({ groupId }) {
+	const { addNewMessage } = useContext(ChatContext);
 	const [fieldText, setFieldText] = useState("");
 	const textArea = useRef(null);
 
@@ -11,8 +13,8 @@ export default function ChatField({ groupId, setUpdate }) {
 		if (!fieldText || !groupId) return;
 		try {
 			const { data, status } = await api.sendMessage({ groupId: groupId, text: fieldText });
-			if (status === 201) setUpdate(data);
 			setFieldText("");
+			if (status === 201) addNewMessage(data);
 		} catch (err) {}
 	};
 
