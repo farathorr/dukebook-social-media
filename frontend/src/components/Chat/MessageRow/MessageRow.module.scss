@@ -13,8 +13,12 @@
 
 	.message-content {
 		background: var(--clr-primary-500);
-		padding: 0px 10px 10px 10px;
 		border-radius: 5px;
+		width: 100%;
+
+		.message-header {
+			padding-top: 5px;
+		}
 
 		.image {
 			position: relative;
@@ -24,12 +28,25 @@
 		}
 
 		pre {
+			--_top: 0px 0px;
+			--_bottom: 0px 0px;
 			position: relative;
 			font-family: inherit;
 			font-size: inherit;
 			white-space: pre-wrap;
 			word-break: break-word;
 			margin: 0px;
+			padding-inline: 10px;
+			border-radius: var(--_top) var(--_bottom);
+			transition: 0.1s background-color;
+
+			&:first-of-type {
+				--_top: 10px 10px;
+			}
+			&:last-of-type {
+				padding-bottom: 10px;
+				--_bottom: 10px 10px;
+			}
 
 			&::before {
 				position: absolute;

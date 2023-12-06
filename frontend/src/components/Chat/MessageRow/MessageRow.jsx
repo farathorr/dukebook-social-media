@@ -8,28 +8,42 @@ export default function MessageRow({ image, name, date, messages }) {
 	return (
 		<div className={style["message-row"]}>
 			<img className={style["profile-pic"]} src={image} alt="Profile picture" width={40} height={40} />
-			<div className={style["message-content"]}>
-				<span className={style["message-user-name"]}>{name} </span>
-				<span className={style["message-date"]}>{date.shortFullDate}</span>
 
-				{messages.map((message, index) => (
-					<MessageText key={index} text={message.text} tooltip={message.date.time} />
-				))}
-			</div>
+			<MessageContent name={name} date={date} messages={messages} />
 		</div>
 	);
 
-	function MessageText({ text, tooltip }) {
+	function MessageContent({ name, date, messages }) {
+		const [firstMessage, ...restMessages] = messages;
+		return (
+			<div className={style["message-content"]}>
+				<pre>
+					<div className={style["message-header"]}>
+						<span className={style["message-user-name"]}>{name} </span>
+						<span className={style["message-date"]}>{date.shortFullDate}</span>
+					</div>
+					<MessageText text={firstMessage.text} />
+				</pre>
+				{restMessages.map((message, i) => (
+					<pre custom-tooltip={message.date.time} key={i}>
+						<MessageText text={message.text} />
+					</pre>
+				))}
+			</div>
+		);
+	}
+
+	function MessageText({ text }) {
 		const linkRegex = /(https?:\/\/[^ \n]+)/g;
 
 		return (
-			<pre custom-tooltip={tooltip}>
+			<>
 				{text.split(linkRegex).map((text, i) => {
 					if (!text.length) return null;
 					if (i % 2 === 0) return <span key={i}>{text}</span>;
 					else return <LinkToImage key={i} link={text} />;
 				})}
-			</pre>
+			</>
 		);
 	}
 
