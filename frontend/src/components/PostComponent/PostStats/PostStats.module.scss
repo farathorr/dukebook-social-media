@@ -16,6 +16,11 @@
 			border-radius: 5px;
 			display: flex;
 			gap: 10px;
+			cursor: pointer;
+		}
+		button:active {
+			background-color: var(--clr-secondary-400);
+			border: 2px solid var(--clr-secondary-500);
 		}
 
 		.comment-button {
