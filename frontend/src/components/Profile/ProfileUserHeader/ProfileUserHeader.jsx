@@ -29,8 +29,8 @@ export default function ProfileUserHeader(props) {
 		}
 		try {
 			const currentUser = authentication.user;
-			if (!currentUser?.userId) return;
-			const { data } = await api.getUserById(currentUser.userId);
+			if (!currentUser?._id) return;
+			const { data } = await api.getUserById(currentUser._id);
 			setUser(data);
 			const isAlreadyFollowed = data.followedIds?.some((id) => id === props.userId);
 			setIsFollowing(isAlreadyFollowed);
