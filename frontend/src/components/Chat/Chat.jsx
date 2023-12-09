@@ -2,13 +2,10 @@ import { useContext, useEffect, useRef, useState } from "react";
 import style from "./Chat.module.scss";
 import image from "../../images/Duke3D.png";
 import FriendRow from "./FriendRow/FriendRow";
-// import ChatField from "./ChatField/ChatField";
 import { AuthenticationContext } from "../AuthenticationControls/AuthenticationControls";
 import { api } from "../../api";
 import { formatDate } from "../../utils/formatDate";
 import { createContext } from "react";
-// import ChatHeader from "./MessageBox/ChatHeader/ChatHeader";
-// import MessageBox from "./MessageBox/MessageBox";
 import ChatFrame from "./ChatFrame/ChatFrame";
 
 export const ChatContext = createContext(null);
@@ -72,7 +69,7 @@ export default function Chat() {
 
 	if (!authentication.isAuthenticated) return null;
 	return (
-		<ChatContext.Provider value={{ group, scrollToBottom, addNewMessage, scrollInfo, messagesBoxRef }}>
+		<ChatContext.Provider value={{ scrollToBottom, addNewMessage, scrollInfo, messagesBoxRef }}>
 			<div className={style["chat-page"]}>
 				<main className={style["page-content"]}>
 					<div className={style["friend-list"]}>
@@ -81,11 +78,6 @@ export default function Chat() {
 						))}
 					</div>
 					<ChatFrame group={group} image={image} messages={messages} />
-					{/* <div className={style["chat-frame"]}>
-						{group && <ChatHeader image={image} name={group?.name} />}
-						<MessageBox messages={messages} />
-						{group && <ChatField groupId={group?._id} />}
-					</div> */}
 				</main>
 			</div>
 		</ChatContext.Provider>
