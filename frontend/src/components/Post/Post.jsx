@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import ReplyForm from "./ReplyForm/ReplyForm";
 import { api } from "../../api";
+import PostForm from "../PostForm/PostForm";
 
 export default function Post() {
 	const params = useParams();
@@ -38,7 +39,7 @@ export default function Post() {
 					{postData.at(-1).originalPostParentId && <Link to={"/post/" + postData.at(-1).originalPostParentId}>{"To start"}</Link>}
 				</div>
 				<ParentLoop posts={postData} index={0} />
-				<ReplyForm updateInterface={setUpdatePostContent} disabled={postData.at(-1).removed} />
+				<PostForm updateInterface={setUpdatePostContent} disabled={postData.at(-1).removed} type="reply" title="New Reply" />
 				<div className={style["main-replies"]}>
 					<CommentPosts replies={repliesData} loadMore={2} />
 				</div>
