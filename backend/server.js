@@ -6,6 +6,7 @@ const app = express();
 const http = require("http").createServer(app);
 const socketIO = require("socket.io")(http, { cors: { origin: "http://localhost:5000" } });
 module.exports = { socketIO };
+const errorHandler = require("./middleware/errorMiddleware");
 
 connectDB();
 
@@ -20,6 +21,10 @@ app.use("/messages", require("./routes/messagesRouter"));
 app.use("/users", require("./routes/usersRouter"));
 app.use("/posts", require("./routes/postsRouter"));
 app.use("/profile", require("./routes/profileRouter"));
+// app.post("/image-upload", require("./controllers/imageController"));
+
+app.use(errorHandler.errorHandler);
+app.use(errorHandler.unknownEndpoint);
 
 const PORT = process.env.PORT || 4000;
 http.listen(PORT, () => console.log(`Server is running on port ${PORT}.`));

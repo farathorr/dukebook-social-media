@@ -1,19 +1,19 @@
 import { createRef, useContext, useEffect, useState } from "react";
-import style from "./PostForm.module.scss";
 import { NotificationContext } from "../NotificationControls/NotificationControls";
 import { AuthenticationContext } from "../AuthenticationControls/AuthenticationControls";
 import { api } from "../../api";
 import { useParams } from "react-router-dom";
 
+import style from "./PostForm.module.scss";
+import Tags from "./Tags/Tags";
+
 const postError = { type: "error", title: "Post failed" };
-let tagIndex = -1;
 
 export default function NewPostForm({ title, updateInterface, disabled, type }) {
 	const [addNotification] = useContext(NotificationContext);
 	const { authentication } = useContext(AuthenticationContext);
 	const params = useParams();
 	const [postText, setPostText] = useState("");
-	const tagRef = createRef();
 	const [tags, setTags] = useState([]);
 
 	const handleSubmit = async (event) => {
@@ -39,16 +39,9 @@ export default function NewPostForm({ title, updateInterface, disabled, type }) 
 		} catch (err) {}
 	};
 
-	useEffect(() => {
-		if (tagRef.current) {
-			tagRef.current.focus();
-			tagIndex = -1;
-		}
-	});
-
 	return (
 		<form className={`${style["new-post"]} ${disabled ? style["disabled"] : ""}`} onSubmit={handleSubmit}>
-			<p>{title}</p>
+			<p className={style["title"]}>{title}</p>
 			<textarea
 				id="postTextArea"
 				value={postText}
@@ -63,51 +56,8 @@ export default function NewPostForm({ title, updateInterface, disabled, type }) 
 				}}
 				style={{ height: "52px" }}
 			/>
-			<div
-				className={style["tag-input"]}
-				id="tag-input"
-				tabIndex="0"
-				placeholder="Enter tags"
-				onFocus={(e) => {
-					if (disabled) return;
-					if (e.target.id === "tag-input") {
-						setTags((tags) => [...tags, ""]);
-						tagIndex = tags.length;
-					}
-				}}
-			>
-				{tags.map((tag, i) => (
-					<div className={style["tag-container"]} key={i}>
-						<span className={style["hashtag"]}>#</span>
-						<span className={style["tag-content"]}>{tag}</span>
-						<input
-							className={style["tag-content"]}
-							value={tag}
-							autoComplete="off"
-							autoCorrect="off"
-							spellCheck="false"
-							autoCapitalize="off"
-							key={i}
-							ref={tagIndex === i ? tagRef : null}
-							onInput={(e) => {
-								const newTags = [...tags];
-								const value = e.target.value.replaceAll("#", "");
-								const splitTags = value.split(" ");
-								if (splitTags.length > 1) {
-									newTags[i] = splitTags[0];
-									newTags.splice(i + 1, 0, ...splitTags.slice(1));
-									tagIndex = i + splitTags.length - 1;
-									setTags(newTags);
-									return;
-								} else {
-									newTags[i] = value.replaceAll(" ", "");
-									setTags(newTags.filter((tag) => tag.length > 0));
-								}
-							}}
-						></input>
-					</div>
-				))}
-			</div>
+			<p>Tags</p>
+			<Tags tags={tags} setTags={setTags} disabled={disabled} />
 			<div className={style["button-container"]}>
 				<button className={style["post-button"]} type="submit" value="post" disabled={disabled}>
 					Post

@@ -6,10 +6,11 @@ const customFind = require("../utils/customFind");
 
 // get all posts
 const getPosts = async (req, res) => {
-	const { filter, search } = req.query;
+	const { filter, search, tags } = req.query;
 	const userId = req.user?.userId;
 
 	const options = { search, isOriginalPost: true };
+	if (tags) options.tags = [tags].flat();
 	if (userId) {
 		const user = await User.findById(userId);
 		if (filter?.includes("followed")) options.followedByUser = user;
