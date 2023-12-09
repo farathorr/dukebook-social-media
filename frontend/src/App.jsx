@@ -12,6 +12,7 @@ import NotificationContainer from "./components/NotificationControls/Notificatio
 import { AuthenticationContext } from "./components/AuthenticationControls/AuthenticationControls";
 import Home from "./components/Home/Home";
 import Authentication from "./components/Authentication/Authentication";
+import ImageUploader from "./components/ImageUploader/ImageUploader";
 import "./App.scss";
 import { useContext } from "react";
 
@@ -21,6 +22,7 @@ export default function App() {
 		<BrowserRouter>
 			<HeaderNav />
 			<NotificationContainer />
+			<ImageUploader />
 			<Routes>
 				<Route path="/" element={<Home />} />
 				<Route path="/user/:userTag" element={<Profile />} />
