@@ -92,8 +92,8 @@ const apiObject = {
 		const response = await axios.get(`http://localhost:4000/posts/${postId}/parents?nesting=${nesting ?? 3}`);
 		return response;
 	},
-	replyToPost: requiresAuth(async ({ postId, postText }) => {
-		const response = await axios.patch(`http://localhost:4000/posts/${postId}/reply`, { postText });
+	replyToPost: requiresAuth(async ({ postId, postText, tags }) => {
+		const response = await axios.patch(`http://localhost:4000/posts/${postId}/reply`, { postText, tags });
 		return response;
 	}),
 	dislikePost: requiresAuth(async (postId) => {

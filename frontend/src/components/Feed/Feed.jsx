@@ -1,13 +1,12 @@
 import style from "./Feed.module.scss";
 import { useState, useContext, useEffect } from "react";
-import { NotificationContext } from "../NotificationControls/NotificationControls";
 import PostComponent from "../PostComponent/PostComponent";
 import { AuthenticationContext } from "../AuthenticationControls/AuthenticationControls";
 import PostSearch from "./PostSearch/PostSearch";
 import { useSearchParams } from "react-router-dom";
 import { api } from "../../api";
 import PostFiltering from "./PostFiltering/PostFiltering";
-import NewPostForm from "./NewPostForm/NewPostForm";
+import PostForm from "../PostForm/PostForm";
 
 export default function Feed() {
 	const { authentication } = useContext(AuthenticationContext);
@@ -31,7 +30,7 @@ export default function Feed() {
 			<PostSearch />
 			<h1 className={style["title"]}>Feed</h1>
 			<section className={style["main-content"]}>
-				<NewPostForm setUpdatePostContent={setUpdatePostContent} />
+				<PostForm title="New post" updateInterface={setUpdatePostContent} type="post" />
 				<PostFiltering />
 				{posts.map((post) => (
 					<PostComponent

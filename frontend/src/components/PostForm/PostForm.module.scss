@@ -4,6 +4,18 @@
 	padding-inline: 50px;
 	display: grid;
 
+	&.disabled {
+		filter: grayscale(1);
+
+		button {
+			cursor: not-allowed;
+		}
+
+		textarea {
+			cursor: not-allowed;
+		}
+	}
+
 	p {
 		font-size: var(--fs-500);
 		font-weight: var(--fw-600);
