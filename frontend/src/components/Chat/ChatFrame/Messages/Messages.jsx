@@ -1,10 +1,10 @@
 import { useContext } from "react";
-import { ChatContext } from "../Chat";
-import style from "./MessageBox.module.scss";
-import MessageRow from "../MessageRow/MessageRow";
-import MessageSeparator from "../MessageSeparator/MessageSeparator";
+import { ChatContext } from "../../Chat";
+import style from "./Messages.module.scss";
+import MessageRow from "./MessageRow/MessageRow";
+import MessageSeparator from "./MessageSeparator/MessageSeparator";
 
-export default function MessageBox({ messages }) {
+export default function Messages({ messages }) {
 	const { messagesBoxRef, scrollInfo } = useContext(ChatContext);
 
 	const handleScroll = (event) => {

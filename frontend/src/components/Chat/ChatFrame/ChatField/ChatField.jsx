@@ -1,7 +1,7 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import style from "./ChatField.module.scss";
-import { api } from "../../../api";
-import { ChatContext } from "../Chat";
+import { api } from "../../../../api";
+import { ChatContext } from "../../Chat";
 
 export default function ChatField({ groupId }) {
 	const { addNewMessage } = useContext(ChatContext);

@@ -2,13 +2,14 @@ import { useContext, useEffect, useRef, useState } from "react";
 import style from "./Chat.module.scss";
 import image from "../../images/Duke3D.png";
 import FriendRow from "./FriendRow/FriendRow";
-import ChatField from "./ChatField/ChatField";
+// import ChatField from "./ChatField/ChatField";
 import { AuthenticationContext } from "../AuthenticationControls/AuthenticationControls";
 import { api } from "../../api";
 import { formatDate } from "../../utils/formatDate";
 import { createContext } from "react";
-import ChatHeader from "./ChatHeader/ChatHeader";
-import MessageBox from "./MessageBox/MessageBox";
+// import ChatHeader from "./MessageBox/ChatHeader/ChatHeader";
+// import MessageBox from "./MessageBox/MessageBox";
+import ChatFrame from "./ChatFrame/ChatFrame";
 
 export const ChatContext = createContext(null);
 
@@ -79,11 +80,12 @@ export default function Chat() {
 							<FriendRow key={group._id} onClick={() => setGroup(group)} name={group.name} lastMessage={group.lastMessage} image={image} />
 						))}
 					</div>
-					<div className={style["chat-frame"]}>
+					<ChatFrame group={group} image={image} messages={messages} />
+					{/* <div className={style["chat-frame"]}>
 						{group && <ChatHeader image={image} name={group?.name} />}
 						<MessageBox messages={messages} />
 						{group && <ChatField groupId={group?._id} />}
-					</div>
+					</div> */}
 				</main>
 			</div>
 		</ChatContext.Provider>

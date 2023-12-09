@@ -1,6 +1,6 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import style from "./MessageRow.module.scss";
-import { ChatContext } from "../Chat";
+import { ChatContext } from "../../../Chat";
 
 export default function MessageRow({ id, image, name, date, messages }) {
 	const memorizedMessageRow = useMemo(() => {
@@ -69,7 +69,7 @@ function LinkToImage({ link }) {
 }
 
 MessageRow.defaultProps = {
-	image: require("../../../images/Duke3D.png"),
+	image: require("../../../../../images/Duke3D.png"),
 	name: "Duke",
 	date: "Today at 15:23",
 	messages: [
