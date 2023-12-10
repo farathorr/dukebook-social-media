@@ -62,6 +62,38 @@
 	display: grid;
 	place-items: center;
 
+	.post-tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 5px;
+		justify-content: center;
+
+		.post-tag {
+			border-radius: 20px;
+			border: 1px solid var(--clr-primary-400);
+			margin: 5px;
+			padding: 2px 5px;
+			background-color: var(--clr-accent-400);
+			font-size: var(--fs-300);
+
+			.tags-button {
+				background-color: var(--clr-secondary-400);
+				border: 2px solid var(--clr-dark-500);
+				padding: 0px 5px;
+				margin-left: 5px;
+				cursor: pointer;
+			}
+
+			.delete-tag {
+				background-color: var(--clr-secondary-400);
+				border: 2px solid var(--clr-dark-500);
+				padding: 0px 5px;
+				margin-left: 5px;
+				cursor: pointer;
+			}
+		}
+	}
+
 	.edit-area {
 		width: 80%;
 		height: 100px;
