@@ -5,11 +5,13 @@ import { AuthenticationContext } from "../../AuthenticationControls/Authenticati
 import { NotificationContext } from "../../NotificationControls/NotificationControls";
 import { api } from "../../../api";
 
-export default function PostStats({ postId, likes, dislikes, comments, userTag, onUpdate, text, removed }) {
+export default function PostStats({ postId, likes, dislikes, comments, userTag, onUpdate, text, removed, tags }) {
 	const { authentication } = useContext(AuthenticationContext);
 	const [addNotification] = useContext(NotificationContext);
 	const [editable, setEditable] = useState(false);
 	const stats = api.usePostStats(postId, { likes, dislikes, comments });
+	const [tagsArray, setTagsArray] = useState(tags);
+	const [addTag, setAddTags] = useState("");
 
 	const optionConstructor = (option, apiFetch) => async () => {
 		if (removed)
@@ -51,6 +53,7 @@ export default function PostStats({ postId, likes, dislikes, comments, userTag, 
 		const post = {
 			postId,
 			postText: event.target["edit-area"].value,
+			tags: tagsArray,
 		};
 		const { status } = await api.updatePost(post);
 		if (status !== 200) return addNotification({ type: "error", message: "Failed to edit post", title: "Post edit failed" });
@@ -58,6 +61,19 @@ export default function PostStats({ postId, likes, dislikes, comments, userTag, 
 		addNotification({ type: "success", message: "Post edited", title: "Post edited" });
 		setEditable(false);
 		onUpdate?.((posts) => posts.map((post) => (post._id === postId ? { ...post, postText: event.target["edit-area"].value } : post)));
+	};
+
+	const handleDeleteTag = (indexToDelete) => {
+		const updatedTags = tagsArray.filter((_, index) => index !== indexToDelete);
+		setTagsArray(updatedTags);
+	};
+
+	const handleAddTag = (tag) => {
+		if (tag.trim().length) {
+			const updatedTags = [...tagsArray, tag];
+			setTagsArray(updatedTags);
+			setAddTags("");
+		}
 	};
 
 	return (
@@ -102,6 +118,21 @@ export default function PostStats({ postId, likes, dislikes, comments, userTag, 
 				{editable ? (
 					<form onSubmit={handleEdit} className={style["edit-form"]}>
 						<textarea className={style["edit-area"]} name="edit-area" id="edit-area" cols="30" rows="10" defaultValue={text}></textarea>
+
+						<input type="text" placeholder="Enter tags" value={addTag} onChange={(e) => setAddTags(e.target.value)} />
+						<button type="button" onClick={() => handleAddTag(addTag)}>
+							Add tag
+						</button>
+						<div className={style["post-tags"]}>
+							{tagsArray.map((tag, index) => (
+								<span className={style["post-tag"]} key={index}>
+									{tag}
+									<button type="button" className={style["delete-tag"]} onClick={() => handleDeleteTag(index)}>
+										X
+									</button>
+								</span>
+							))}
+						</div>
 						<button type="submit">Save</button>
 					</form>
 				) : null}

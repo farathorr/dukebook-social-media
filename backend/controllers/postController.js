@@ -72,13 +72,15 @@ const createPost = async (req, res) => {
 };
 
 const updatePost = async (req, res) => {
+	const { userId } = req.user;
 	const { id } = req.params;
-	const { postText } = req.body;
+	const { postText, tags } = req.body;
 	if (!mongoose.Types.ObjectId.isValid(id)) {
 		return res.status(404).send(`No post with id: ${id}`);
 	}
 	try {
-		const updatedPost = await Post.findByIdAndUpdate(id, { postText, edited: true }, { new: true });
+		const updatedPost = await Post.findOneAndUpdate({ _id: id, user: userId }, { postText, edited: true, tags }, { new: true });
+		if (!updatedPost) return res.status(400).json({ message: "Post does not exist." });
 		res.json(updatedPost);
 	} catch (err) {
 		res.status(500).json({ message: err.message });
