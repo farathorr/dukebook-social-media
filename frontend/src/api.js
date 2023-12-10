@@ -176,6 +176,15 @@ const apiObject = {
 		return response;
 	}),
 
+	uploadImage: requiresAuth(async (image) => {
+		const response = await axios.post("http://localhost:4000/image", { image });
+		return response;
+	}),
+	deleteImage: requiresAuth(async (deleteHash) => {
+		const response = await axios.delete(`http://localhost:4000/image/${deleteHash}`);
+		return response;
+	}),
+
 	usePostStats: (id, props) => {
 		const [value] = useSocket(`post/${id}`);
 		const [dislikes, setDislikes] = useState(props?.dislikes ?? 0);
@@ -209,7 +218,7 @@ export const api = new Proxy(apiObject, {
 				try {
 					return await callback(...settings);
 				} catch (err) {
-					return err.response;
+					return err.response || err || { error: "Unknown error" };
 				}
 			};
 		} else {
@@ -217,7 +226,7 @@ export const api = new Proxy(apiObject, {
 				try {
 					return callback(...settings);
 				} catch (err) {
-					return err.response;
+					return err.response || err || { error: "Unknown error" };
 				}
 			};
 		}
