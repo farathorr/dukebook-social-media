@@ -12,7 +12,7 @@ export default function HeaderNav() {
 			<img src={logo} alt="logo" />
 			<div className={style.links}>
 				<Link to="/">home</Link>
-				{authentication.isAuthenticated && <Link to={`/user/${authentication.user.userTag}`}>profile</Link>}
+				{authentication.isAuthenticated && <Link to={`/user/${authentication.user?.userTag}`}>profile</Link>}
 				<Link to="/feed">feed</Link>
 				{authentication.isAuthenticated && <Link to={`/chat`}>chat</Link>}
 			</div>
