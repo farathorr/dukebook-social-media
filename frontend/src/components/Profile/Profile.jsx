@@ -40,21 +40,7 @@ export default function Profile() {
 				followerCount={profileData?.followerIds?.length}
 			/>
 			{posts.map((post) => (
-				<PostComponent
-					key={post._id}
-					postId={post._id}
-					username={profileData?.username}
-					userTag={profileData?.userTag}
-					text={post.postText}
-					date={post.createdAt}
-					comments={post.comments.length}
-					likes={post.likes.length}
-					dislikes={post.dislikes.length}
-					removed={post.removed}
-					onUpdate={setPosts}
-					edited={post.edited}
-					tags={post.tags}
-				/>
+				<PostComponent key={post._id} post={post} onUpdate={setPosts} />
 			))}
 		</div>
 	);

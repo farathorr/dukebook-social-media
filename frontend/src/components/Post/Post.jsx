@@ -51,21 +51,7 @@ export default function Post() {
 		const post = posts[index];
 		if (!post?._id) return null;
 		return (
-			<PostComponent
-				key={post._id}
-				postId={post._id}
-				userTag={post.user?.userTag}
-				username={post.user?.username}
-				text={post.postText}
-				likes={post.likes?.length}
-				comments={post.comments?.length}
-				dislikes={post.dislikes?.length}
-				date={post.createdAt}
-				removed={post.removed}
-				onUpdate={setPostData}
-				edited={post.edited}
-				tags={post.tags}
-			>
+			<PostComponent key={post._id} post={post} onUpdate={setPostData}>
 				<ParentLoop posts={posts} index={index + 1} />
 			</PostComponent>
 		);
@@ -79,19 +65,9 @@ export default function Post() {
 			<>
 				{replies.map((reply) => (
 					<PostComponent
-						postId={reply._id}
+						post={reply}
 						key={reply._id}
-						userTag={reply.user?.userTag}
-						username={reply.user?.username}
-						text={reply.postText}
-						likes={reply.likes.length}
-						dislikes={reply.dislikes.length}
-						comments={reply.comments?.length}
-						date={reply.createdAt}
-						removed={reply.removed}
 						onUpdate={setReplies}
-						edited={reply.edited}
-						tags={reply.tags}
 						children={
 							<CommentPosts
 								key={reply._id}

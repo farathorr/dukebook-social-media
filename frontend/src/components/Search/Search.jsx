@@ -33,21 +33,7 @@ export default function Search() {
 				<PostFiltering />
 				{posts.length === 0 && <p>No posts found</p>}
 				{posts.map((post) => (
-					<PostComponent
-						key={post._id}
-						postId={post._id}
-						username={post.user?.username}
-						userTag={post.user?.userTag}
-						date={post.createdAt}
-						text={post.postText}
-						removed={post.removed}
-						comments={post.comments?.length}
-						dislikes={post.dislikes.length}
-						likes={post.likes.length}
-						onUpdate={setPosts}
-						edited={post.edited}
-						tags={post.tags}
-					/>
+					<PostComponent key={post._id} post={post} onUpdate={setPosts} />
 				))}
 			</section>
 		</>

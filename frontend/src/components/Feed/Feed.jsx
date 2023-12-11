@@ -42,104 +42,21 @@ export default function Feed() {
 
 const NestPosts = ({ post, onUpdate }) => {
 	if (!post.originalPostParentId) {
-		return (
-			<PostComponent
-				postId={post._id}
-				username={post.user?.username}
-				userTag={post.user?.userTag}
-				date={post.createdAt}
-				text={post.postText}
-				removed={post.removed}
-				comments={post.comments?.length}
-				dislikes={post.dislikes.length}
-				likes={post.likes.length}
-				onUpdate={onUpdate}
-				edited={post.edited}
-				tags={post.tags}
-			/>
-		);
+		return <PostComponent post={post} onUpdate={onUpdate} />;
 	}
 
 	if (post.originalPostParentId._id == post.replyParentId._id) {
 		return (
-			<PostComponent
-				postId={post.originalPostParentId._id}
-				username={post.originalPostParentId.user?.username}
-				userTag={post.originalPostParentId.user?.userTag}
-				date={post.originalPostParentId.createdAt}
-				text={post.originalPostParentId.postText}
-				removed={post.originalPostParentId.removed}
-				comments={post.originalPostParentId.comments?.length}
-				dislikes={post.originalPostParentId.dislikes.length}
-				likes={post.originalPostParentId.likes.length}
-				onUpdate={onUpdate}
-				edited={post.originalPostParentId.edited}
-				tags={post.originalPostParentId.tags}
-				children={
-					<PostComponent
-						postId={post._id}
-						username={post.user?.username}
-						userTag={post.user?.userTag}
-						date={post.createdAt}
-						text={post.postText}
-						removed={post.removed}
-						comments={post.comments?.length}
-						dislikes={post.dislikes.length}
-						likes={post.likes.length}
-						onUpdate={onUpdate}
-						edited={post.edited}
-						tags={post.tags}
-					/>
-				}
-			/>
+			<PostComponent post={post.originalPostParentId} onUpdate={onUpdate} children={<PostComponent post={post} onUpdate={onUpdate} />} />
 		);
 	}
 
 	return (
 		<PostComponent
-			postId={post.originalPostParentId._id}
-			username={post.originalPostParentId.user?.username}
-			userTag={post.originalPostParentId.user?.userTag}
-			date={post.originalPostParentId.createdAt}
-			text={post.originalPostParentId.postText}
-			removed={post.originalPostParentId.removed}
-			comments={post.originalPostParentId.comments?.length}
-			dislikes={post.originalPostParentId.dislikes.length}
-			likes={post.originalPostParentId.likes.length}
+			post={post.originalPostParentId}
 			onUpdate={onUpdate}
-			edited={post.originalPostParentId.edited}
-			tags={post.originalPostParentId.tags}
 			children={
-				<PostComponent
-					postId={post.replyParentId._id}
-					username={post.replyParentId.user?.username}
-					userTag={post.replyParentId.user?.userTag}
-					date={post.replyParentId.createdAt}
-					text={post.replyParentId.postText}
-					removed={post.replyParentId.removed}
-					comments={post.replyParentId.comments?.length}
-					dislikes={post.replyParentId.dislikes.length}
-					likes={post.replyParentId.likes.length}
-					onUpdate={onUpdate}
-					edited={post.replyParentId.edited}
-					tags={post.replyParentId.tags}
-					children={
-						<PostComponent
-							postId={post._id}
-							username={post.user?.username}
-							userTag={post.user?.userTag}
-							date={post.createdAt}
-							text={post.postText}
-							removed={post.removed}
-							comments={post.comments?.length}
-							dislikes={post.dislikes.length}
-							likes={post.likes.length}
-							onUpdate={onUpdate}
-							edited={post.edited}
-							tags={post.tags}
-						/>
-					}
-				/>
+				<PostComponent post={post.replyParentId} onUpdate={onUpdate} children={<PostComponent post={post} onUpdate={onUpdate} />} />
 			}
 		/>
 	);
