@@ -4,7 +4,7 @@ import { useContext, useEffect, useState } from "react";
 import { AuthenticationContext } from "../../AuthenticationControls/AuthenticationControls";
 import { NotificationContext } from "../../NotificationControls/NotificationControls";
 import { api } from "../../../api";
-import TagsComponent from "../../PostForm/Tags/Tags";
+import TagsField from "../../TagsField/TagsField";
 
 export default function PostStats({ postId, likes, dislikes, comments, userTag, onUpdate, text, removed, tags }) {
 	const { authentication } = useContext(AuthenticationContext);
@@ -105,7 +105,7 @@ export default function PostStats({ postId, likes, dislikes, comments, userTag, 
 				{editable ? (
 					<form onSubmit={handleEdit} className={style["edit-form"]}>
 						<textarea className={style["edit-area"]} name="edit-area" id="edit-area" cols="30" rows="10" defaultValue={text}></textarea>
-						<TagsComponent tags={tagsArray} setTags={setTagsArray} disabled={false} />
+						<TagsField tags={tagsArray} setTags={setTagsArray} disabled={false} />
 						<button className={style["save-button"]} type="submit">
 							Save
 						</button>

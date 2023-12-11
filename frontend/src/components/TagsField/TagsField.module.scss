@@ -1,0 +1,150 @@
+.tag-input {
+	border-radius: 5px;
+	border: 2px solid transparent;
+	background-color: var(--clr-primary-600);
+	margin-top: 10px;
+	font-size: inherit;
+	font-family: inherit;
+	box-sizing: content-box;
+	font-weight: var(--fw-500);
+	position: relative;
+	display: flex;
+	flex-grow: 0;
+	overflow: hidden;
+	flex-wrap: wrap;
+	gap: 10px;
+	padding: 10px 10px;
+
+	&:empty::before {
+		content: attr(placeholder);
+		color: var(--clr-accent-400);
+		opacity: 1;
+	}
+
+	&:focus-within .tag-container {
+		opacity: 0.8;
+	}
+
+	.add-tag {
+		background-color: var(--clr-primary-400);
+		position: relative;
+		font-weight: var(--fw-700);
+		padding: 5px 15px;
+		top: 0px;
+		left: 0px;
+		border-radius: 5px;
+		width: fit-content;
+		cursor: pointer;
+		transition: filter 0.2s, transform 0.2s;
+
+		&:hover {
+			filter: brightness(1.1);
+			transform: scale(1.05);
+		}
+
+		&:active {
+			filter: brightness(0.9);
+			transform: scale(0.95);
+		}
+	}
+
+	.tag-container {
+		background-color: var(--clr-accent-500);
+		position: relative;
+		padding: 3px 10px;
+		padding-right: 0px;
+		gap: 5px;
+		display: grid;
+		grid-template-columns: auto auto 35px;
+		overflow: hidden;
+		align-items: center;
+		border-radius: 16px;
+		width: fit-content;
+		transition: background-color 0.2s, opacity 0.2s;
+		cursor: pointer;
+
+		&:focus-within {
+			outline: 2px solid var(--clr-accent-400);
+			background-color: var(--clr-accent-450);
+			opacity: 1;
+		}
+
+		.hashtag {
+			opacity: 0.8;
+		}
+
+		.remove-tag {
+			cursor: pointer;
+			position: relative;
+			background-color: var(--clr-accent-550);
+			border-radius: 50%;
+			border: none;
+			width: 25px;
+			height: 25px;
+			padding: 5px;
+			justify-self: end;
+			margin-right: 5px;
+			display: grid;
+			place-items: center;
+			transition: background-color 0.2s;
+
+			&:hover {
+				background-color: var(--clr-accent-300);
+
+				&::before,
+				&::after {
+					background-color: black;
+				}
+			}
+
+			&::before,
+			&::after {
+				content: "";
+				position: relative;
+				display: block;
+				width: 100%;
+				height: 4px;
+				border-radius: 10px;
+				grid-column: 1/1;
+				grid-row: 1/1;
+				background-color: var(--clr-text-500);
+				transform: rotate(45deg);
+				transition: background-color 0.2s;
+			}
+
+			&::after {
+				transform: rotate(-45deg);
+			}
+		}
+
+		:where(.tag-content) {
+			all: unset;
+			box-sizing: border-box;
+			outline: none;
+			overflow: hidden;
+			word-break: break-all;
+			min-width: 20px;
+			grid-column: 2 / 3;
+		}
+
+		span.tag-content:empty::before {
+			content: "-";
+			color: transparent;
+		}
+
+		input {
+			position: absolute;
+			width: 100%;
+			height: 100%;
+
+			&:not(:focus) {
+				opacity: 0;
+			}
+
+			&:focus + .tag-content {
+				visibility: hidden;
+				white-space: nowrap;
+			}
+		}
+	}
+}

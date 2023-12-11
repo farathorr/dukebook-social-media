@@ -29,7 +29,7 @@ export default function PostComponent(props) {
 						{props.tags.length > 0 ? (
 							<div className={style["post-tags"]}>
 								{props.tags.map((tag, index) => (
-									<Link className={style["post-tag"]} key={tag + index} to={`/feed?tags=${tag}`}>
+									<Link className={style["post-tag"]} key={tag + index} to={`/search?tags=${tag}`}>
 										{tag}
 									</Link>
 								))}

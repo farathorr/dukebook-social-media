@@ -15,6 +15,7 @@ import Authentication from "./components/Authentication/Authentication";
 import ImageUploader from "./components/ImageUploader/ImageUploader";
 import "./App.scss";
 import { useContext } from "react";
+import Search from "./components/Search/Search";
 
 export default function App() {
 	const { authentication } = useContext(AuthenticationContext);
@@ -29,6 +30,7 @@ export default function App() {
 				<Route path="/authentication" element={authentication.isAuthenticated ? <Authentication /> : <Navigate to="/login" />} />
 				<Route path="/profile" element={<HearedEditForm />} />
 				<Route path="/feed" element={<Feed />} />
+				<Route path="/search" element={<Search />} />
 				<Route path="/login" element={<Login />} />
 				<Route path="/register" element={<Register />} />
 				<Route path="/post" element={<Post />} />
