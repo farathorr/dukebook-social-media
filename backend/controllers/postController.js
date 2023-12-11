@@ -25,6 +25,26 @@ const getPosts = async (req, res) => {
 	}
 };
 
+const getFeedPosts = async (req, res) => {
+	const { userId } = req.user;
+
+	const options = { removed: false };
+	if (userId) {
+		const user = await User.findById(userId);
+		options.followedByUser = user;
+	} else return res.status(400).json({ message: "Authentication is required." });
+
+	try {
+		const posts = await customFind(Post, options)
+			.populate("user")
+			.populate({ path: "replyParentId", model: "Post", populate: [{ path: "user", model: "User" }] })
+			.populate({ path: "originalPostParentId", model: "Post", populate: [{ path: "user", model: "User" }] });
+		res.json(posts);
+	} catch (err) {
+		res.status(500).json({ message: err.message });
+	}
+};
+
 // get post by id
 const getPostById = async (req, res) => {
 	const { id } = req.params;
@@ -250,6 +270,7 @@ const getParentPosts = async (req, res) => {
 
 module.exports = {
 	getPosts,
+	getFeedPosts,
 	getPostById,
 	getPostsByAuthor,
 	createPost,

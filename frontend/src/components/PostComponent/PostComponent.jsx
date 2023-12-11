@@ -3,32 +3,43 @@ import { Link } from "react-router-dom";
 import PostTime from "./PostTime/PostTime";
 import PostStats from "./PostStats/PostStats";
 
-export default function PostComponent(props) {
-	const { postId, likes, dislikes, comments, onUpdate, userTag, text, edited, removed, tags } = props;
+export default function PostComponent({ post, onUpdate, profilePic, ...props }) {
+	const postId = post._id;
+	const username = post.user?.username;
+	const userTag = post.user?.userTag;
+	const date = post.createdAt;
+	const text = post.postText;
+	const removed = post.removed;
+	const comments = post.comments?.length;
+	const dislikes = post.dislikes.length;
+	const likes = post.likes.length;
+	const edited = post.edited;
+	const tags = post.tags;
+	// const { postId, likes, dislikes, comments, userTag, text, edited, removed, tags } = post;
 	const stats = { postId, likes, dislikes, comments, onUpdate, userTag, text, removed, tags };
 
 	return (
 		<div className={style["post-container"]} id={postId}>
-			<div className={style["post-data"] + " " + (!props.removed || style["removed"])}>
+			<div className={style["post-data"] + " " + (!removed || style["removed"])}>
 				<div className={style["post-content"]}>
-					{!props.removed && <img className={style["profile-pic"]} src={props.profilePic} alt="Profile picture" width={100} height={100} />}
+					{!removed && <img className={style["profile-pic"]} src={profilePic} alt="Profile picture" width={100} height={100} />}
 					<div className={style["post-text-container"]}>
-						{!props.removed && (
+						{!removed && (
 							<>
-								<span className={style["post-user-name"]}>{props.username}</span>
+								<span className={style["post-user-name"]}>{username}</span>
 								<Link className={style["post-user-tag"]} to={`/user/${userTag}`}>
 									@{userTag}
 								</Link>
 							</>
 						)}
-						<PostTime time={props.date} />
-						<pre className={style["post-text"]}>{props.text}</pre>
+						<PostTime time={date} />
+						<pre className={style["post-text"]}>{text}</pre>
 						{props.images.map((image, index) => (
 							<img className={style["post-image"]} src={image} key={index} alt="Picture" />
 						))}
-						{props.tags.length > 0 ? (
+						{tags.length > 0 ? (
 							<div className={style["post-tags"]}>
-								{props.tags.map((tag, index) => (
+								{tags.map((tag, index) => (
 									<Link className={style["post-tag"]} key={tag + index} to={`/search?tags=${tag}`}>
 										{tag}
 									</Link>

@@ -76,6 +76,10 @@ const apiObject = {
 		const response = await axios.get(`http://localhost:4000/posts?${query}`);
 		return response;
 	}),
+	getUserFeedPosts: requiresAuth(async () => {
+		const response = await axios.get(`http://localhost:4000/posts/feed?`);
+		return response;
+	}),
 	getPostById: async (postId) => {
 		const response = await axios.get(`http://localhost:4000/posts/${postId}`);
 		return response;
