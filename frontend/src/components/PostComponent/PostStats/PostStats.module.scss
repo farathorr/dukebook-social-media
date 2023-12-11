@@ -65,6 +65,12 @@
 	.save-button {
 		margin-top: 10px;
 		margin-inline: auto;
+		background-color: var(--clr-secondary-400);
+		border: 2px solid var(--clr-dark-500);
+		border-radius: 5px;
+		padding: 5px 10px;
+		color: var(--clr-text-100);
+		font-size: var(--fs-300);
 	}
 
 	.post-tags {
@@ -118,15 +124,5 @@
 			outline: none;
 			border: 2px solid var(--clr-accent-400);
 		}
-	}
-	button {
-		top: 10px;
-		right: 10px;
-		background-color: var(--clr-secondary-400);
-		border: 2px solid var(--clr-dark-500);
-		border-radius: 5px;
-		padding: 5px 10px;
-		color: var(--clr-text-100);
-		font-size: var(--fs-300);
 	}
 }

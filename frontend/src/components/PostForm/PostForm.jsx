@@ -5,7 +5,7 @@ import { api } from "../../api";
 import { useParams } from "react-router-dom";
 
 import style from "./PostForm.module.scss";
-import Tags from "./Tags/Tags";
+import Tags from "../TagsField/TagsField";
 
 const postError = { type: "error", title: "Post failed" };
 
