@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { createRef, useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import style from "./PostSearch.module.scss";
 
 let focus = false;
 export default function PostSearch() {
+	const navigate = useNavigate();
+	const searchRef = createRef(null);
 	const [searchParams, setSearchParams] = useSearchParams();
 	const [searchValue, setSearchValue] = useState(initialValue());
 
@@ -30,6 +32,8 @@ export default function PostSearch() {
 			if (sValue) search.set("search", sValue);
 			return search;
 		});
+
+		navigate("/search?" + searchParams.toString());
 	}
 
 	const onSearchChange = (event) => {
@@ -49,6 +53,10 @@ export default function PostSearch() {
 		if (!focus) setSearchValue(initialValue());
 	});
 
+	useEffect(() => {
+		if (window.location.pathname === "/search") searchRef.current?.focus();
+	}, [searchRef.current]);
+
 	return (
 		<form onSubmit={handleSubmit} className={style["search-form"]}>
 			<input
@@ -62,6 +70,7 @@ export default function PostSearch() {
 				autoCorrect="off"
 				spellCheck="false"
 				autoCapitalize="off"
+				ref={searchRef}
 				onBlur={() => (focus = false)}
 				onFocus={() => (focus = true)}
 			/>

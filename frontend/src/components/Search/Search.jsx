@@ -1,14 +1,14 @@
-import style from "./Feed.module.scss";
+import style from "./Search.module.scss";
 import { useState, useContext, useEffect } from "react";
 import PostComponent from "../PostComponent/PostComponent";
 import { AuthenticationContext } from "../AuthenticationControls/AuthenticationControls";
 import PostSearch from "../PostSearch/PostSearch";
 import { useSearchParams } from "react-router-dom";
 import { api } from "../../api";
-// import PostFiltering from "../Search/PostFiltering/PostFiltering";
+import PostFiltering from "./PostFiltering/PostFiltering";
 import PostForm from "../PostForm/PostForm";
 
-export default function Feed() {
+export default function Search() {
 	const { authentication } = useContext(AuthenticationContext);
 	const [searchParams] = useSearchParams();
 	const [posts, setPosts] = useState([]);
@@ -28,10 +28,10 @@ export default function Feed() {
 	return (
 		<>
 			<PostSearch />
-			<h1 className={style["title"]}>Feed</h1>
+			<h1 className={style["title"]}>Search</h1>
 			<section className={style["main-content"]}>
-				<PostForm title="New post" updateInterface={setUpdatePostContent} type="post" />
-				{/* <PostFiltering /> */}
+				<PostFiltering />
+				{posts.length === 0 && <p>No posts found</p>}
 				{posts.map((post) => (
 					<PostComponent
 						key={post._id}
