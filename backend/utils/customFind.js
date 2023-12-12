@@ -17,6 +17,9 @@
  * @param {string[]} options.tags - Find posts with specific tags
  * @param {boolean} options.removed - Find removed posts
  * @param {boolean} options.sortByTrending - Sort by trending
+ * @param {Onject} options.author - Find posts by a specific author
+ * @param {Onject} options.getFeedPosts - Find posts by a specific author
+ * @returns {Object} - Mongoose query
  */
 
 function customFind(schema, query = {}) {
@@ -40,6 +43,8 @@ function customFind(schema, query = {}) {
 			}
 		}
 
+		if (query.author) find[0].user = query.author;
+
 		if ("removed" in query) find[0].removed = query.removed;
 
 		if (query.isComment) find[0].nestingLevel = { $gt: 0 };
@@ -59,6 +64,11 @@ function customFind(schema, query = {}) {
 
 			find[1].hasUserLiked = { $in: [query.hasLiked, "$likes"] };
 			find[1].hasUserDisliked = { $in: [query.hasLiked, "$dislikes"] };
+		}
+
+		if (query.getFeedPosts) {
+			find[0].removed = false;
+			find[0].$or = [{ user: { $in: query.getFeedPosts.followedIds } }, { user: query.getFeedPosts }];
 		}
 
 		if (query.countLikes) {

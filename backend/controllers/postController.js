@@ -62,7 +62,7 @@ const getFeedPosts = async (req, res) => {
 	const options = { removed: false };
 	if (userId) {
 		const user = await User.findById(userId);
-		options.followedByUser = user;
+		options.getFeedPosts = user;
 	} else return res.status(400).json({ message: "Authentication is required." });
 
 	try {
@@ -70,6 +70,7 @@ const getFeedPosts = async (req, res) => {
 			.populate("user")
 			.populate({ path: "replyParentId", model: "Post", populate: [{ path: "user", model: "User" }] })
 			.populate({ path: "originalPostParentId", model: "Post", populate: [{ path: "user", model: "User" }] });
+
 		res.json(posts);
 	} catch (err) {
 		res.status(500).json({ message: err.message });
@@ -302,6 +303,7 @@ const getParentPosts = async (req, res) => {
 module.exports = {
 	getPosts,
 	getFeedPosts,
+	getTrendingPosts,
 	getPostById,
 	getPostsByAuthor,
 	createPost,

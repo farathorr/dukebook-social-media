@@ -5,6 +5,7 @@ const { optionalAuthentication, weakAuthentication } = require("../middleware/au
 
 router.get("/", optionalAuthentication, postController.getPosts);
 router.get("/feed", weakAuthentication, postController.getFeedPosts);
+router.get("/trending", postController.getTrendingPosts);
 router.get("/:id", postController.getPostById);
 
 router.get("/author/:userTag", postController.getPostsByAuthor);
