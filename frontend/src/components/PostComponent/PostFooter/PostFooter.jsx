@@ -1,4 +1,4 @@
-import style from "./PostStats.module.scss";
+import style from "./PostFooter.module.scss";
 import { Link } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { AuthenticationContext } from "../../AuthenticationControls/AuthenticationControls";
@@ -6,7 +6,7 @@ import { NotificationContext } from "../../NotificationControls/NotificationCont
 import { api } from "../../../api";
 import TagsField from "../../TagsField/TagsField";
 
-export default function PostStats({ postId, likes, dislikes, comments, userTag, onUpdate, text, removed, tags }) {
+export default function PostFooter({ postId, likes, dislikes, comments, userTag, onUpdate, text, removed, tags }) {
 	const { authentication } = useContext(AuthenticationContext);
 	const [addNotification] = useContext(NotificationContext);
 	const [editable, setEditable] = useState(false);
