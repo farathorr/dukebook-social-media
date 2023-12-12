@@ -1,12 +1,12 @@
 import style from "./Search.module.scss";
 import { useState, useContext, useEffect } from "react";
-import PostComponent from "../PostComponent/PostComponent";
-import { AuthenticationContext } from "../AuthenticationControls/AuthenticationControls";
-import PostSearch from "../PostSearch/PostSearch";
+import PostComponent from "../../components/PostComponent/PostComponent";
+import { AuthenticationContext } from "../../context/AuthenticationContext/AuthenticationContext";
+import PostSearch from "../../components/PostSearch/PostSearch";
 import { useSearchParams } from "react-router-dom";
-import { api } from "../../api";
+import { api } from "../../utils/api";
 import PostFiltering from "./PostFiltering/PostFiltering";
-import PostForm from "../PostForm/PostForm";
+import PostForm from "../../components/PostForm/PostForm";
 
 export default function Search() {
 	const { authentication } = useContext(AuthenticationContext);

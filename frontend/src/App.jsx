@@ -1,21 +1,20 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import HeaderNav from "./components/HeaderNav/HeaderNav";
-import Chat from "./components/Chat/Chat";
-import Feed from "./components/Feed/Feed";
+import Chat from "./pages/Chat/Chat";
+import Feed from "./pages/Feed/Feed";
 import Profile from "./components/Profile/Profile";
 import HearedEditForm from "./components/Profile/EditHeaderInfo/HearedEditForm";
 import Post from "./components/Post/Post";
-import Login from "./components/Login/Login";
-import Register from "./components/Register/Register";
-import NotificationControls from "./components/NotificationControls/NotificationControls";
-import NotificationContainer from "./components/NotificationControls/NotificationContainer/NotificationContainer";
-import { AuthenticationContext } from "./components/AuthenticationControls/AuthenticationControls";
-import Home from "./components/Home/Home";
-import Authentication from "./components/Authentication/Authentication";
+import Login from "./pages/Login/Login";
+import Register from "./pages/Register/Register";
+import NotificationContainer from "./components/NotificationContainer/NotificationContainer";
+import { AuthenticationContext } from "./context/AuthenticationContext/AuthenticationContext";
+import Home from "./pages/Home/Home";
+import Authentication from "./pages/Authentication/Authentication";
 import ImageUploader from "./components/ImageUploader/ImageUploader";
 import "./App.scss";
 import { useContext } from "react";
-import Search from "./components/Search/Search";
+import Search from "./pages/Search/Search";
 
 export default function App() {
 	const { authentication } = useContext(AuthenticationContext);

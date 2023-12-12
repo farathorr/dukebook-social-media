@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import style from "./ChatField.module.scss";
-import { api } from "../../../../api";
+import { api } from "../../../../utils/api";
 import { ChatContext } from "../../Chat";
 
 export default function ChatField({ groupId }) {
