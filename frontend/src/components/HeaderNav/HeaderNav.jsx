@@ -3,10 +3,11 @@ import style from "./HeaderNav.module.scss";
 import { Link } from "react-router-dom";
 import ProfileIcon from "./ProfileIcon/ProfileIcon";
 import logo from "../../images/logo.png";
-import { AuthenticationContext } from "../AuthenticationControls/AuthenticationControls";
+import { AuthenticationContext } from "../../context/AuthenticationContext/AuthenticationContext";
 
 export default function HeaderNav() {
 	const { authentication } = useContext(AuthenticationContext);
+
 	return (
 		<nav className={style["header-nav"]}>
 			<img src={logo} alt="logo" />

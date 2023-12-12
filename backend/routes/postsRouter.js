@@ -4,6 +4,7 @@ const router = express.Router();
 const { optionalAuthentication, weakAuthentication } = require("../middleware/authenticateToken");
 
 router.get("/", optionalAuthentication, postController.getPosts);
+router.get("/feed", weakAuthentication, postController.getFeedPosts);
 router.get("/:id", postController.getPostById);
 
 router.get("/author/:userTag", postController.getPostsByAuthor);

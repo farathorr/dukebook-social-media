@@ -25,6 +25,26 @@ const getPosts = async (req, res) => {
 	}
 };
 
+const getFeedPosts = async (req, res) => {
+	const { userId } = req.user;
+
+	const options = { removed: false };
+	if (userId) {
+		const user = await User.findById(userId);
+		options.followedByUser = user;
+	} else return res.status(400).json({ message: "Authentication is required." });
+
+	try {
+		const posts = await customFind(Post, options)
+			.populate("user")
+			.populate({ path: "replyParentId", model: "Post", populate: [{ path: "user", model: "User" }] })
+			.populate({ path: "originalPostParentId", model: "Post", populate: [{ path: "user", model: "User" }] });
+		res.json(posts);
+	} catch (err) {
+		res.status(500).json({ message: err.message });
+	}
+};
+
 // get post by id
 const getPostById = async (req, res) => {
 	const { id } = req.params;
@@ -73,13 +93,15 @@ const createPost = async (req, res) => {
 };
 
 const updatePost = async (req, res) => {
+	const { userId } = req.user;
 	const { id } = req.params;
-	const { postText } = req.body;
+	const { postText, tags } = req.body;
 	if (!mongoose.Types.ObjectId.isValid(id)) {
 		return res.status(404).send(`No post with id: ${id}`);
 	}
 	try {
-		const updatedPost = await Post.findByIdAndUpdate(id, { postText, edited: true }, { new: true });
+		const updatedPost = await Post.findOneAndUpdate({ _id: id, user: userId }, { postText, edited: true, tags }, { new: true });
+		if (!updatedPost) return res.status(400).json({ message: "Post does not exist." });
 		res.json(updatedPost);
 	} catch (err) {
 		res.status(500).json({ message: err.message });
@@ -248,6 +270,7 @@ const getParentPosts = async (req, res) => {
 
 module.exports = {
 	getPosts,
+	getFeedPosts,
 	getPostById,
 	getPostsByAuthor,
 	createPost,

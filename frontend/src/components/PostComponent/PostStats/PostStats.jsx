@@ -1,15 +1,17 @@
 import style from "./PostStats.module.scss";
 import { Link } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
-import { AuthenticationContext } from "../../AuthenticationControls/AuthenticationControls";
-import { NotificationContext } from "../../NotificationControls/NotificationControls";
-import { api } from "../../../api";
+import { AuthenticationContext } from "../../../context/AuthenticationContext/AuthenticationContext";
+import { NotificationContext } from "../../../context/NotificationControls/NotificationControls";
+import { api } from "../../../utils/api";
+import TagsField from "../../TagsField/TagsField";
 
-export default function PostStats({ postId, likes, dislikes, comments, userTag, onUpdate, text, removed }) {
+export default function PostStats({ postId, likes, dislikes, comments, userTag, onUpdate, text, removed, tags }) {
 	const { authentication } = useContext(AuthenticationContext);
 	const [addNotification] = useContext(NotificationContext);
 	const [editable, setEditable] = useState(false);
 	const stats = api.usePostStats(postId, { likes, dislikes, comments });
+	const [tagsArray, setTagsArray] = useState(tags);
 
 	const optionConstructor = (option, apiFetch) => async () => {
 		if (removed)
@@ -51,13 +53,14 @@ export default function PostStats({ postId, likes, dislikes, comments, userTag, 
 		const post = {
 			postId,
 			postText: event.target["edit-area"].value,
+			tags: tagsArray,
 		};
 		const { status } = await api.updatePost(post);
 		if (status !== 200) return addNotification({ type: "error", message: "Failed to edit post", title: "Post edit failed" });
 
 		addNotification({ type: "success", message: "Post edited", title: "Post edited" });
 		setEditable(false);
-		onUpdate?.((posts) => posts.map((post) => (post._id === postId ? { ...post, postText: event.target["edit-area"].value } : post)));
+		onUpdate?.((posts) => posts.map((p) => (p._id === postId ? { ...p, ...post } : p)));
 	};
 
 	return (
@@ -102,7 +105,10 @@ export default function PostStats({ postId, likes, dislikes, comments, userTag, 
 				{editable ? (
 					<form onSubmit={handleEdit} className={style["edit-form"]}>
 						<textarea className={style["edit-area"]} name="edit-area" id="edit-area" cols="30" rows="10" defaultValue={text}></textarea>
-						<button type="submit">Save</button>
+						<TagsField tags={tagsArray} setTags={setTagsArray} disabled={false} />
+						<button className={style["save-button"]} type="submit">
+							Save
+						</button>
 					</form>
 				) : null}
 			</div>

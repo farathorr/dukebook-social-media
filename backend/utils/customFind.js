@@ -15,6 +15,7 @@ function customFind(
 		countLikes,
 		hideLikes,
 		tags,
+		removed,
 		...query
 	} = {}
 ) {
@@ -37,6 +38,8 @@ function customFind(
 				sort.score = { $meta: "textScore" };
 			}
 		}
+
+		if (removed) find[0].removed = removed;
 
 		if (isComment) find[0].nestingLevel = { $gt: 0 };
 		else if (isOriginalPost) find[0].nestingLevel = 0;

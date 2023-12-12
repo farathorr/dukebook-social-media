@@ -1,0 +1,27 @@
+.title {
+	color: var(--clr-primary-100);
+	font-size: var(--fs-500);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.main-content {
+	display: grid;
+	place-items: center;
+	font-size: var(--fs-300);
+	display: grid;
+	grid-template-columns: 1fr [content-start] min(100%, 700px) [content-end] 1fr;
+
+	> * {
+		grid-column: content;
+	}
+	> div {
+		width: 100%;
+	}
+
+	.feed-posts {
+		display: grid;
+		gap: 20px;
+	}
+}
