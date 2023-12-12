@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema(
 		},
 		profilePicture: {
 			type: String,
-			default: "",
+			default: "https://i.imgur.com/XY5aZDk.png",
 		},
 		profileDescription: {
 			type: String,

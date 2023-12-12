@@ -5,7 +5,6 @@ import ProfileUserHeader from "./ProfileUserHeader/ProfileUserHeader";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { api } from "../../api";
-import { formatDate } from "../../utils/formatDate";
 
 export default function Profile() {
 	const params = useParams();
@@ -29,16 +28,7 @@ export default function Profile() {
 
 	return (
 		<div className={style["profile-page"]}>
-			<ProfileUserHeader
-				username={profileData?.username}
-				userTag={profileData?.userTag}
-				userId={profileData?._id}
-				bio={profileData?.bio}
-				followers={profileData?.followerIds}
-				following={profileData?.followedIds.length}
-				joinDate={formatDate(profileData?.updatedAt)?.longDate}
-				followerCount={profileData?.followerIds?.length}
-			/>
+			<ProfileUserHeader userData={profileData} />
 			{posts.map((post) => (
 				<PostComponent key={post._id} post={post} onUpdate={setPosts} />
 			))}
