@@ -6,6 +6,7 @@ import { NotificationContext } from "../../../context/NotificationControls/Notif
 import { api } from "../../../utils/api";
 import { Link } from "react-router-dom";
 import UserProfileData from "../UserProfileData/UserProfileData";
+import UserPicture from "../../../components/UserPicture/UserPicture";
 
 export default function ProfileUserHeader({ userData }) {
 	const [isFollowing, setIsFollowing] = useState(false);
@@ -115,7 +116,8 @@ export default function ProfileUserHeader({ userData }) {
 	return (
 		<div className={style["profile-container"]}>
 			<div className={style["right-content"]}>
-				<img src={userData?.profilePicture || "https://i.imgur.com/XY5aZDk.png"} alt="" className={style["profile-pic"]} />
+				<UserPicture src={userData?.profilePicture} size={"big"} />
+				{/* <img src={userData?.profilePicture || "https://i.imgur.com/XY5aZDk.png"} alt="" className={style["profile-pic"]} /> */}
 				<div className={style["buttons"]}>
 					{isButtonVisible && (
 						<button className={style["follow-button"]} onClick={handleFollow}>

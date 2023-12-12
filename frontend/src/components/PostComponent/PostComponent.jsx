@@ -2,6 +2,7 @@ import style from "./PostComponent.module.scss";
 import PostFooter from "./PostFooter/PostFooter";
 import PostHeader from "./PostHeader/PostHeader";
 import PostContent from "./PostContent/PostContent";
+import UserPicture from "../UserPicture/UserPicture";
 
 export default function PostComponent({ post, onUpdate, ...props }) {
 	const postId = post._id;
@@ -19,7 +20,7 @@ export default function PostComponent({ post, onUpdate, ...props }) {
 		<div className={style["post-container"]} id={postId}>
 			<div className={style["post-data"] + " " + (!removed || style["removed"])}>
 				<div className={style["post-content"]}>
-					{!removed && <img className={style["profile-pic"]} src={profilePicture} alt="Profile picture" width={100} height={100} />}
+					{!removed && <UserPicture src={profilePicture} size={"small"} />}
 					<div className={style["post-text-container"]}>
 						<PostHeader post={post} />
 						<PostContent post={post} {...props} />

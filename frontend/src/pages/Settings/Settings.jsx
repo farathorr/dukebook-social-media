@@ -26,11 +26,24 @@ export default function Settings() {
 	const callback = async () => {
 		let userData = { username, userTag, bio, profilePicture };
 
-		if(username.length < 3 || username.length > 20) return addNotification({ type: "error", message: "Username must be between 3 and 20 characters", title: "Invalid username", duration: 5000 });
+		if (username.length < 3 || username.length > 20)
+			return addNotification({
+				type: "error",
+				message: "Username must be between 3 and 20 characters",
+				title: "Invalid username",
+				duration: 5000,
+			});
 
-		if(userTag.length < 3 || userTag.length > 20) return addNotification({ type: "error", message: "UserTag must be between 3 and 20 characters", title: "Invalid userTag", duration: 5000 });
+		if (userTag.length < 3 || userTag.length > 20)
+			return addNotification({
+				type: "error",
+				message: "UserTag must be between 3 and 20 characters",
+				title: "Invalid userTag",
+				duration: 5000,
+			});
 
-		if(bio.length > 200) return addNotification({ type: "error", message: "Bio must be less than 200 characters", title: "Invalid bio", duration: 5000 });
+		if (bio.length > 200)
+			return addNotification({ type: "error", message: "Bio must be less than 200 characters", title: "Invalid bio", duration: 5000 });
 
 		const { status } = await api.updateAuthUser(userData);
 		if (status === 403) {
@@ -46,7 +59,7 @@ export default function Settings() {
 			return addNotification({ type: "error", message: "Failed to get user info", title: "Failed to get user info", duration: 5000 });
 
 		dispatchAuthentication({ type: "update", user: data });
-		navigate("/profile");
+		navigate("/settings");
 	};
 
 	const handleSubmit = async (event) => {
@@ -67,7 +80,13 @@ export default function Settings() {
 			</label>
 			<label>
 				Profile Picture:
-				<input type="url" name="profilePicture" placeholder="Url" value={profilePicture} onChange={(e) => setProfilePicture(e.target.value)} />
+				<input
+					type="url"
+					name="profilePicture"
+					placeholder="Url"
+					value={profilePicture}
+					onChange={(e) => setProfilePicture(e.target.value)}
+				/>
 			</label>
 			<label>
 				Bio:
