@@ -2,9 +2,9 @@ import { useState, useEffect, useContext } from "react";
 import style from "./HeaderEditForm.module.scss";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { NotificationContext } from "../../../context/NotificationControls/NotificationControls";
-import { AuthenticationContext } from "../../../context/AuthenticationContext/AuthenticationContext";
-import { api } from "../../../utils/api";
+import { NotificationContext } from "../../context/NotificationControls/NotificationControls";
+import { AuthenticationContext } from "../../context/AuthenticationContext/AuthenticationContext";
+import { api } from "../../utils/api";
 
 export default function HeaderEditForm() {
 	const [addNotification] = useContext(NotificationContext);

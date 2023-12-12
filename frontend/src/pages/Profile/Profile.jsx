@@ -1,6 +1,6 @@
 import React from "react";
 import style from "./Profile.module.scss";
-import PostComponent from "../PostComponent/PostComponent";
+import PostComponent from "../../components/PostComponent/PostComponent";
 import ProfileUserHeader from "./ProfileUserHeader/ProfileUserHeader";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
