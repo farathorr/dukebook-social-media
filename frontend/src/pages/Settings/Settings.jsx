@@ -20,10 +20,11 @@ export default function Settings() {
 		setUsername(authentication.user.username);
 		setUserTag(authentication.user.userTag);
 		setBio(authentication.user.bio);
+		setProfilePicture(authentication.user.profilePicture);
 	}, [authentication]);
 
 	const callback = async () => {
-		const userData = { username, userTag, bio, profilePicture };
+		let userData = { username, userTag, bio, profilePicture };
 
 		if(username.length < 3 || username.length > 20) return addNotification({ type: "error", message: "Username must be between 3 and 20 characters", title: "Invalid username", duration: 5000 });
 
