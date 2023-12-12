@@ -7,6 +7,7 @@ import { api } from "../../../utils/api";
 import { Link } from "react-router-dom";
 import UserProfileData from "../UserProfileData/UserProfileData";
 import UserPicture from "../../../components/UserPicture/UserPicture";
+import CustomButton from "../../../components/CustomButton/CustomButton";
 
 export default function ProfileUserHeader({ userData }) {
 	const [isFollowing, setIsFollowing] = useState(false);
@@ -129,11 +130,7 @@ export default function ProfileUserHeader({ userData }) {
 							{friendButtonText}
 						</button>
 					)}
-					{!isButtonVisible && (
-						<Link to="/settings">
-							<button>Edit proile</button>
-						</Link>
-					)}
+					{!isButtonVisible && <CustomButton to="/settings">Edit proile</CustomButton>}
 				</div>
 			</div>
 			<div className={style["left-content"]}>
