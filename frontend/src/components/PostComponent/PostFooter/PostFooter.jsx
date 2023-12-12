@@ -1,6 +1,5 @@
 import style from "./PostFooter.module.scss";
-import { Link } from "react-router-dom";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { AuthenticationContext } from "../../../context/AuthenticationContext/AuthenticationContext";
 import { NotificationContext } from "../../../context/NotificationControls/NotificationControls";
 import { api } from "../../../utils/api";
@@ -86,14 +85,12 @@ export default function PostFooter({ postId, likes, dislikes, comments, userTag,
 				</CustomButton>
 
 				{authentication.isAuthenticated && authentication.user.userTag === userTag && onUpdate ? (
-					<div className={style["stat-container"] + " " + style["remove-button"]}>
-						<button onClick={removePost}>Remove</button>
-					</div>
+					<CustomButton purpose="warning" className={style["remove-button"]} onClick={removePost}>
+						Remove
+					</CustomButton>
 				) : null}
 				{authentication.isAuthenticated && authentication.user.userTag === userTag && onUpdate ? (
-					<div className={style["stat-container"] + " " + style["edit-button"]}>
-						<button onClick={editPost}>Edit</button>
-					</div>
+					<CustomButton onClick={editPost}>Edit</CustomButton>
 				) : null}
 			</div>
 			{editable ? (
@@ -101,9 +98,10 @@ export default function PostFooter({ postId, likes, dislikes, comments, userTag,
 					<form onSubmit={handleEdit} className={style["edit-form"]}>
 						<textarea className={style["edit-area"]} name="edit-area" id="edit-area" cols="30" rows="10" defaultValue={text}></textarea>
 						<TagsField tags={tagsArray} setTags={setTagsArray} disabled={false} />
-						<button className={style["save-button"]} type="submit">
+
+						<CustomButton purpose="action" className={style["save-button"]} type="submit">
 							Save
-						</button>
+						</CustomButton>
 					</form>
 				</div>
 			) : null}

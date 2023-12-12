@@ -23,31 +23,8 @@
 		fill: var(--clr-accent-400);
 	}
 
-	.stat-container {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-
-		button {
-			background-color: var(--clr-secondary-500);
-			border: 2px solid var(--clr-secondary-600);
-			padding: 5px 10px;
-			border-radius: 5px;
-			display: flex;
-			gap: 10px;
-			cursor: pointer;
-		}
-		button:active {
-			background-color: var(--clr-secondary-400);
-			border: 2px solid var(--clr-secondary-500);
-		}
-	}
 	.remove-button {
 		margin-left: auto;
-
-		button {
-			background-color: rgb(66, 0, 0);
-		}
 	}
 }
 .edit-form {
@@ -58,14 +35,7 @@
 	margin-top: 10px;
 
 	.save-button {
-		margin-top: 10px;
 		margin-inline: auto;
-		background-color: var(--clr-secondary-400);
-		border: 2px solid var(--clr-dark-500);
-		border-radius: 5px;
-		padding: 5px 10px;
-		color: var(--clr-text-100);
-		font-size: var(--fs-300);
 	}
 
 	.post-tags {

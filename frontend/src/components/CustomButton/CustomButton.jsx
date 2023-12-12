@@ -7,6 +7,8 @@ export default function Button({ to, children, className, purpose, ...props }) {
 		primary: style["primary"],
 		secondary: style["secondary"],
 		tertiary: style["tertiary"],
+		warning: style["warning"],
+		dark: style["dark"],
 	};
 	const purposeClass = purposeSwitch[purpose] || "";
 

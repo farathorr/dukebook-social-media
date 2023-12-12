@@ -11,24 +11,54 @@
 	flex: 0 0 auto;
 	gap: 10px;
 	place-items: center;
-}
 
-:where(.button[disabled]) {
-	background-color: var(--clr-primary-400);
-	cursor: not-allowed;
-	filter: grayscale(1);
-}
-
-:where(.button:not([disabled])) {
-	cursor: pointer;
-	transition: background-color 0.2s, transform 0.2s;
-
-	&:hover {
+	&:where([disabled]) {
 		background-color: var(--clr-primary-400);
-		transform: scale(1.05);
+		cursor: not-allowed;
+		filter: grayscale(1);
 	}
 
-	&:active {
-		transform: scale(1);
+	&:where(:not([disabled])) {
+		cursor: pointer;
+		transition: background-color 0.2s, transform 0.2s;
+
+		&:hover {
+			background-color: var(--clr-primary-400);
+			transform: scale(1.05);
+		}
+
+		&:active {
+			transform: scale(1);
+		}
+	}
+}
+
+:where(.warning) {
+	background-color: rgb(94, 0, 0);
+
+	&:where(:not([disabled])) {
+		&:hover {
+			background-color: rgb(105, 10, 10);
+		}
+	}
+}
+
+:where(.action) {
+	background-color: var(--clr-accent-500);
+
+	&:where(:not([disabled])) {
+		&:hover {
+			background-color: var(--clr-accent-450);
+		}
+	}
+}
+
+:where(.dark) {
+	background-color: var(--clr-secondary-500);
+
+	&:where(:not([disabled])) {
+		&:hover {
+			background-color: var(--clr-secondary-400);
+		}
 	}
 }
