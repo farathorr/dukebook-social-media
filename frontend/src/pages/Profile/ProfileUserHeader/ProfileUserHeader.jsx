@@ -1,12 +1,11 @@
 import React from "react";
 import style from "./ProfileUserHeader.module.scss";
-import image from "../../../images/Duke3D.png";
 import { useState, useEffect, useContext } from "react";
 import { AuthenticationContext } from "../../../context/AuthenticationContext/AuthenticationContext";
 import { NotificationContext } from "../../../context/NotificationControls/NotificationControls";
 import { api } from "../../../utils/api";
 import { Link } from "react-router-dom";
-import { formatDate } from "../../../utils/formatDate";
+import UserProfileData from "../UserProfileData/UserProfileData";
 
 export default function ProfileUserHeader({ userData }) {
 	const [isFollowing, setIsFollowing] = useState(false);
@@ -136,20 +135,7 @@ export default function ProfileUserHeader({ userData }) {
 				</div>
 			</div>
 			<div className={style["left-content"]}>
-				<span className={style["profile-name"]}>{userData?.username}</span>
-				<span className={style["profile-tag"]}>@{userData?.userTag}</span>
-				<pre className={style["profile-description"]}>{userData?.bio}</pre>
-				<div className={style["social-stats"]}>
-					<span>
-						<strong>Followers</strong> {followers}
-					</span>
-					<span>
-						<strong>Following</strong> {userData?.followedIds.length}
-					</span>
-					<span>
-						<strong>Joined at</strong> {formatDate(userData?.updatedAt)?.longDate}
-					</span>
-				</div>
+				<UserProfileData userData={userData} followers={followers} />
 				<div className={style["filter-buttons"]}>
 					<button className={style["selected"]}>Feed</button>
 					<button>Likes</button>

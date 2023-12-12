@@ -1,0 +1,17 @@
+.profile-name {
+	font-size: var(--fs-500);
+	font-weight: var(--fw-600);
+	margin: 0px;
+}
+
+.profile-description {
+	font-family: inherit;
+	font-size: inherit;
+	margin: 0px;
+	white-space: pre-wrap;
+}
+
+.social-stats {
+	display: flex;
+	gap: 15px;
+}
