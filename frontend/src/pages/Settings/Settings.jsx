@@ -11,6 +11,7 @@ export default function Settings() {
 	const [username, setUsername] = useState("");
 	const [userTag, setUserTag] = useState("");
 	const [bio, setBio] = useState("");
+	const [profilePicture, setProfilePicture] = useState("");
 	const navigate = useNavigate();
 
 	useEffect(() => {
@@ -22,7 +23,7 @@ export default function Settings() {
 	}, [authentication]);
 
 	const callback = async () => {
-		const userData = { username, userTag, bio };
+		const userData = { username, userTag, bio, profilePicture };
 		const { status } = await api.updateAuthUser(userData);
 		if (status === 403) {
 			dispatchAuthentication({ type: "callback", callback });
@@ -55,6 +56,10 @@ export default function Settings() {
 			<label>
 				User Tag:
 				<input type="text" name="userTag" placeholder="UserTag" value={userTag} onChange={(e) => setUserTag(e.target.value)} />
+			</label>
+			<label>
+				Profile Picture:
+				<input type="url" name="profilePicture" placeholder="Url" value={profilePicture} onChange={(e) => setProfilePicture(e.target.value)} />
 			</label>
 			<label>
 				Bio:
