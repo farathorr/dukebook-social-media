@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import HeaderNav from "./components/HeaderNav/HeaderNav";
-import Chat from "./components/Chat/Chat";
+import Chat from "./pages/Chat/Chat";
 import Feed from "./pages/Feed/Feed";
 import Profile from "./components/Profile/Profile";
 import HearedEditForm from "./components/Profile/EditHeaderInfo/HearedEditForm";
