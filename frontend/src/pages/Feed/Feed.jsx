@@ -4,7 +4,7 @@ import PostComponent from "../../components/PostComponent/PostComponent";
 import { AuthenticationContext } from "../../context/AuthenticationContext/AuthenticationContext";
 import PostSearch from "../../components/PostSearch/PostSearch";
 import { useSearchParams } from "react-router-dom";
-import { api } from "../../api";
+import { api } from "../../utils/api";
 import PostForm from "../../components/PostForm/PostForm";
 
 export default function Feed() {

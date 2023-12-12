@@ -3,7 +3,7 @@ import style from "./Chat.module.scss";
 import image from "../../images/Duke3D.png";
 import FriendRow from "./FriendRow/FriendRow";
 import { AuthenticationContext } from "../../context/AuthenticationContext/AuthenticationContext";
-import { api } from "../../api";
+import { api } from "../../utils/api";
 import { formatDate } from "../../utils/formatDate";
 import { createContext } from "react";
 import ChatFrame from "./ChatFrame/ChatFrame";

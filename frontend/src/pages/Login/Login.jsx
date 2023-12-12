@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState, useContext } from "react";
 import { NotificationContext } from "../../context/NotificationControls/NotificationControls";
 import { AuthenticationContext } from "../../context/AuthenticationContext/AuthenticationContext";
-import { api } from "../../api";
+import { api } from "../../utils/api";
 
 export default function Login() {
 	const [addNotification] = useContext(NotificationContext);

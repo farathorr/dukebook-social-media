@@ -4,7 +4,7 @@ import PostComponent from "../PostComponent/PostComponent";
 import ProfileUserHeader from "./ProfileUserHeader/ProfileUserHeader";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { api } from "../../api";
+import { api } from "../../utils/api";
 
 export default function Profile() {
 	const params = useParams();

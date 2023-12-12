@@ -2,7 +2,7 @@ import style from "./ProfileIcon.module.scss";
 import { AuthenticationContext } from "../../../context/AuthenticationContext/AuthenticationContext";
 import { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { api } from "../../../api";
+import { api } from "../../../utils/api";
 
 export default function ProfileIcon() {
 	const { authentication, dispatchAuthentication } = useContext(AuthenticationContext);

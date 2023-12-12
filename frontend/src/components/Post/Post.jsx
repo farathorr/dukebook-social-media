@@ -3,7 +3,7 @@ import PostComponent from "../PostComponent/PostComponent";
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import ReplyForm from "./ReplyForm/ReplyForm";
-import { api } from "../../api";
+import { api } from "../../utils/api";
 import PostForm from "../PostForm/PostForm";
 
 export default function Post() {

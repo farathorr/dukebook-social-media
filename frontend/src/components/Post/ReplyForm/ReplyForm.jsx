@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { useContext } from "react";
 import { AuthenticationContext } from "../../../context/AuthenticationContext/AuthenticationContext";
 import { NotificationContext } from "../../../context/NotificationControls/NotificationControls";
-import { api } from "../../../api";
+import { api } from "../../../utils/api";
 
 const postError = { type: "error", title: "Post failed" };
 
