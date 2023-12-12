@@ -13,9 +13,3 @@ export default function FriendList({ group, setGroup }) {
 		</div>
 	);
 }
-
-FriendList.defaultProps = {
-	image: require("../../../images/Duke3D.png"),
-	name: "Duke",
-	lastMessage: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.",
-};

@@ -4,8 +4,11 @@ import { useNavigate } from "react-router-dom";
 import { NotificationContext } from "../../context/NotificationControls/NotificationControls";
 import { AuthenticationContext } from "../../context/AuthenticationContext/AuthenticationContext";
 import { api } from "../../utils/api";
+import CustomButton from "../../components/CustomButton/CustomButton";
+import { ImageUploaderContext } from "../../components/ImageUploader/ImageUploader";
 
 export default function Settings() {
+	const { open } = useContext(ImageUploaderContext);
 	const [addNotification] = useContext(NotificationContext);
 	const { authentication, dispatchAuthentication } = useContext(AuthenticationContext);
 	const [username, setUsername] = useState("");
@@ -78,21 +81,22 @@ export default function Settings() {
 				User Tag:
 				<input type="text" name="userTag" placeholder="UserTag" value={userTag} onChange={(e) => setUserTag(e.target.value)} />
 			</label>
-			<label>
-				Profile Picture:
-				<input
-					type="url"
-					name="profilePicture"
-					placeholder="Url"
-					value={profilePicture}
-					onChange={(e) => setProfilePicture(e.target.value)}
-				/>
-			</label>
+			<CustomButton
+				purpose="action"
+				type="button"
+				onClick={() => {
+					open((url) => setProfilePicture(url));
+				}}
+			>
+				Change profile picture
+			</CustomButton>
 			<label>
 				Bio:
 				<textarea name="bio" placeholder="Bio" value={bio} onChange={(e) => setBio(e.target.value)} />
 			</label>
-			<button type="submit">Save Changes</button>
+			<CustomButton className={style["save-button"]} type="submit">
+				Save Changes
+			</CustomButton>
 		</form>
 	);
 }

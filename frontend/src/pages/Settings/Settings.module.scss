@@ -21,13 +21,8 @@
 		}
 	}
 
-	button {
+	.save-button {
 		background-color: #007bff;
-		color: #fff;
-		padding: 10px;
-		border: none;
-		cursor: pointer;
-		transition: background-color 0.3s;
 
 		&:hover {
 			background-color: #0056b3;

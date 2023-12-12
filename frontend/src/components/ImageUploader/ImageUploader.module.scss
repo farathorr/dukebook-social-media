@@ -97,27 +97,12 @@
 
 			button {
 				font-size: var(--fs-500);
-				font-weight: var(--fw-600);
-				padding: 0.5rem 1rem;
-				border-radius: 0.5rem;
-				border: none;
-				background-color: var(--clr-primary-400);
+				font-weight: var(--fw-700);
 				color: var(--clr-primary-100);
-				cursor: pointer;
-				transition: filter 0.2s ease-in-out;
 
 				&[disabled] {
 					background-color: var(--clr-primary-700);
 					color: var(--clr-primary-400);
-					margin-right: 1rem;
-				}
-
-				&:hover {
-					filter: brightness(1.1);
-				}
-
-				&:active {
-					filter: brightness(0.95);
 				}
 			}
 		}

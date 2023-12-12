@@ -113,11 +113,12 @@ export default function ProfileUserHeader({ userData }) {
 		fetchData();
 	}, [authentication.user, userData?.followerIds?.length, isFollowing]);
 
+	if (!userData) return null;
+
 	return (
 		<div className={style["profile-container"]}>
 			<div className={style["right-content"]}>
 				<UserPicture src={userData?.profilePicture} size={"big"} />
-				{/* <img src={userData?.profilePicture || "https://i.imgur.com/XY5aZDk.png"} alt="" className={style["profile-pic"]} /> */}
 				<div className={style["buttons"]}>
 					{isButtonVisible && (
 						<button className={style["follow-button"]} onClick={handleFollow}>

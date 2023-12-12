@@ -1,5 +1,6 @@
 import { createContext, createRef, useEffect, useReducer, useState } from "react";
 import { api } from "../../utils/api";
+import CustomButton from "../CustomButton/CustomButton";
 import style from "./ImageUploader.module.scss";
 
 export const ImageUploaderContext = createContext();
@@ -30,27 +31,26 @@ function reducer(state, action) {
 			};
 		case "reset":
 			return initialFile;
+		case "callback":
+			return { ...state, callback: action.payload };
 		default:
 			return state;
 	}
 }
 
 export default function ImageUploader(props) {
-	const [file, dispatch] = useReducer(reducer, initialFile);
+	const [uploader, dispatch] = useReducer(reducer, initialFile);
 	const myDialog = createRef();
 
-	const open = () => {
+	const open = (callback) => {
 		myDialog.current.showModal();
 		dispatch({ type: "reset" });
+		dispatch({ type: "callback", payload: callback });
 	};
 
 	const close = () => {
 		myDialog.current.close();
 	};
-
-	// useEffect(() => {
-	// 	open();
-	// }, []);
 
 	const onPaste = (event) => {
 		const clipboard = event.clipboardData || window.clipboardData;
@@ -59,25 +59,36 @@ export default function ImageUploader(props) {
 		if (!file) return;
 
 		dispatch({ type: "setFile", payload: file });
+	};
 
-		const image = new Image();
-		// image.onload = onLoad;
+	const upload = async () => {
+		if (uploader.file && uploader.isImage) {
+			const image = new Image();
+			image.onload = onLoad;
 
-		// document.body.appendChild(image);
-		// image.src = URL.createObjectURL(file);
+			image.src = URL.createObjectURL(uploader.file);
+			image.width = 800;
+			image.height = 800;
 
-		async function onLoad() {
-			URL.revokeObjectURL(image.src);
-			const canvas = document.createElement("canvas");
-			const ctx = canvas.getContext("2d");
-			canvas.width = image.naturalWidth;
-			canvas.height = image.naturalHeight;
-			ctx.drawImage(image, 0, 0);
-			const dataURL = canvas.toDataURL("image/png").replace("data:image/png;base64,", ""); // Imgur doesn't like the header
+			async function onLoad() {
+				URL.revokeObjectURL(image.src);
+				const canvas = document.createElement("canvas");
+				const ctx = canvas.getContext("2d");
+				canvas.width = image.naturalWidth;
+				canvas.height = image.naturalHeight;
+				ctx.drawImage(image, 0, 0);
+				const dataURL = canvas.toDataURL("image/png").replace("data:image/png;base64,", ""); // Imgur doesn't like the header
 
-			const response = await api.uploadImage(dataURL);
+				const { data, status } = await api.uploadImage(dataURL);
 
-			console.log(response);
+				if (status === 200) {
+					uploader.callback(data.url);
+					close();
+				}
+			}
+		} else if (uploader.url && uploader.isImage) {
+			uploader.callback(uploader.url);
+			close();
 		}
 	};
 
@@ -102,15 +113,15 @@ export default function ImageUploader(props) {
 							<div className={style["file-info-text"]}>
 								<p>
 									<strong>File name: </strong>
-									{file.name || "none"}
+									{uploader.name || "none"}
 								</p>
 								<p>
 									<strong>File type: </strong>
-									{file.type || "none"}
+									{uploader.type || "none"}
 								</p>
 								<p>
 									<strong>File size: </strong>
-									{formatBytes(file.size) || ""}
+									{formatBytes(uploader.size) || ""}
 								</p>
 							</div>
 						</div>
@@ -125,21 +136,23 @@ export default function ImageUploader(props) {
 							name=""
 							id=""
 							placeholder="Paste url or image"
-							value={file.url}
+							value={uploader.url}
 							onChange={(e) => dispatch({ type: "setUrl", payload: e.target.value })}
 						/>
 					</div>
-					<PreviewImage file={file} dispatch={dispatch} />
+					<PreviewImage file={uploader} dispatch={dispatch} />
 					<div className={style["footer"]}>
-						<button
+						<CustomButton
 							onClick={(e) => {
 								e.preventDefault();
 								close();
 							}}
 						>
 							Back
-						</button>
-						<button disabled={!file.isImage}>Upload</button>
+						</CustomButton>
+						<CustomButton disabled={!uploader.isImage} onClick={upload}>
+							Upload
+						</CustomButton>
 					</div>
 				</div>
 			</dialog>
