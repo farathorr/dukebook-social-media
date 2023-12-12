@@ -1,0 +1,64 @@
+:where(.button) {
+	all: unset;
+	display: inline-block;
+	padding: 8px 16px;
+	border-radius: 8px;
+	font-family: inherit;
+	font-size: var(--fs-300);
+	background-color: var(--clr-primary-500);
+	transition: background-color 0.2s, transform 0.2s;
+	display: flex;
+	flex: 0 0 auto;
+	gap: 10px;
+	place-items: center;
+
+	&:where([disabled]) {
+		background-color: var(--clr-primary-400);
+		cursor: not-allowed;
+		filter: grayscale(1);
+	}
+
+	&:where(:not([disabled])) {
+		cursor: pointer;
+		transition: background-color 0.2s, transform 0.2s;
+
+		&:hover {
+			background-color: var(--clr-primary-400);
+			transform: scale(1.05);
+		}
+
+		&:active {
+			transform: scale(1);
+		}
+	}
+}
+
+:where(.warning) {
+	background-color: rgb(94, 0, 0);
+
+	&:where(:not([disabled])) {
+		&:hover {
+			background-color: rgb(105, 10, 10);
+		}
+	}
+}
+
+:where(.action) {
+	background-color: var(--clr-accent-500);
+
+	&:where(:not([disabled])) {
+		&:hover {
+			background-color: var(--clr-accent-450);
+		}
+	}
+}
+
+:where(.dark) {
+	background-color: var(--clr-secondary-500);
+
+	&:where(:not([disabled])) {
+		&:hover {
+			background-color: var(--clr-secondary-400);
+		}
+	}
+}
