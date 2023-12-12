@@ -1,12 +1,13 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import style from "./MessageRow.module.scss";
 import { ChatContext } from "../../../Chat";
+import UserPicture from "../../../../../components/UserPicture/UserPicture";
 
 export default function MessageRow({ message }) {
 	const memorizedMessageRow = useMemo(() => {
 		return (
 			<div className={style["message-row"]}>
-				<img className={style["profile-pic"]} src={message.sender.profilePicture} alt="Profile picture" width={40} height={40} />
+				<UserPicture src={message.sender.profilePicture} size="small" />
 
 				<MessageContent name={message.sender.userTag} date={message.date} messages={message.messages} />
 			</div>
