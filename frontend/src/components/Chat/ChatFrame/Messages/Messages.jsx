@@ -15,7 +15,7 @@ export default function Messages({ messages }) {
 		<div className={style["message-box"]} onScroll={handleScroll} ref={messagesBoxRef}>
 			{messages.map((message) => {
 				if (message.type === "separator") return <MessageSeparator key={message.date.longDate} date={message.date} />;
-				return <MessageRow key={message._id} id={message._id} name={message.sender?.userTag} {...message} />;
+				return <MessageRow key={message._id} message={message} />;
 			})}
 		</div>
 	);

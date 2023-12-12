@@ -74,10 +74,10 @@ export default function Chat() {
 				<main className={style["page-content"]}>
 					<div className={style["friend-list"]}>
 						{messageGroups.map((group) => (
-							<FriendRow key={group._id} onClick={() => setGroup(group)} name={group.name} lastMessage={group.lastMessage} image={image} />
+							<FriendRow key={group._id} setGroup={setGroup} group={group} />
 						))}
 					</div>
-					<ChatFrame group={group} image={image} messages={messages} />
+					<ChatFrame group={group} messages={messages} />
 				</main>
 			</div>
 		</ChatContext.Provider>

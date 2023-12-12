@@ -7,6 +7,7 @@ import { AuthenticationContext } from "../AuthenticationControls/AuthenticationC
 
 export default function HeaderNav() {
 	const { authentication } = useContext(AuthenticationContext);
+
 	return (
 		<nav className={style["header-nav"]}>
 			<img src={logo} alt="logo" />

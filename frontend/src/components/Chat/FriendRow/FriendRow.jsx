@@ -1,13 +1,13 @@
 import React from "react";
 import style from "./FriendRow.module.scss";
 
-export default function FriendList(props) {
+export default function FriendList({ group, setGroup }) {
 	return (
-		<div className={style["friend-row"]} onClick={props.onClick}>
-			<img className={style["profile-pic"]} src={props.image} alt="Profile picture" width={40} height={40} />
+		<div className={style["friend-row"]} onClick={() => setGroup(group)}>
+			<img className={style["profile-pic"]} src={group.image} alt="Profile picture" width={40} height={40} />
 			<div className={style["friend-info-container"]}>
-				<span className={style["user-name"]}>{props.name}</span>
-				<span className={style["user-last-message"]}>{props.lastMessage}</span>
+				<span className={style["user-name"]}>{group.name}</span>
+				<span className={style["user-last-message"]}>{group.lastMessage}</span>
 			</div>
 		</div>
 	);
