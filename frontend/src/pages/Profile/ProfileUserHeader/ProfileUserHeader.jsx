@@ -129,7 +129,7 @@ export default function ProfileUserHeader({ userData }) {
 						</button>
 					)}
 					{!isButtonVisible && (
-						<Link to="/profile">
+						<Link to="/settings">
 							<button>Edit proile</button>
 						</Link>
 					)}
