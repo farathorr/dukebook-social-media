@@ -29,12 +29,12 @@ export default function App() {
 				<Route path="/user/:userTag" element={<Profile />} />
 				<Route path="/authentication" element={authentication.isAuthenticated ? <Authentication /> : <Navigate to="/login" />} />
 				<Route path="/profile" element={<HearedEditForm />} />
-				<Route path="/feed" element={<Feed />} />
+				<Route path="/feed" element={authentication.isAuthenticated ? <Feed /> : <Navigate to="/search" />} />
 				<Route path="/search" element={<Search />} />
-				<Route path="/login" element={<Login />} />
-				<Route path="/register" element={<Register />} />
+				<Route path="/login" element={!authentication.isAuthenticated ? <Login /> : <Navigate to="/" />} />
+				<Route path="/register" element={!authentication.isAuthenticated ? <Register /> : <Navigate to="/" />} />
 				<Route path="/post" element={<Post />} />
-				<Route path="/chat" element={<Chat />} />
+				<Route path="/chat" element={authentication.isAuthenticated ? <Chat /> : <Navigate to="/login" />} />
 				<Route path="/post/:id" element={<Post />} />
 			</Routes>
 		</BrowserRouter>

@@ -24,13 +24,14 @@ function reducer(state, action) {
 }
 
 export default function AuthenticationControls(props) {
+	const [isLoading, setIsLoading] = useState(true);
 	const [authentication, dispatchAuthentication] = useReducer(reducer, initialState);
 
 	useEffect(() => {
 		const fetchData = async () => {
 			const { data, status } = await api.getAuthUserInfo();
+			setIsLoading(false);
 			if (status !== 200) return;
-			authentication.isAuthenticated = true;
 
 			dispatchAuthentication({ type: "login", user: data, rememberPassword: true });
 		};
@@ -38,5 +39,6 @@ export default function AuthenticationControls(props) {
 		fetchData();
 	}, []);
 
+	if (isLoading) return null;
 	return <AuthenticationContext.Provider value={{ authentication, dispatchAuthentication }} {...props} />;
 }

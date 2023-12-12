@@ -16,8 +16,8 @@ export default function Feed() {
 	useEffect(() => {
 		async function fetchPosts() {
 			try {
-				const { data } = await api.getUserFeedPosts();
-				setPosts(data);
+				const { data, status } = await api.getUserFeedPosts();
+				if (status === 200) setPosts(data);
 			} catch (err) {}
 		}
 
