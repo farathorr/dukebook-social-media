@@ -1,10 +1,11 @@
 import { Link } from "react-router-dom";
 import style from "./ChatHeader.module.scss";
+import UserPicture from "../../../../components/UserPicture/UserPicture";
 
 export default function ChatHeader({ image, name }) {
 	return (
 		<div className={style["chat-bar"]}>
-			<img className={style["profile-pic"]} src={image} alt="Profile picture" width={40} height={40} />
+			<UserPicture src={image} size="small" />
 			<div className={style["bar-user-info-container"]}>
 				<Link className={style["user-name"]} to={`/user/${name}`}>
 					@{name}
