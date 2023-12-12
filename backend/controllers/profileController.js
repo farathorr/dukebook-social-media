@@ -10,6 +10,9 @@ const updateAuthUser = async (req, res) => {
 	const { userId: id } = req.user;
 	const { username, userTag, email, password, profilePicture, bio } = req.body;
 	const updatedUser = { username, userTag, email, password, profilePicture, bio, _id: id };
+
+	if (User.findOne(userTag)) return res.status(409).json({ message: "UserTag already exists." });
+
 	const user = await User.findByIdAndUpdate(id, updatedUser, { new: true });
 
 	if (!user) return res.status(404).send(`No user with id: ${id}`);

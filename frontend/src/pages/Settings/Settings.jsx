@@ -49,11 +49,19 @@ export default function Settings() {
 			return addNotification({ type: "error", message: "Bio must be less than 200 characters", title: "Invalid bio", duration: 5000 });
 
 		const { status } = await api.updateAuthUser(userData);
+
 		if (status === 403) {
 			dispatchAuthentication({ type: "callback", callback });
 			navigate("/authentication");
 			return;
 		}
+
+		if (status === 409) {
+			addNotification({ type: "error", message: "UserTag already taken", title: "Invalid userTag", duration: 5000 });
+			navigate("/settings");
+			return;
+		}
+
 		if (status !== 200) return;
 		addNotification({ type: "success", message: "Settings updated succesfully", title: "Authentication successful", duration: 2000 });
 
