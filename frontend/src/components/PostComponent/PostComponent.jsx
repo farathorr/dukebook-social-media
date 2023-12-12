@@ -13,7 +13,7 @@ export default function PostComponent({ post, onUpdate, ...props }) {
 	const dislikes = post.dislikes.length;
 	const likes = post.likes.length;
 	const tags = post.tags;
-	const profilePicture = post.user?.profilePicture || "https://i.imgur.com/XY5aZDk.png";
+	const profilePicture = post.user?.profilePicture;
 	const stats = { postId, likes, dislikes, comments, onUpdate, userTag, text, removed, tags };
 
 	return (
@@ -37,16 +37,3 @@ export default function PostComponent({ post, onUpdate, ...props }) {
 		</div>
 	);
 }
-
-PostComponent.defaultProps = {
-	profilePic: require("../../images/Duke3D.png"),
-	username: "Duke",
-	userTag: "author",
-	postText:
-		"Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam quibusdam, voluptatum, quos, voluptatem voluptas quia quaeaspernatur voluptatibus quod doloribus quas. Quisquam quibusdam, voluptatum, quos, voluptatem voluptas quia quae aspernaturvoluptatibus quod doloribus quas.",
-	images: [],
-	likes: 0,
-	dislikes: 0,
-	comments: 0,
-	date: new Date().toLocaleString(),
-};

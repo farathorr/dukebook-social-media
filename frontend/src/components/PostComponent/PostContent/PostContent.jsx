@@ -6,7 +6,7 @@ export default function PostContent({ post, ...props }) {
 	return (
 		<>
 			<pre className={style["post-text"]}>{post.postText}</pre>
-			{props.images.map((image, index) => (
+			{props.images?.map((image, index) => (
 				<img className={style["post-image"]} src={image} key={index} alt="Picture" />
 			))}
 			{post.tags.length > 0 ? (

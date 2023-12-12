@@ -22,7 +22,6 @@ export default function App() {
 		<BrowserRouter>
 			<HeaderNav />
 			<NotificationContainer />
-			<ImageUploader />
 			<Routes>
 				<Route path="/" element={<Home />} />
 				<Route path="/user/:userTag" element={<Profile />} />
