@@ -2,16 +2,16 @@ import { useContext, useEffect, useMemo, useState } from "react";
 import style from "./MessageRow.module.scss";
 import { ChatContext } from "../../../Chat";
 
-export default function MessageRow({ id, image, name, date, messages }) {
+export default function MessageRow({ message }) {
 	const memorizedMessageRow = useMemo(() => {
 		return (
 			<div className={style["message-row"]}>
-				<img className={style["profile-pic"]} src={image} alt="Profile picture" width={40} height={40} />
+				<img className={style["profile-pic"]} src={message.sender.profilePicture} alt="Profile picture" width={40} height={40} />
 
-				<MessageContent name={name} date={date} messages={messages} />
+				<MessageContent name={message.sender.userTag} date={message.date} messages={message.messages} />
 			</div>
 		);
-	}, [id, messages.length]);
+	}, [message._id, message.messages.length]);
 
 	return <>{memorizedMessageRow}</>;
 }
@@ -67,14 +67,3 @@ function LinkToImage({ link }) {
 	if (loaded) return <img className={style["image"]} src={link} alt="Image" onLoad={scrollToBottom} />;
 	else return <a href={link}>{link}</a>;
 }
-
-MessageRow.defaultProps = {
-	image: require("../../../../../images/Duke3D.png"),
-	name: "Duke",
-	date: "Today at 15:23",
-	messages: [
-		"Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.",
-		"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugiat ratione quod adipisci dolores aperiam, quidem recusandae cupiditate unde harum voluptatibus! Adipisci veritatis laborum minima modi ducimus nulla libero repudiandae! Eligendi.",
-		"Lorem, ipsum dolor.",
-	],
-};

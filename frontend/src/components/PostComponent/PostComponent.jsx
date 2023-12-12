@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import PostTime from "./PostTime/PostTime";
 import PostStats from "./PostStats/PostStats";
 
-export default function PostComponent({ post, onUpdate, profilePic, ...props }) {
+export default function PostComponent({ post, onUpdate, ...props }) {
 	const postId = post._id;
 	const username = post.user?.username;
 	const userTag = post.user?.userTag;
@@ -15,6 +15,7 @@ export default function PostComponent({ post, onUpdate, profilePic, ...props }) 
 	const likes = post.likes.length;
 	const edited = post.edited;
 	const tags = post.tags;
+	const profilePicture = post.user?.profilePicture || "https://i.imgur.com/XY5aZDk.png";
 	// const { postId, likes, dislikes, comments, userTag, text, edited, removed, tags } = post;
 	const stats = { postId, likes, dislikes, comments, onUpdate, userTag, text, removed, tags };
 
@@ -22,7 +23,7 @@ export default function PostComponent({ post, onUpdate, profilePic, ...props }) 
 		<div className={style["post-container"]} id={postId}>
 			<div className={style["post-data"] + " " + (!removed || style["removed"])}>
 				<div className={style["post-content"]}>
-					{!removed && <img className={style["profile-pic"]} src={profilePic} alt="Profile picture" width={100} height={100} />}
+					{!removed && <img className={style["profile-pic"]} src={profilePicture} alt="Profile picture" width={100} height={100} />}
 					<div className={style["post-text-container"]}>
 						{!removed && (
 							<>
