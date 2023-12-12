@@ -3,6 +3,7 @@ import { AuthenticationContext } from "../../context/AuthenticationContext/Authe
 import { api } from "../../utils/api";
 import style from "./Authentication.module.scss";
 import { NotificationContext } from "../../context/NotificationControls/NotificationControls";
+import UserPicture from "../../components/UserPicture/UserPicture";
 
 export default function Authentication() {
 	const [addNotification] = useContext(NotificationContext);
@@ -37,7 +38,7 @@ export default function Authentication() {
 				<p>Enter your password</p>
 			</div>
 			<div className={style["profile-info"]}>
-				<img src={require("../../images/Duke3D.png")} alt="profile picture" />
+				<UserPicture src={authentication.user?.profilePicture} size="small" />
 				<span className={style.username}>{authentication.user?.username}</span>
 				<span className={style.usertag}>{authentication.user?.userTag}</span>
 			</div>
