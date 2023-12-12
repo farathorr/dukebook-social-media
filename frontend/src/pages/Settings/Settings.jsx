@@ -23,6 +23,13 @@ export default function Settings() {
 
 	const callback = async () => {
 		const userData = { username, userTag, bio };
+
+		if(username.length < 3 || username.length > 20) return addNotification({ type: "error", message: "Username must be between 3 and 20 characters", title: "Invalid username", duration: 5000 });
+
+		if(userTag.length < 3 || userTag.length > 20) return addNotification({ type: "error", message: "UserTag must be between 3 and 20 characters", title: "Invalid userTag", duration: 5000 });
+
+		if(bio.length > 200) return addNotification({ type: "error", message: "Bio must be less than 200 characters", title: "Invalid bio", duration: 5000 });
+
 		const { status } = await api.updateAuthUser(userData);
 		if (status === 403) {
 			dispatchAuthentication({ type: "callback", callback });
