@@ -1,11 +1,11 @@
 import style from "./Feed.module.scss";
 import { useState, useContext, useEffect } from "react";
-import PostComponent from "../PostComponent/PostComponent";
+import PostComponent from "../../components/PostComponent/PostComponent";
 import { AuthenticationContext } from "../../context/AuthenticationContext/AuthenticationContext";
-import PostSearch from "../PostSearch/PostSearch";
+import PostSearch from "../../components/PostSearch/PostSearch";
 import { useSearchParams } from "react-router-dom";
 import { api } from "../../api";
-import PostForm from "../PostForm/PostForm";
+import PostForm from "../../components/PostForm/PostForm";
 
 export default function Feed() {
 	const { authentication } = useContext(AuthenticationContext);
