@@ -2,8 +2,8 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import HeaderNav from "./components/HeaderNav/HeaderNav";
 import Chat from "./pages/Chat/Chat";
 import Feed from "./pages/Feed/Feed";
-import Profile from "./components/Profile/Profile";
-import HearedEditForm from "./components/Profile/EditHeaderInfo/HearedEditForm";
+import Profile from "./pages/Profile/Profile";
+import Settings from "./pages/Settings/Settings";
 import Post from "./pages/Post/Post";
 import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
@@ -27,7 +27,7 @@ export default function App() {
 				<Route path="/" element={<Home />} />
 				<Route path="/user/:userTag" element={<Profile />} />
 				<Route path="/authentication" element={authentication.isAuthenticated ? <Authentication /> : <Navigate to="/login" />} />
-				<Route path="/profile" element={<HearedEditForm />} />
+				<Route path="/settings" element={<Settings />} />
 				<Route path="/feed" element={authentication.isAuthenticated ? <Feed /> : <Navigate to="/search" />} />
 				<Route path="/search" element={<Search />} />
 				<Route path="/login" element={!authentication.isAuthenticated ? <Login /> : <Navigate to="/" />} />
