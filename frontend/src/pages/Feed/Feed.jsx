@@ -3,7 +3,7 @@ import { useState, useContext, useEffect } from "react";
 import PostComponent from "../../components/PostComponent/PostComponent";
 import { AuthenticationContext } from "../../context/AuthenticationContext/AuthenticationContext";
 import PostSearch from "../../components/PostSearch/PostSearch";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { api } from "../../utils/api";
 import PostForm from "../../components/PostForm/PostForm";
 
@@ -31,6 +31,13 @@ export default function Feed() {
 			<section className={style["main-content"]}>
 				<PostForm title="New post" updateInterface={setUpdatePostContent} type="post" />
 				<div className={style["feed-posts"]}>
+					{authentication.user?.followedIds.length === 0 && (
+						<div className={style["no-posts"]}>
+							<span>
+								You are not following anyone yet. Find <Link to="/search">trending posts</Link>
+							</span>
+						</div>
+					)}
 					{posts.map((post) => (
 						<NestPosts key={post._id} post={post} onUpdate={setPosts} />
 					))}

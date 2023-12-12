@@ -9,7 +9,7 @@ const getPosts = async (req, res) => {
 	const { filter, search, tags } = req.query;
 	const userId = req.user?.userId;
 
-	const options = { search, isOriginalPost: true };
+	const options = { search, isOriginalPost: true, removed: false };
 	if (tags) options.tags = [tags].flat();
 	if (userId) {
 		const user = await User.findById(userId);
@@ -25,13 +25,44 @@ const getPosts = async (req, res) => {
 	}
 };
 
+const getTrendingPosts = async (req, res) => {
+	try {
+		const posts = await Post.aggregate([
+			{
+				$addFields: {
+					likeReleaseRatio: {
+						$divide: [
+							{
+								$add: [
+									{ $size: "$likes" },
+									{ $multiply: [{ $size: "$likes" }, 2] },
+									{ $multiply: [{ $size: "$dislikes" }, -1] },
+									{ $multiply: [{ $size: "$comments" }, 0.5] },
+								],
+							},
+							{
+								$pow: [2, { $divide: [{ $subtract: [new Date(), "$createdAt"] }, 86400000] }],
+							},
+						],
+					},
+				},
+			},
+			{ $sort: { likeReleaseRatio: -1, createdAt: -1, _id: 1 } },
+		]).limit(100);
+
+		res.json(await User.populate(posts, { path: "user" }));
+	} catch (err) {
+		res.status(500).json({ message: err.message });
+	}
+};
+
 const getFeedPosts = async (req, res) => {
 	const { userId } = req.user;
 
 	const options = { removed: false };
 	if (userId) {
 		const user = await User.findById(userId);
-		options.followedByUser = user;
+		options.getFeedPosts = user;
 	} else return res.status(400).json({ message: "Authentication is required." });
 
 	try {
@@ -39,6 +70,7 @@ const getFeedPosts = async (req, res) => {
 			.populate("user")
 			.populate({ path: "replyParentId", model: "Post", populate: [{ path: "user", model: "User" }] })
 			.populate({ path: "originalPostParentId", model: "Post", populate: [{ path: "user", model: "User" }] });
+
 		res.json(posts);
 	} catch (err) {
 		res.status(500).json({ message: err.message });
@@ -271,6 +303,7 @@ const getParentPosts = async (req, res) => {
 module.exports = {
 	getPosts,
 	getFeedPosts,
+	getTrendingPosts,
 	getPostById,
 	getPostsByAuthor,
 	createPost,

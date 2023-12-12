@@ -189,6 +189,11 @@ const apiObject = {
 		return response;
 	}),
 
+	getTrendingPosts: async () => {
+		const response = await axios.get("http://localhost:4000/posts/trending");
+		return response;
+	},
+
 	usePostStats: (id, props) => {
 		const [value] = useSocket(`post/${id}`);
 		const [dislikes, setDislikes] = useState(props?.dislikes ?? 0);

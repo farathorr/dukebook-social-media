@@ -12,18 +12,17 @@ export default function Search() {
 	const { authentication } = useContext(AuthenticationContext);
 	const [searchParams] = useSearchParams();
 	const [posts, setPosts] = useState([]);
-	const [updatePostContent, setUpdatePostContent] = useState(false);
 
 	useEffect(() => {
 		async function fetchPosts() {
 			try {
-				const { data } = await api.getPosts(searchParams.toString());
-				setPosts(data);
+				const { data, status } = await api.getPosts(searchParams.toString());
+				if (status === 200) setPosts(data);
 			} catch (err) {}
 		}
 
 		fetchPosts();
-	}, [searchParams, updatePostContent, authentication]);
+	}, [searchParams, authentication]);
 
 	return (
 		<>
