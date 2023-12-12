@@ -1,5 +1,5 @@
 import { createContext, createRef, useEffect, useReducer, useState } from "react";
-import { api } from "../../api";
+import { api } from "../../utils/api";
 import style from "./ImageUploader.module.scss";
 
 export const ImageUploaderContext = createContext();
