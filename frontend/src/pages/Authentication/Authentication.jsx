@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState } from "react";
-import { AuthenticationContext } from "../AuthenticationControls/AuthenticationControls";
-import { api } from "../../api";
+import { AuthenticationContext } from "../../context/AuthenticationContext/AuthenticationContext";
+import { api } from "../../utils/api";
 import style from "./Authentication.module.scss";
-import { NotificationContext } from "../NotificationControls/NotificationControls";
+import { NotificationContext } from "../../context/NotificationControls/NotificationControls";
 
 export default function Authentication() {
 	const [addNotification] = useContext(NotificationContext);

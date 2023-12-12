@@ -1,7 +1,7 @@
 import { createRef, useContext, useEffect, useState } from "react";
-import { NotificationContext } from "../NotificationControls/NotificationControls";
-import { AuthenticationContext } from "../AuthenticationControls/AuthenticationControls";
-import { api } from "../../api";
+import { NotificationContext } from "../../context/NotificationControls/NotificationControls";
+import { AuthenticationContext } from "../../context/AuthenticationContext/AuthenticationContext";
+import { api } from "../../utils/api";
 import { useParams } from "react-router-dom";
 
 import style from "./PostForm.module.scss";

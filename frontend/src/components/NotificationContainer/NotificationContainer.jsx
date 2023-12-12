@@ -1,6 +1,6 @@
 import { useContext } from "react";
-import { NotificationContext } from "../NotificationControls";
-import Notification from "../Notification/Notification";
+import { NotificationContext } from "../../context/NotificationControls/NotificationControls";
+import Notification from "./Notification/Notification";
 import style from "./NotificationContainer.module.scss";
 
 export default function NotificationContainer() {

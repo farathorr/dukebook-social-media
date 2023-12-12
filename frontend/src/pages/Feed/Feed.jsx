@@ -1,11 +1,11 @@
 import style from "./Feed.module.scss";
 import { useState, useContext, useEffect } from "react";
-import PostComponent from "../PostComponent/PostComponent";
-import { AuthenticationContext } from "../AuthenticationControls/AuthenticationControls";
-import PostSearch from "../PostSearch/PostSearch";
+import PostComponent from "../../components/PostComponent/PostComponent";
+import { AuthenticationContext } from "../../context/AuthenticationContext/AuthenticationContext";
+import PostSearch from "../../components/PostSearch/PostSearch";
 import { useSearchParams } from "react-router-dom";
-import { api } from "../../api";
-import PostForm from "../PostForm/PostForm";
+import { api } from "../../utils/api";
+import PostForm from "../../components/PostForm/PostForm";
 
 export default function Feed() {
 	const { authentication } = useContext(AuthenticationContext);
@@ -16,8 +16,8 @@ export default function Feed() {
 	useEffect(() => {
 		async function fetchPosts() {
 			try {
-				const { data } = await api.getUserFeedPosts();
-				setPosts(data);
+				const { data, status } = await api.getUserFeedPosts();
+				if (status === 200) setPosts(data);
 			} catch (err) {}
 		}
 

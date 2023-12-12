@@ -2,8 +2,8 @@ import { useContext, useEffect, useRef, useState } from "react";
 import style from "./Chat.module.scss";
 import image from "../../images/Duke3D.png";
 import FriendRow from "./FriendRow/FriendRow";
-import { AuthenticationContext } from "../AuthenticationControls/AuthenticationControls";
-import { api } from "../../api";
+import { AuthenticationContext } from "../../context/AuthenticationContext/AuthenticationContext";
+import { api } from "../../utils/api";
 import { formatDate } from "../../utils/formatDate";
 import { createContext } from "react";
 import ChatFrame from "./ChatFrame/ChatFrame";
@@ -74,10 +74,10 @@ export default function Chat() {
 				<main className={style["page-content"]}>
 					<div className={style["friend-list"]}>
 						{messageGroups.map((group) => (
-							<FriendRow key={group._id} onClick={() => setGroup(group)} name={group.name} lastMessage={group.lastMessage} image={image} />
+							<FriendRow key={group._id} setGroup={setGroup} group={group} />
 						))}
 					</div>
-					<ChatFrame group={group} image={image} messages={messages} />
+					<ChatFrame group={group} messages={messages} />
 				</main>
 			</div>
 		</ChatContext.Provider>
