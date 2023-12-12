@@ -4,7 +4,7 @@ import Chat from "./pages/Chat/Chat";
 import Feed from "./pages/Feed/Feed";
 import Profile from "./components/Profile/Profile";
 import HearedEditForm from "./components/Profile/EditHeaderInfo/HearedEditForm";
-import Post from "./components/Post/Post";
+import Post from "./pages/Post/Post";
 import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
 import NotificationContainer from "./components/NotificationContainer/NotificationContainer";

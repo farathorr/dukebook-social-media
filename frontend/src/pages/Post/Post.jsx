@@ -1,10 +1,9 @@
 import style from "./Post.module.scss";
-import PostComponent from "../PostComponent/PostComponent";
+import PostComponent from "../../components/PostComponent/PostComponent";
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import ReplyForm from "./ReplyForm/ReplyForm";
 import { api } from "../../utils/api";
-import PostForm from "../PostForm/PostForm";
+import PostForm from "../../components/PostForm/PostForm";
 
 export default function Post() {
 	const params = useParams();
