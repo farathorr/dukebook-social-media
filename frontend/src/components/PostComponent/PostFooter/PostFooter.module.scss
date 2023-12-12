@@ -4,55 +4,27 @@
 	padding: 5px;
 	margin-left: 5px;
 
-	.stat-container {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-
-		button {
-			background-color: var(--clr-secondary-500);
-			border: 2px solid var(--clr-secondary-600);
-			padding: 5px 10px;
-			border-radius: 5px;
-			display: flex;
-			gap: 10px;
-			cursor: pointer;
-		}
-		button:active {
-			background-color: var(--clr-secondary-400);
-			border: 2px solid var(--clr-secondary-500);
-		}
-
-		.comment-button {
-			display: flex;
-			gap: 5px;
-			align-items: center;
-			text-decoration: none;
-			color: var(--clr-accent-400);
-			font-size: var(--fs-300);
-			border-bottom: 3px solid var(--clr-accent-400);
-			border-radius: 3px;
-			svg {
-				fill: var(--clr-accent-400);
-			}
-		}
-		.like-button {
-			svg {
-				fill: green;
-			}
-		}
-		.dislike-button {
-			svg {
-				fill: red;
-			}
-		}
+	.like-button {
+		fill: green;
 	}
+	.dislike-button {
+		fill: red;
+	}
+
+	.comment-button {
+		display: flex;
+		gap: 5px;
+		align-items: center;
+		text-decoration: none;
+		color: var(--clr-accent-400);
+		font-size: var(--fs-300);
+		border-bottom: 3px solid var(--clr-accent-400);
+		border-radius: 3px;
+		fill: var(--clr-accent-400);
+	}
+
 	.remove-button {
 		margin-left: auto;
-
-		button {
-			background-color: rgb(66, 0, 0);
-		}
 	}
 }
 .edit-form {
@@ -63,14 +35,7 @@
 	margin-top: 10px;
 
 	.save-button {
-		margin-top: 10px;
 		margin-inline: auto;
-		background-color: var(--clr-secondary-400);
-		border: 2px solid var(--clr-dark-500);
-		border-radius: 5px;
-		padding: 5px 10px;
-		color: var(--clr-text-100);
-		font-size: var(--fs-300);
 	}
 
 	.post-tags {
