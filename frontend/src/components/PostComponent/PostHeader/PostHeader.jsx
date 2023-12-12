@@ -9,7 +9,7 @@ export default function PostHeader({ post }) {
 			{!post.removed && (
 				<>
 					<span className={style["post-user-name"]}>{post.user?.username}</span>
-					<UserTag tag={post.user?.userTag} link={true} />
+					<UserTag tag={post.user?.userTag} isLink={true} />
 				</>
 			)}
 			<PostTime time={post.createdAt} />

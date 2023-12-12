@@ -6,12 +6,12 @@ export default function UserTag({ tag, isLink }) {
 	if (isLink) {
 		return (
 			<>
-				<Link href={`/user/@${tag}`} className={style["user-tag"]}>
+				<Link to={`/user/${tag}`} className={style["user-tag"]}>
 					@{tag}
 				</Link>
 			</>
 		);
-	} else if (!isLink) {
+	} else {
 		return (
 			<>
 				<span className={style["user-tag-no-hover"]}>@{tag}</span>

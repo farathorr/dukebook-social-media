@@ -1,12 +1,13 @@
 import React from "react";
 import style from "./UserProfileData.module.scss";
 import { formatDate } from "../../../utils/formatDate";
+import UserTag from "../../../components/UserTag/UserTag";
 
 export default function UserProfileData({ userData, followers }) {
 	return (
 		<>
 			<span className={style["profile-name"]}>{userData?.username}</span>
-			<span className={style["profile-tag"]}>@{userData?.userTag}</span>
+			<UserTag tag={userData?.userTag} />
 			<pre className={style["profile-description"]}>{userData?.bio}</pre>
 			<div className={style["social-stats"]}>
 				<span>
