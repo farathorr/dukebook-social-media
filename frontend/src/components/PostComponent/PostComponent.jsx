@@ -16,7 +16,6 @@ export default function PostComponent({ post, onUpdate, ...props }) {
 	const edited = post.edited;
 	const tags = post.tags;
 	const profilePicture = post.user?.profilePicture || "https://i.imgur.com/XY5aZDk.png";
-	// const { postId, likes, dislikes, comments, userTag, text, edited, removed, tags } = post;
 	const stats = { postId, likes, dislikes, comments, onUpdate, userTag, text, removed, tags };
 
 	return (

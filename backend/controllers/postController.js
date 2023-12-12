@@ -9,7 +9,7 @@ const getPosts = async (req, res) => {
 	const { filter, search, tags } = req.query;
 	const userId = req.user?.userId;
 
-	const options = { search, isOriginalPost: true };
+	const options = { search, isOriginalPost: true, removed: false };
 	if (tags) options.tags = [tags].flat();
 	if (userId) {
 		const user = await User.findById(userId);
@@ -20,6 +20,37 @@ const getPosts = async (req, res) => {
 	try {
 		const posts = await customFind(Post, options).populate("user");
 		res.json(posts);
+	} catch (err) {
+		res.status(500).json({ message: err.message });
+	}
+};
+
+const getTrendingPosts = async (req, res) => {
+	try {
+		const posts = await Post.aggregate([
+			{
+				$addFields: {
+					likeReleaseRatio: {
+						$divide: [
+							{
+								$add: [
+									{ $size: "$likes" },
+									{ $multiply: [{ $size: "$likes" }, 2] },
+									{ $multiply: [{ $size: "$dislikes" }, -1] },
+									{ $multiply: [{ $size: "$comments" }, 0.5] },
+								],
+							},
+							{
+								$pow: [2, { $divide: [{ $subtract: [new Date(), "$createdAt"] }, 86400000] }],
+							},
+						],
+					},
+				},
+			},
+			{ $sort: { likeReleaseRatio: -1, createdAt: -1, _id: 1 } },
+		]).limit(100);
+
+		res.json(await User.populate(posts, { path: "user" }));
 	} catch (err) {
 		res.status(500).json({ message: err.message });
 	}
