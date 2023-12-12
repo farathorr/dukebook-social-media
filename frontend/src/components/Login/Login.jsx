@@ -2,7 +2,7 @@ import React from "react";
 import style from "./Login.module.scss";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useContext } from "react";
-import { NotificationContext } from "../NotificationControls/NotificationControls";
+import { NotificationContext } from "../../context/NotificationControls/NotificationControls";
 import { AuthenticationContext } from "../AuthenticationControls/AuthenticationControls";
 import { api } from "../../api";
 

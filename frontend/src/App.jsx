@@ -7,15 +7,15 @@ import HearedEditForm from "./components/Profile/EditHeaderInfo/HearedEditForm";
 import Post from "./components/Post/Post";
 import Login from "./components/Login/Login";
 import Register from "./components/Register/Register";
-import NotificationControls from "./components/NotificationControls/NotificationControls";
-import NotificationContainer from "./components/NotificationControls/NotificationContainer/NotificationContainer";
+import NotificationControls from "./context/NotificationControls/NotificationControls";
+import NotificationContainer from "./components/NotificationContainer/NotificationContainer";
 import { AuthenticationContext } from "./components/AuthenticationControls/AuthenticationControls";
 import Home from "./components/Home/Home";
-import Authentication from "./components/Authentication/Authentication";
+import Authentication from "./pages/Authentication/Authentication";
 import ImageUploader from "./components/ImageUploader/ImageUploader";
 import "./App.scss";
 import { useContext } from "react";
-import Search from "./components/Search/Search";
+import Search from "./pages/Search/Search";
 
 export default function App() {
 	const { authentication } = useContext(AuthenticationContext);

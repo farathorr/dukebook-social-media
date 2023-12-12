@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import style from "./HeaderEditForm.module.scss";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { NotificationContext } from "../../NotificationControls/NotificationControls";
+import { NotificationContext } from "../../../context/NotificationControls/NotificationControls";
 import { AuthenticationContext } from "../../AuthenticationControls/AuthenticationControls";
 import { api } from "../../../api";
 

@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useContext } from "react";
 import { AuthenticationContext } from "../../AuthenticationControls/AuthenticationControls";
-import { NotificationContext } from "../../NotificationControls/NotificationControls";
+import { NotificationContext } from "../../../context/NotificationControls/NotificationControls";
 import { api } from "../../../api";
 
 const postError = { type: "error", title: "Post failed" };

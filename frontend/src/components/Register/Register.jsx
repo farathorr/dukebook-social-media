@@ -1,7 +1,7 @@
 import style from "./Register.module.scss";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useContext } from "react";
-import { NotificationContext } from "../NotificationControls/NotificationControls";
+import { NotificationContext } from "../../context/NotificationControls/NotificationControls";
 import { api } from "../../api";
 
 const errorMessage = { type: "error", title: "Registration failed" };

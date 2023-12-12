@@ -1,5 +1,5 @@
 import { createRef, useContext, useEffect, useState } from "react";
-import { NotificationContext } from "../NotificationControls/NotificationControls";
+import { NotificationContext } from "../../context/NotificationControls/NotificationControls";
 import { AuthenticationContext } from "../AuthenticationControls/AuthenticationControls";
 import { api } from "../../api";
 import { useParams } from "react-router-dom";
