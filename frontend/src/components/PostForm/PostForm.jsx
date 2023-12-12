@@ -1,6 +1,6 @@
 import { createRef, useContext, useEffect, useState } from "react";
 import { NotificationContext } from "../../context/NotificationControls/NotificationControls";
-import { AuthenticationContext } from "../AuthenticationControls/AuthenticationControls";
+import { AuthenticationContext } from "../../context/AuthenticationContext/AuthenticationContext";
 import { api } from "../../api";
 import { useParams } from "react-router-dom";
 

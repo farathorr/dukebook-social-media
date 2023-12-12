@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { AuthenticationContext } from "../../components/AuthenticationControls/AuthenticationControls";
+import { AuthenticationContext } from "../../context/AuthenticationContext/AuthenticationContext";
 import { api } from "../../api";
 import style from "./Authentication.module.scss";
 import { NotificationContext } from "../../context/NotificationControls/NotificationControls";

@@ -1,5 +1,5 @@
 import style from "./ProfileIcon.module.scss";
-import { AuthenticationContext } from "../../AuthenticationControls/AuthenticationControls";
+import { AuthenticationContext } from "../../../context/AuthenticationContext/AuthenticationContext";
 import { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { api } from "../../../api";

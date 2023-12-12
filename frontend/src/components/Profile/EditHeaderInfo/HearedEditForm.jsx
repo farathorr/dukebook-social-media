@@ -3,7 +3,7 @@ import style from "./HeaderEditForm.module.scss";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { NotificationContext } from "../../../context/NotificationControls/NotificationControls";
-import { AuthenticationContext } from "../../AuthenticationControls/AuthenticationControls";
+import { AuthenticationContext } from "../../../context/AuthenticationContext/AuthenticationContext";
 import { api } from "../../../api";
 
 export default function HeaderEditForm() {

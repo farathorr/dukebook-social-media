@@ -9,7 +9,7 @@ import Login from "./components/Login/Login";
 import Register from "./components/Register/Register";
 import NotificationControls from "./context/NotificationControls/NotificationControls";
 import NotificationContainer from "./components/NotificationContainer/NotificationContainer";
-import { AuthenticationContext } from "./components/AuthenticationControls/AuthenticationControls";
+import { AuthenticationContext } from "./context/AuthenticationContext/AuthenticationContext";
 import Home from "./components/Home/Home";
 import Authentication from "./pages/Authentication/Authentication";
 import ImageUploader from "./components/ImageUploader/ImageUploader";

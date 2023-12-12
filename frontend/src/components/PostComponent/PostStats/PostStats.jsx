@@ -1,7 +1,7 @@
 import style from "./PostStats.module.scss";
 import { Link } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
-import { AuthenticationContext } from "../../AuthenticationControls/AuthenticationControls";
+import { AuthenticationContext } from "../../../context/AuthenticationContext/AuthenticationContext";
 import { NotificationContext } from "../../../context/NotificationControls/NotificationControls";
 import { api } from "../../../api";
 import TagsField from "../../TagsField/TagsField";

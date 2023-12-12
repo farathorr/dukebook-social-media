@@ -1,7 +1,7 @@
 import style from "./Search.module.scss";
 import { useState, useContext, useEffect } from "react";
 import PostComponent from "../../components/PostComponent/PostComponent";
-import { AuthenticationContext } from "../../components/AuthenticationControls/AuthenticationControls";
+import { AuthenticationContext } from "../../context/AuthenticationContext/AuthenticationContext";
 import PostSearch from "../../components/PostSearch/PostSearch";
 import { useSearchParams } from "react-router-dom";
 import { api } from "../../api";

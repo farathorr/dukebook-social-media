@@ -2,7 +2,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import style from "./Chat.module.scss";
 import image from "../../images/Duke3D.png";
 import FriendRow from "./FriendRow/FriendRow";
-import { AuthenticationContext } from "../AuthenticationControls/AuthenticationControls";
+import { AuthenticationContext } from "../../context/AuthenticationContext/AuthenticationContext";
 import { api } from "../../api";
 import { formatDate } from "../../utils/formatDate";
 import { createContext } from "react";

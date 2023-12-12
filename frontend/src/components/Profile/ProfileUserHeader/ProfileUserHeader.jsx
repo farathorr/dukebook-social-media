@@ -2,7 +2,7 @@ import React from "react";
 import style from "./ProfileUserHeader.module.scss";
 import image from "../../../images/Duke3D.png";
 import { useState, useEffect, useContext } from "react";
-import { AuthenticationContext } from "../../AuthenticationControls/AuthenticationControls";
+import { AuthenticationContext } from "../../../context/AuthenticationContext/AuthenticationContext";
 import { NotificationContext } from "../../../context/NotificationControls/NotificationControls";
 import { api } from "../../../api";
 import { Link } from "react-router-dom";

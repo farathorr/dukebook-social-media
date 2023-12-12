@@ -3,7 +3,7 @@ import style from "./Login.module.scss";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useContext } from "react";
 import { NotificationContext } from "../../context/NotificationControls/NotificationControls";
-import { AuthenticationContext } from "../AuthenticationControls/AuthenticationControls";
+import { AuthenticationContext } from "../../context/AuthenticationContext/AuthenticationContext";
 import { api } from "../../api";
 
 export default function Login() {

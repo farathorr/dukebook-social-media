@@ -1,7 +1,7 @@
 import style from "./Feed.module.scss";
 import { useState, useContext, useEffect } from "react";
 import PostComponent from "../PostComponent/PostComponent";
-import { AuthenticationContext } from "../AuthenticationControls/AuthenticationControls";
+import { AuthenticationContext } from "../../context/AuthenticationContext/AuthenticationContext";
 import PostSearch from "../PostSearch/PostSearch";
 import { useSearchParams } from "react-router-dom";
 import { api } from "../../api";
