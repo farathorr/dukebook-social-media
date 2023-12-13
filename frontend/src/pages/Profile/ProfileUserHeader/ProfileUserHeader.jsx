@@ -91,6 +91,7 @@ export default function ProfileUserHeader({ userData, showLikedPosts }) {
 			console.log(data);
 			setFollowers(data.followerIds.length);
 			setIsFollowing(!isFollowing);
+			updateAuthentication();
 		} catch (err) {
 			console.log(err);
 		}

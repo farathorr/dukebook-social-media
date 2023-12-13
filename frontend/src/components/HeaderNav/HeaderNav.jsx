@@ -30,9 +30,6 @@ export default function HeaderNav() {
 					<NavButton to="/">
 						<HomeIcon />
 					</NavButton>
-					<NavButton to="/feed">
-						<PostIcon />
-					</NavButton>
 					<NavButton to="/search">
 						<SearchIcon />
 					</NavButton>

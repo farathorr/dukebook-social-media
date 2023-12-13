@@ -1,0 +1,21 @@
+.nav-button {
+	transition: padding 0.2s;
+	&:hover {
+		svg {
+			fill: var(--clr-accent-400);
+		}
+	}
+
+	svg {
+		fill: white;
+		width: 35px;
+		height: 35px;
+		transition: color 0.2s;
+	}
+
+	img {
+		height: 100%;
+		width: 100%;
+		min-height: 0px;
+	}
+}

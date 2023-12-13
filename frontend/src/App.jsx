@@ -26,11 +26,10 @@ export default function App() {
 				<Route path="/register" element={!authentication.isAuthenticated ? <Register /> : <Navigate to="/" />} />
 
 				<Route path="/" element={<Layout />}>
-					<Route index element={<Home />} />
+					<Route index element={<Feed />} />
 					<Route path="/user/:userTag" element={<Profile />} />
 					<Route path="/authentication" element={<Authentication />} />
 					<Route path="/settings" element={<Settings />} />
-					<Route path="/feed" element={<Feed />} />
 					<Route path="/search" element={<Search />} />
 					<Route path="/post" element={<Post />} />
 					<Route path="/chat" element={<Chat />} />
