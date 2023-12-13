@@ -41,6 +41,13 @@ export default function AuthenticationControls(props) {
 		fetchData();
 	}, []);
 
+	async function updateAuthentication() {
+		const { data, status } = await api.getAuthUserInfo();
+		if (status !== 200) return;
+
+		dispatchAuthentication({ type: "update", user: data });
+	}
+
 	if (isLoading) return null;
-	return <AuthenticationContext.Provider value={{ authentication, dispatchAuthentication }} {...props} />;
+	return <AuthenticationContext.Provider value={{ authentication, dispatchAuthentication, updateAuthentication }} {...props} />;
 }

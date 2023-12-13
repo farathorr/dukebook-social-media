@@ -24,6 +24,8 @@ export default function Chat() {
 	const [messages, setMessages] = useState([]);
 	const [newMessage, changeGroup] = api.useMessage(group?._id);
 
+	console.log(group);
+
 	const addNewMessage = (message) => {
 		if (!group || message.groupId !== group._id) return;
 		scrollInfo.firstRender = false;
@@ -64,7 +66,7 @@ export default function Chat() {
 
 	useEffect(() => scrollToBottom());
 
-	if (!authentication.isAuthenticated) return null;
+	if (!authentication.isAuthenticated || group?.participants.every(({ _id }) => _id !== authentication.user._id)) return null;
 	return (
 		<ChatContext.Provider value={{ scrollToBottom, addNewMessage, scrollInfo }}>
 			<div className={style["chat-page"]}>

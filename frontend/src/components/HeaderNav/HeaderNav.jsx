@@ -1,8 +1,5 @@
 import { useContext } from "react";
 import style from "./HeaderNav.module.scss";
-import CustomButton from "../CustomButton/CustomButton";
-import ProfileIcon from "./ProfileIcon/ProfileIcon";
-import logo from "../../images/logo.png";
 import { AuthenticationContext } from "../../context/AuthenticationContext/AuthenticationContext";
 import NavButton from "./NavButton/NavButton";
 import HomeIcon from "../../svg/HomeIcon";
@@ -39,7 +36,7 @@ export default function HeaderNav() {
 					<NavButton to="/search">
 						<SearchIcon />
 					</NavButton>
-					<NavButton to="/likes">
+					<NavButton to={`/user/${authentication.user.userTag}`}>
 						<LikeIcon />
 					</NavButton>
 					<NavButton to="/chat">

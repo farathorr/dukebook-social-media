@@ -9,14 +9,14 @@ import UserProfileData from "../UserProfileData/UserProfileData";
 import UserPicture from "../../../components/UserPicture/UserPicture";
 import CustomButton from "../../../components/CustomButton/CustomButton";
 
-export default function ProfileUserHeader({ userData , showLikedPosts}) {
+export default function ProfileUserHeader({ userData, showLikedPosts }) {
 	const [isFollowing, setIsFollowing] = useState(false);
 	const [followers, setFollowers] = useState(userData?.followerIds);
 	const [followButtonText, setFollowButtonText] = useState("Follow");
 	const [isFriend, setIsFriend] = useState(false);
 	const [friendButtonText, setFriendButtonText] = useState("Add as friend");
 	const [isButtonVisible, setIsButtonVisible] = useState(false);
-	const { authentication } = useContext(AuthenticationContext);
+	const { authentication, updateAuthentication } = useContext(AuthenticationContext);
 	const [addNotification] = useContext(NotificationContext);
 	const [user, setUser] = useState({});
 
@@ -104,6 +104,7 @@ export default function ProfileUserHeader({ userData , showLikedPosts}) {
 			await action(userData?.userTag);
 			setFriendButtonText(`${!isFriend ? "Remove" : "Add as"} friend`);
 			setIsFriend(!isFriend);
+			updateAuthentication();
 		} catch (err) {
 			console.log(err);
 		}
