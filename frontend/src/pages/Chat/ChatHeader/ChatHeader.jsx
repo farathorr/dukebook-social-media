@@ -14,7 +14,12 @@ export default function ChatHeader({ group }) {
 						<UserTag tag={group.name} className={style["name"]} isLink={true} />
 					)}
 					{group.type === "group" && <p className={style["user-status"]}>{group.participants.length} Members</p>}
-					{group.type === "chat" && <p className={style["user-status"]}>Online</p>}
+					{group.type === "chat" && (
+						<div className={style["status-container"]}>
+							<div className={style["user-status-indicator"]}></div>
+							<span className={style["user-status"]}>Online</span>
+						</div>
+					)}
 				</div>
 			</div>
 		</div>
