@@ -1,6 +1,7 @@
-import { createContext, createRef, useEffect, useReducer, useState } from "react";
+import { createContext, createRef, useContext, useEffect, useReducer, useState } from "react";
 import { api } from "../../utils/api";
 import CustomButton from "../CustomButton/CustomButton";
+import { NotificationContext } from "../../context/NotificationControls/NotificationControls";
 import style from "./ImageUploader.module.scss";
 
 export const ImageUploaderContext = createContext();
@@ -39,6 +40,7 @@ function reducer(state, action) {
 }
 
 export default function ImageUploader(props) {
+	const [addNotification] = useContext(NotificationContext);
 	const [uploader, dispatch] = useReducer(reducer, initialFile);
 	const myDialog = createRef();
 
@@ -84,7 +86,7 @@ export default function ImageUploader(props) {
 				if (status === 200) {
 					uploader.callback(data.url);
 					close();
-				}
+				} else addNotification({ type: "error", title: "Upload failed", message: "Something went wrong" });
 			}
 		} else if (uploader.url && uploader.isImage) {
 			uploader.callback(uploader.url);

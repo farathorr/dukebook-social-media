@@ -24,7 +24,8 @@ export default function ProfileUserHeader({ userData }) {
 		if (!userData?._id) return;
 
 		try {
-			const { data } = await api.getUserById(userData?._id);
+			const { data, status } = await api.getUserById(userData?._id);
+			if (status !== 200) return;
 			setFollowers(data.followerIds.length);
 		} catch (err) {
 			console.log(err);
@@ -32,7 +33,8 @@ export default function ProfileUserHeader({ userData }) {
 		try {
 			const currentUser = authentication.user;
 			if (!currentUser?._id) return;
-			const { data } = await api.getUserById(currentUser._id);
+			const { data, status } = await api.getUserById(currentUser._id);
+			if (status !== 200) return;
 			setUser(data);
 			const isAlreadyFollowed = data.followedIds?.some((id) => id === userData?._id);
 			setIsFollowing(isAlreadyFollowed);

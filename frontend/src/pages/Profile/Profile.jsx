@@ -14,10 +14,10 @@ export default function Profile() {
 	useEffect(() => {
 		const fetchServices = async () => {
 			try {
-				const { data: profileData } = await api.getUserByUserTag(params.userTag);
-				const { data: posts } = await api.getPostsByAuthor(params.userTag);
-				if (profileData) setProfileData(profileData);
-				if (posts) setPosts(posts);
+				const profileData = await api.getUserByUserTag(params.userTag);
+				const posts = await api.getPostsByAuthor(params.userTag);
+				if (profileData.status) setProfileData(profileData.data);
+				if (posts.status) setPosts(posts.data);
 			} catch (err) {
 				console.log(err);
 			}
