@@ -9,6 +9,13 @@
 	font-size: var(--fs-400);
 }
 
+.scroll-to-top-button {
+	position: fixed;
+	bottom: 20px;
+	right: 20px;
+	z-index: 1000;
+}
+
 .profile-page {
 	// display: grid;
 	grid-column: middle-content;

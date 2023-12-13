@@ -10,6 +10,13 @@
 	align-items: center;
 }
 
+.scroll-to-top-button {
+	position: fixed;
+	bottom: 20px;
+	right: 20px;
+	z-index: 1000;
+}
+
 .main-content {
 	display: grid;
 	place-items: center;

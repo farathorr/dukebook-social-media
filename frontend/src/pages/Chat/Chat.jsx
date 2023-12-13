@@ -7,6 +7,7 @@ import { api } from "../../utils/api";
 import { formatDate } from "../../utils/formatDate";
 import { createContext } from "react";
 import ChatFrame from "./ChatFrame/ChatFrame";
+import { NotificationContext } from "../../context/NotificationControls/NotificationControls";
 
 export const ChatContext = createContext(null);
 
@@ -16,6 +17,7 @@ const scrollInfo = {
 };
 
 export default function Chat() {
+	const [addNotification] = useContext(NotificationContext);
 	const { authentication } = useContext(AuthenticationContext);
 	const [messageGroups, setMessageGroups] = useState([]);
 	const [messages, setMessages] = useState([]);
@@ -34,7 +36,8 @@ export default function Chat() {
 		if (!authentication.isAuthenticated) return;
 		const fetchServices = async () => {
 			const { status, data } = await api.getMessageGroups();
-			if (status === 200) setMessageGroups(data);
+			if (status !== 200) return addNotification({ type: "error", title: "Error", message: "Failed to fetch message groups" });
+			setMessageGroups(data);
 		};
 
 		fetchServices();
@@ -44,7 +47,8 @@ export default function Chat() {
 		if (!group) return;
 		const fetchServices = async () => {
 			const { status, data } = await api.getMessages(group._id);
-			if (status === 200) setMessages(data.reduce(groupMessage, []));
+			if (status !== 200) return addNotification({ type: "error", title: "Error", message: "Failed to fetch messages" });
+			setMessages(data.reduce(groupMessage, []));
 			scrollInfo.firstRender = true;
 			changeGroup(group._id);
 			sessionStorage.setItem("lastGroup", JSON.stringify(group));

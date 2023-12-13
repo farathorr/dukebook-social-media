@@ -6,12 +6,27 @@ import PostSearch from "../../components/PostSearch/PostSearch";
 import { Link, useSearchParams } from "react-router-dom";
 import { api } from "../../utils/api";
 import PostForm from "../../components/PostForm/PostForm";
+import CustomButton from "../../components/CustomButton/CustomButton";
 
 export default function Feed() {
 	const { authentication } = useContext(AuthenticationContext);
 	const [searchParams] = useSearchParams();
 	const [posts, setPosts] = useState([]);
 	const [updatePostContent, setUpdatePostContent] = useState(false);
+	const [positionY, setPositionY] = useState(0);
+	const [isButtonVisible, setIsButtonVisible] = useState(false);
+
+	useEffect(() => {
+		const handleScroll = () => {
+			setPositionY(window.scrollY);
+		};
+		window.addEventListener("scroll", handleScroll);
+		if (positionY > 600) {
+			setIsButtonVisible(true);
+		} else {
+			setIsButtonVisible(false);
+		}
+	}, [window.scrollY]);
 
 	useEffect(() => {
 		async function fetchPosts() {
@@ -42,6 +57,11 @@ export default function Feed() {
 						<NestPosts key={post._id} post={post} onUpdate={setPosts} />
 					))}
 				</div>
+				{isButtonVisible && (
+					<CustomButton className={style["scroll-to-top-button"]} onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
+						Top
+					</CustomButton>
+				)}
 			</section>
 		</div>
 	);
