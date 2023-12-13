@@ -23,13 +23,16 @@ export default function Chat() {
 	const { group } = useContext(ChatGroupContext);
 	const [messages, setMessages] = useState([]);
 	const [newMessage, changeGroup] = api.useMessage(group?._id);
-	const messagesBoxRef = useRef(null);
 
 	const addNewMessage = (message) => {
 		if (!group || message.groupId !== group._id) return;
 		scrollInfo.firstRender = false;
 
 		setMessages(groupMessage([...messages], message));
+	};
+
+	document.body.parentElement.onscroll = (event) => {
+		scrollInfo.scrolledAtBottom = event.target.scrollHeight < event.target.scrollTop + event.target.clientHeight + 10;
 	};
 
 	useEffect(() => {
@@ -55,17 +58,17 @@ export default function Chat() {
 	}, [newMessage]);
 
 	const scrollToBottom = () => {
-		if (messagesBoxRef.current && (scrollInfo.firstRender || scrollInfo.scrolledAtBottom))
-			messagesBoxRef.current.scrollTop = messagesBoxRef.current.scrollHeight;
+		if (scrollInfo.firstRender || scrollInfo.scrolledAtBottom)
+			window.document.body.parentNode.scrollTop = window.document.body.parentNode.scrollHeight;
 	};
 
 	useEffect(() => scrollToBottom());
 
 	if (!authentication.isAuthenticated) return null;
 	return (
-		<ChatContext.Provider value={{ scrollToBottom, addNewMessage, scrollInfo, messagesBoxRef }}>
-			<div className={style["chat-frame"]}>
-				{group && <ChatHeader image={group.image} name={group?.name} type={group?.type} />}
+		<ChatContext.Provider value={{ scrollToBottom, addNewMessage, scrollInfo }}>
+			<div className={style["chat-page"]}>
+				{group && <ChatHeader group={group} />}
 				<Messages messages={messages} />
 				{group && <ChatField groupId={group?._id} />}
 			</div>
