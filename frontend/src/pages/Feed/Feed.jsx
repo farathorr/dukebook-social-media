@@ -40,7 +40,7 @@ export default function Feed() {
 	}, [searchParams, updatePostContent, authentication]);
 
 	return (
-		<>
+		<div className={style["feed-pag"]}>
 			<PostSearch />
 			<h1 className={style["title"]}>Feed</h1>
 			<section className={style["main-content"]}>
@@ -63,7 +63,7 @@ export default function Feed() {
 					</CustomButton>
 				)}
 			</section>
-		</>
+		</div>
 	);
 }
 

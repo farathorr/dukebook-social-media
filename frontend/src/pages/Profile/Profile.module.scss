@@ -17,10 +17,15 @@
 }
 
 .profile-page {
-	display: grid;
-	grid-template-columns: 1fr [content-start] min(100%, 700px) [content-end] 1fr;
+	// display: grid;
+	grid-column: middle-content;
+	// grid-template-columns: 1fr [content-start] min(100%, 700px) [content-end] 1fr;
 
 	> * {
 		grid-column: content;
 	}
+}
+
+.friend-list {
+	grid-column: right-content;
 }
