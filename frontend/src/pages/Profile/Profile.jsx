@@ -5,7 +5,6 @@ import ProfileUserHeader from "./ProfileUserHeader/ProfileUserHeader";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { api } from "../../utils/api";
-import FriendList from "../../components/FriendList/FriendList";
 import CustomButton from "../../components/CustomButton/CustomButton";
 
 export default function Profile() {
@@ -14,12 +13,13 @@ export default function Profile() {
 	const [posts, setPosts] = useState([]);
 	const [positionY, setPositionY] = useState(0);
 	const [isButtonVisible, setIsButtonVisible] = useState(false);
+	const [userNotFound, setUserNotFound] = useState(false);
 
 	const showLikedPosts = async () => {
 		try {
-			const likedPosts = await api.getPosts(`liked=${profileData._id}`);
-			console.log(likedPosts);
-			setPosts(likedPosts.data);
+			const { data, status } = await api.getPosts(`liked=${profileData._id}`);
+			if (status !== 200) return;
+			setPosts(data);
 		} catch (err) {
 			console.log(err);
 		}
@@ -39,23 +39,27 @@ export default function Profile() {
 
 	useEffect(() => {
 		const fetchServices = async () => {
+			setUserNotFound(false);
 			try {
-				const profileData = await api.getUserByUserTag(params.userTag);
+				const { data, status } = await api.getUserByUserTag(params.userTag);
+				if (status !== 200) return setUserNotFound(true);
+				setProfileData(data);
+
 				const posts = await api.getPostsByAuthor(params.userTag);
-				if (profileData.status) setProfileData(profileData.data);
-				if (posts.status) setPosts(posts.data);
+				if (posts.status === 200) setPosts(posts.data);
 			} catch (err) {
 				console.log(err);
 			}
 		};
 
 		fetchServices();
-	}, []);
+	}, [params.userTag]);
 
 	return (
 		<div className={style["profile-page"]}>
 			<ProfileUserHeader userData={profileData} showLikedPosts={showLikedPosts} />
-			{posts.map((post) => (
+			{userNotFound && <h1>User not found</h1>}
+			{posts?.map((post) => (
 				<PostComponent key={post._id} post={post} onUpdate={setPosts} />
 			))}
 			{isButtonVisible && (

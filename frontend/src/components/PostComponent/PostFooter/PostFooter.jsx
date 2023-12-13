@@ -9,15 +9,16 @@ import ArrowUp from "../../../svg/ArrowUp";
 import ArrowDown from "../../../svg/ArrowDown";
 import SpeechBubble from "../../../svg/SpeechBubble";
 
-export default function PostFooter({ postId, likes, dislikes, comments, userTag, onUpdate, text, removed, tags }) {
+export default function PostFooter({ onUpdate, post }) {
+	const postId = post._id;
 	const { authentication } = useContext(AuthenticationContext);
 	const [addNotification] = useContext(NotificationContext);
 	const [editable, setEditable] = useState(false);
-	const stats = api.usePostStats(postId, { likes, dislikes, comments });
-	const [tagsArray, setTagsArray] = useState(tags);
+	const stats = api.usePostStats(postId, { likes: post.likes.length, dislikes: post.dislikes.length, comments: post.comments?.length });
+	const [tagsArray, setTagsArray] = useState(post.tags);
 
 	const optionConstructor = (option, apiFetch) => async () => {
-		if (removed)
+		if (post.removed)
 			return addNotification({ type: "error", message: `You can't ${option.toLowerCase()} a removed post`, title: `${option} failed` });
 		if (!authentication.isAuthenticated)
 			return addNotification({
@@ -54,7 +55,7 @@ export default function PostFooter({ postId, likes, dislikes, comments, userTag,
 	const handleEdit = async (event) => {
 		event.preventDefault();
 		const post = {
-			postId,
+			postId: postId,
 			postText: event.target["edit-area"].value,
 			tags: tagsArray,
 		};
@@ -84,19 +85,26 @@ export default function PostFooter({ postId, likes, dislikes, comments, userTag,
 					<span>{stats.comments}</span>
 				</CustomButton>
 
-				{authentication.isAuthenticated && authentication.user.userTag === userTag && onUpdate ? (
+				{authentication.isAuthenticated && authentication.user.userTag === post.user?.userTag && onUpdate ? (
 					<CustomButton purpose="warning" className={style["remove-button"]} onClick={removePost}>
 						Remove
 					</CustomButton>
 				) : null}
-				{authentication.isAuthenticated && authentication.user.userTag === userTag && onUpdate ? (
+				{authentication.isAuthenticated && authentication.user.userTag === post.user?.userTag && onUpdate ? (
 					<CustomButton onClick={editPost}>Edit</CustomButton>
 				) : null}
 			</div>
 			{editable ? (
 				<div className="edit-container">
 					<form onSubmit={handleEdit} className={style["edit-form"]}>
-						<textarea className={style["edit-area"]} name="edit-area" id="edit-area" cols="30" rows="10" defaultValue={text}></textarea>
+						<textarea
+							className={style["edit-area"]}
+							name="edit-area"
+							id="edit-area"
+							cols="30"
+							rows="10"
+							defaultValue={post.postText}
+						></textarea>
 						<TagsField tags={tagsArray} setTags={setTagsArray} disabled={false} />
 
 						<CustomButton purpose="action" className={style["save-button"]} type="submit">

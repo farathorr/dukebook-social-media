@@ -15,6 +15,7 @@ const getPosts = async (req, res) => {
 		if (filter?.includes("followed")) options.followedByUser = user;
 		if (filter?.includes("friends")) options.friendsWithUser = user;
 		if (liked) options.filterLiked = liked;
+		options.hasLiked = userId;
 	}
 
 	try {

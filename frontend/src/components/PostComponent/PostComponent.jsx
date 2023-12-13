@@ -5,28 +5,19 @@ import PostContent from "./PostContent/PostContent";
 import UserPicture from "../UserPicture/UserPicture";
 
 export default function PostComponent({ post, onUpdate, ...props }) {
-	const postId = post._id;
-	const userTag = post.user?.userTag;
-	const text = post.postText;
-	const removed = post.removed;
-	const comments = post.comments?.length;
-	const dislikes = post.dislikes.length;
-	const likes = post.likes.length;
-	const tags = post.tags;
-	const profilePicture = post.user?.profilePicture;
-	const stats = { postId, likes, dislikes, comments, onUpdate, userTag, text, removed, tags };
+	const footerData = { post, onUpdate };
 
 	return (
 		<div className={style["post-container"]}>
-			<div className={style["post-data"] + " " + (!removed || style["removed"])}>
+			<div className={style["post-data"] + " " + (!post.removed || style["removed"])}>
 				<div className={style["post-content"]}>
-					{!removed && <UserPicture src={profilePicture} size={"small"} />}
+					{!post.removed && <UserPicture src={post.user?.profilePicture} size={"small"} />}
 					<div className={style["post-text-container"]}>
 						<PostHeader post={post} />
 						<PostContent post={post} {...props} />
 					</div>
 				</div>
-				<PostFooter {...stats} />
+				<PostFooter {...footerData} />
 			</div>
 			{props.children ? (
 				<div className={style["replies"]}>
