@@ -1,18 +1,32 @@
+import { useContext, useEffect, useState } from "react";
 import style from "./FriendList.module.scss";
+import { api } from "../../utils/api";
+import { AuthenticationContext } from "../../context/AuthenticationContext/AuthenticationContext";
+import { NotificationContext } from "../../context/NotificationControls/NotificationControls";
+import FriendRow from "./FriendRow/FriendRow";
 
 export default function FriendList() {
+	const [addNotification] = useContext(NotificationContext);
+	const { authentication } = useContext(AuthenticationContext);
+	const [messageGroups, setMessageGroups] = useState([]);
+	const [group, setGroup] = useState(JSON.parse(sessionStorage.getItem("lastGroup")) || null);
+
+	useEffect(() => {
+		if (!authentication.isAuthenticated) return;
+		const fetchServices = async () => {
+			const { status, data } = await api.getMessageGroups();
+			if (status !== 200) return addNotification({ type: "error", title: "Error", message: "Failed to fetch message groups" });
+			setMessageGroups(data);
+		};
+
+		fetchServices();
+	}, [authentication]);
+
 	return (
 		<div className={style["friend-list"]}>
-			<p>Lorem ipsum dolor sit amet.</p>
-			<p>Neque fugiat tempora corrupti praesentium.</p>
-			<p>Assumenda, facere! Aut, fuga saepe?</p>
-			<p>Nam quam dolorem a eveniet.</p>
-			<p>Quasi molestias eligendi architecto perspiciatis.</p>
-			<p>Aut ea praesentium sequi dolorum!</p>
-			<p>Nostrum magni odit fuga eum.</p>
-			<p>Provident sint ex harum pariatur?</p>
-			<p>Architecto magnam quo facere exercitationem!</p>
-			<p>Architecto nihil consectetur voluptate atque.</p>
+			{messageGroups.map((group) => (
+				<FriendRow key={group._id} setGroup={setGroup} group={group} />
+			))}
 		</div>
 	);
 }

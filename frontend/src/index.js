@@ -4,6 +4,7 @@ import App from "./App";
 import NotificationControls from "./context/NotificationControls/NotificationControls";
 import AuthenticationControls from "./context/AuthenticationContext/AuthenticationContext";
 import ImageUploader from "./components/ImageUploader/ImageUploader";
+import ChatProvider from "./context/ChatGroupContext/ChatGroupContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -11,7 +12,9 @@ root.render(
 		<NotificationControls>
 			<AuthenticationControls>
 				<ImageUploader>
-					<App />
+					<ChatProvider>
+						<App />
+					</ChatProvider>
 				</ImageUploader>
 			</AuthenticationControls>
 		</NotificationControls>

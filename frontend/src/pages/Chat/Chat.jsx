@@ -1,13 +1,14 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import style from "./Chat.module.scss";
-import image from "../../images/Duke3D.png";
-import FriendRow from "./FriendRow/FriendRow";
+// import image from "../../images/Duke3D.png";
+// import FriendRow from "./FriendRow/FriendRow";
 import { AuthenticationContext } from "../../context/AuthenticationContext/AuthenticationContext";
 import { api } from "../../utils/api";
 import { formatDate } from "../../utils/formatDate";
 import { createContext } from "react";
 import ChatFrame from "./ChatFrame/ChatFrame";
 import { NotificationContext } from "../../context/NotificationControls/NotificationControls";
+import { ChatGroupContext } from "../../context/ChatGroupContext/ChatGroupContext";
 
 export const ChatContext = createContext(null);
 
@@ -19,9 +20,10 @@ const scrollInfo = {
 export default function Chat() {
 	const [addNotification] = useContext(NotificationContext);
 	const { authentication } = useContext(AuthenticationContext);
+	const { group } = useContext(ChatGroupContext);
 	const [messageGroups, setMessageGroups] = useState([]);
 	const [messages, setMessages] = useState([]);
-	const [group, setGroup] = useState(JSON.parse(sessionStorage.getItem("lastGroup")) || null);
+	// const [group, setGroup] = useState(JSON.parse(sessionStorage.getItem("lastGroup")) || null);
 	const [newMessage, changeGroup] = api.useMessage(group?._id);
 	const messagesBoxRef = useRef(null);
 
@@ -77,11 +79,6 @@ export default function Chat() {
 		<ChatContext.Provider value={{ scrollToBottom, addNewMessage, scrollInfo, messagesBoxRef }}>
 			<div className={style["chat-page"]}>
 				<main className={style["page-content"]}>
-					<div className={style["friend-list"]}>
-						{messageGroups.map((group) => (
-							<FriendRow key={group._id} setGroup={setGroup} group={group} />
-						))}
-					</div>
 					<ChatFrame group={group} messages={messages} />
 				</main>
 			</div>
