@@ -1,5 +1,6 @@
 .friend-list {
 	position: sticky;
+	width: 250px;
 	grid-column: right-content;
 	background-color: var(--clr-primary-500);
 	display: grid;
@@ -7,12 +8,20 @@
 	gap: 5px;
 	margin-top: 200px;
 	height: max-content;
-	padding: 25px;
+	padding: 15px;
 	border-radius: 10px;
 
-	p {
-		margin: 0px;
-		background-color: var(--clr-primary-600);
-		padding: 10px;
+	.buttons {
+		position: relative;
+		width: 100%;
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 10px;
+		margin-bottom: 10px;
+
+		button {
+			display: block;
+			text-align: center;
+		}
 	}
 }
