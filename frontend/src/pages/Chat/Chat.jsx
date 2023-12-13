@@ -60,6 +60,7 @@ export default function Chat() {
 	useEffect(() => {
 		if (!newMessage) return;
 		scrollInfo.firstRender = false;
+		console.log(newMessage);
 		if (newMessage?.sender?._id === authentication.user?._id) return;
 		addNewMessage(newMessage);
 	}, [newMessage]);
