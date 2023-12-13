@@ -6,15 +6,15 @@ const customFind = require("../utils/customFind");
 
 // get all posts
 const getPosts = async (req, res) => {
-	const { filter, search, tags } = req.query;
+	const { filter, search, tags, liked } = req.query;
 	const userId = req.user?.userId;
-
 	const options = { search, isOriginalPost: true, removed: false };
 	if (tags) options.tags = [tags].flat();
 	if (userId) {
 		const user = await User.findById(userId);
 		if (filter?.includes("followed")) options.followedByUser = user;
 		if (filter?.includes("friends")) options.friendsWithUser = user;
+		if (liked) options.filterLiked = liked;
 	}
 
 	try {
@@ -172,12 +172,16 @@ const likePost = async (req, res) => {
 		return res.status(404).send(`No post with id: ${id}`);
 	}
 	try {
+		const user = await User.findById(userId).populate("likedPosts");
 		const post = await Post.findById(id);
 		if (post.likes.includes(userId)) {
 			post.likes.pull(userId);
+			user.likedPosts.pull(post);
 		} else {
 			post.dislikes.pull(userId);
+			user.dislikedPosts.pull(post);
 			post.likes.push(userId);
+			user.likedPosts.push(post);
 		}
 
 		post.save();
@@ -195,9 +199,11 @@ const dislikePost = async (req, res) => {
 		return res.status(404).send(`No post with id: ${id}`);
 	}
 	try {
+		const user = await User.findById(userId).populate("dislikedPosts");
 		const post = await Post.findById(id);
 		if (post.dislikes.includes(userId)) {
 			post.dislikes.pull(userId);
+			user.dislikedPosts.pull(post);
 		} else {
 			post.likes.pull(userId);
 			post.dislikes.push(userId);

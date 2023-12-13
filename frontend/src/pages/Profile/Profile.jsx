@@ -15,6 +15,16 @@ export default function Profile() {
 	const [positionY, setPositionY] = useState(0);
 	const [isButtonVisible, setIsButtonVisible] = useState(false);
 
+	const showLikedPosts = async () => {
+		try {
+			const likedPosts = await api.getPosts(`liked=${profileData._id}`);
+			console.log(likedPosts);
+			setPosts(likedPosts.data);
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
 	useEffect(() => {
 		const handleScroll = () => {
 			setPositionY(window.scrollY);
@@ -44,7 +54,7 @@ export default function Profile() {
 
 	return (
 		<div className={style["profile-page"]}>
-			<ProfileUserHeader userData={profileData} />
+			<ProfileUserHeader userData={profileData} showLikedPosts={showLikedPosts} />
 			{posts.map((post) => (
 				<PostComponent key={post._id} post={post} onUpdate={setPosts} />
 			))}

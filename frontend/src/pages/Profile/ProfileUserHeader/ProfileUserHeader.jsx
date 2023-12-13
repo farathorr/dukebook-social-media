@@ -9,7 +9,7 @@ import UserProfileData from "../UserProfileData/UserProfileData";
 import UserPicture from "../../../components/UserPicture/UserPicture";
 import CustomButton from "../../../components/CustomButton/CustomButton";
 
-export default function ProfileUserHeader({ userData }) {
+export default function ProfileUserHeader({ userData , showLikedPosts}) {
 	const [isFollowing, setIsFollowing] = useState(false);
 	const [followers, setFollowers] = useState(userData?.followerIds);
 	const [followButtonText, setFollowButtonText] = useState("Follow");
@@ -140,7 +140,7 @@ export default function ProfileUserHeader({ userData }) {
 				<UserProfileData userData={userData} followers={followers} />
 				<div className={style["filter-buttons"]}>
 					<button className={style["selected"]}>Feed</button>
-					<button>Likes</button>
+					<CustomButton onClick={showLikedPosts}>Likes</CustomButton>
 					<button>Something</button>
 				</div>
 			</div>
