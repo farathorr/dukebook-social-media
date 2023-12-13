@@ -30,7 +30,7 @@ export default function Post() {
 	if (postData.length === 0) return null;
 
 	return (
-		<>
+		<div>
 			<h1 className={style["title"]}>Post</h1>
 			<main className={style["main-content"]}>
 				<div className={style["post-links"]}>
@@ -43,17 +43,13 @@ export default function Post() {
 					<CommentPosts replies={repliesData} loadMore={2} />
 				</div>
 			</main>
-		</>
+		</div>
 	);
 
 	function ParentLoop({ posts, index }) {
 		const post = posts[index];
 		if (!post?._id) return null;
-		return (
-			<PostComponent key={post._id} post={post} onUpdate={setPostData}>
-				<ParentLoop posts={posts} index={index + 1} />
-			</PostComponent>
-		);
+		return <PostComponent key={post._id} post={post} onUpdate={setPostData} children={<ParentLoop posts={posts} index={index + 1} />} />;
 	}
 
 	function CommentPosts({ replies, more, startNestingLevel, loadMore }) {

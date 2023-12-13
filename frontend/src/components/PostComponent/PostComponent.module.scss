@@ -1,14 +1,11 @@
 .post-container {
-	display: grid;
-	max-width: 100%;
-
+	width: 100%;
 	.post-data {
 		margin: 10px;
 		display: grid;
 		background-color: var(--clr-primary-600);
 		border-radius: 10px;
 		border: 1px solid var(--clr-primary-400);
-		max-width: 700px;
 		padding: 10px;
 
 		&.removed {

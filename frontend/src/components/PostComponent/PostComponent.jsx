@@ -17,7 +17,7 @@ export default function PostComponent({ post, onUpdate, ...props }) {
 	const stats = { postId, likes, dislikes, comments, onUpdate, userTag, text, removed, tags };
 
 	return (
-		<div className={style["post-container"]} id={postId}>
+		<div className={style["post-container"]}>
 			<div className={style["post-data"] + " " + (!removed || style["removed"])}>
 				<div className={style["post-content"]}>
 					{!removed && <UserPicture src={profilePicture} size={"small"} />}
