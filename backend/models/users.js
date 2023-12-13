@@ -22,10 +22,6 @@ const userSchema = new mongoose.Schema(
 			type: String,
 			default: "https://i.imgur.com/XY5aZDk.png",
 		},
-		profileDescription: {
-			type: String,
-			max: 200,
-		},
 		likedPosts: {
 			type: [
 				{
@@ -83,6 +79,7 @@ const userSchema = new mongoose.Schema(
 		bio: {
 			type: String,
 			max: 500,
+			default: "",
 		},
 	},
 	{ timestamps: true }
