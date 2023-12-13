@@ -48,15 +48,15 @@ export default function HeaderNav() {
 			<NavButton to="/likes">
 				<LikeIcon />
 			</NavButton>
-			<NavButton to={"/login"}>
-				<LogoutIcon />
-			</NavButton>
 
 			{authentication.isAuthenticated && (
 				<NavButton to="/chat">
 					<ChatIcon />
 				</NavButton>
 			)}
+			<NavButton to={"/login"}>
+				<LogoutIcon />
+			</NavButton>
 		</nav>
 	);
 }
