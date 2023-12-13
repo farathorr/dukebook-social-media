@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { api } from "../../utils/api";
 import PostForm from "../../components/PostForm/PostForm";
-import ScrollTopButton from "../../components/CustomButton/ScrollTopButton/ScrollTopButton";
 
 export default function Post() {
 	const params = useParams();
@@ -35,8 +34,16 @@ export default function Post() {
 			<h1 className={style["title"]}>Post</h1>
 			<main className={style["main-content"]}>
 				<div className={style["post-links"]}>
-					{postData.at(-1).replyParentId && <Link to={"/post/" + postData.at(-1).replyParentId}>{"< Back"}</Link>}
-					{postData.at(-1).originalPostParentId && <Link to={"/post/" + postData.at(-1).originalPostParentId}>{"To start"}</Link>}
+					{postData.at(-1).replyParentId && (
+						<CustomButton purpose="action" to={"/post/" + postData.at(-1).replyParentId}>
+							{"< Back"}
+						</CustomButton>
+					)}
+					{postData.at(-1).originalPostParentId && (
+						<CustomButton purpose="action" to={"/post/" + postData.at(-1).originalPostParentId}>
+							{"To start"}
+						</CustomButton>
+					)}
 				</div>
 				<ParentLoop posts={postData} index={0} />
 				<PostForm updateInterface={setUpdatePostContent} disabled={postData.at(-1).removed} type="reply" title="New Reply" />
@@ -83,8 +90,8 @@ export default function Post() {
 
 function LoadMoreComments(props) {
 	return (
-		<Link to={"/post/" + props.link}>
-			<button>Load more</button>
-		</Link>
+		<CustomButton to={"/post/" + props.link} className={style["load-more-button"]} purpose="action">
+			Load more
+		</CustomButton>
 	);
 }

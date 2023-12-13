@@ -29,3 +29,22 @@
 		gap: 20px;
 	}
 }
+
+.help-text {
+	border-left: 5px solid var(--clr-primary-400);
+	background-color: var(--clr-primary-700);
+	padding: 15px 20px;
+	font-size: var(--fs-400);
+	display: flow-root;
+	margin-top: 35px;
+	display: flex;
+	align-items: center;
+	border-radius: 0px 10px 10px 0px;
+
+	.help-button {
+		width: max-content;
+		display: block;
+		margin-left: auto;
+		font-weight: var(--fw-700);
+	}
+}

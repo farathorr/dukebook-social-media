@@ -9,7 +9,6 @@ import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
 import NotificationContainer from "./components/NotificationContainer/NotificationContainer";
 import { AuthenticationContext } from "./context/AuthenticationContext/AuthenticationContext";
-import Home from "./pages/Home/Home";
 import Authentication from "./pages/Authentication/Authentication";
 import "./App.scss";
 import { useContext } from "react";

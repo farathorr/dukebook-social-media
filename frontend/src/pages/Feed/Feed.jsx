@@ -3,7 +3,7 @@ import { useState, useContext, useEffect } from "react";
 import PostComponent from "../../components/PostComponent/PostComponent";
 import { AuthenticationContext } from "../../context/AuthenticationContext/AuthenticationContext";
 import PostSearch from "../../components/PostSearch/PostSearch";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { api } from "../../utils/api";
 import PostForm from "../../components/PostForm/PostForm";
 import CustomButton from "../../components/CustomButton/CustomButton";
@@ -35,9 +35,12 @@ export default function Feed() {
 				<div className={style["feed-posts"]}>
 					{authentication.user?.followedIds.length === 0 && (
 						<div className={style["no-posts"]}>
-							<span>
-								You are not following anyone yet. Find <Link to="/search">trending posts</Link>
-							</span>
+							<div className={style["help-text"]}>
+								You are not following anyone yet.
+								<CustomButton className={style["help-button"]} purpose="action" to="/search">
+									Find posts
+								</CustomButton>
+							</div>
 						</div>
 					)}
 					{posts.map((post) => (
