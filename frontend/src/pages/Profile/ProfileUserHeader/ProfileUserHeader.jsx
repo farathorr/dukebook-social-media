@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import UserProfileData from "../UserProfileData/UserProfileData";
 import UserPicture from "../../../components/UserPicture/UserPicture";
 import CustomButton from "../../../components/CustomButton/CustomButton";
+import EditProfile from "../../../svg/EditProfile";
 
 export default function ProfileUserHeader({ userData, showLikedPosts }) {
 	const [isFollowing, setIsFollowing] = useState(false);
@@ -135,14 +136,18 @@ export default function ProfileUserHeader({ userData, showLikedPosts }) {
 							{friendButtonText}
 						</button>
 					)}
-					{!isButtonVisible && <CustomButton to="/settings">Edit proile</CustomButton>}
+					{!isButtonVisible && (
+						<CustomButton to="/settings">
+							<EditProfile className={style["edit-svg"]} /> Edit
+						</CustomButton>
+					)}
 				</div>
 			</div>
 			<div className={style["left-content"]}>
 				<UserProfileData userData={userData} followers={followers} />
 				<div className={style["filter-buttons"]}>
 					<button className={style["selected"]}>Feed</button>
-					<CustomButton onClick={showLikedPosts}>Likes</CustomButton>
+					<button onClick={showLikedPosts}>Likes</button>
 					<button>Something</button>
 				</div>
 			</div>

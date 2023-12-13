@@ -17,7 +17,7 @@ export default function UserProfileData({ userData, followers }) {
 					<strong>Following</strong> {userData?.followedIds.length}
 				</span>
 				<span>
-					<strong>Joined at</strong> {formatDate(userData?.createdAt)?.longDate}
+					<strong>Joined</strong> {formatDate(userData?.createdAt)?.longDate}
 				</span>
 			</div>
 		</>

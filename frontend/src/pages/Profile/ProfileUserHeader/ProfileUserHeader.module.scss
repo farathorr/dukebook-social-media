@@ -21,6 +21,10 @@
 			display: flex;
 			justify-content: space-between;
 
+			.edit-svg {
+				fill: white;
+			}
+
 			button {
 				padding: 8px 15px;
 				background-color: var(--clr-primary-500);
