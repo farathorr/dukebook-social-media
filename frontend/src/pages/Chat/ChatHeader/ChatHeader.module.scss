@@ -1,8 +1,11 @@
 .chat-bar {
+	position: sticky;
+	top: 0px;
 	height: 50px;
 	background-color: var(--clr-primary-400);
 	display: grid;
 	grid-template-columns: auto auto 1fr;
+	z-index: 1;
 
 	.bar-user-info-container {
 		display: grid;

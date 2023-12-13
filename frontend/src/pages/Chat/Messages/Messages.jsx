@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { ChatContext } from "../../Chat";
+import { ChatContext } from "../Chat";
 import style from "./Messages.module.scss";
 import MessageRow from "./MessageRow/MessageRow";
 import MessageSeparator from "./MessageSeparator/MessageSeparator";

@@ -1,4 +1,6 @@
 .chat-input {
+	position: sticky;
+	bottom: 0px;
 	width: 100%;
 	height: max-content;
 	background-color: var(--clr-accent-600);

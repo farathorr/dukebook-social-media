@@ -1,6 +1,6 @@
 import style from "./ChatHeader.module.scss";
-import UserPicture from "../../../../components/UserPicture/UserPicture";
-import UserTag from "../../../../components/UserTag/UserTag";
+import UserPicture from "../../../components/UserPicture/UserPicture";
+import UserTag from "../../../components/UserTag/UserTag";
 
 export default function ChatHeader({ image, name, type }) {
 	return (

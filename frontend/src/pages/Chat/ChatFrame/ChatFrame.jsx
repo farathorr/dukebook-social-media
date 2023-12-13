@@ -1,5 +1,5 @@
 import ChatField from "./ChatField/ChatField";
-import ChatHeader from "./ChatHeader/ChatHeader";
+import ChatHeader from "../ChatHeader/ChatHeader";
 import Messages from "./Messages/Messages";
 import style from "./ChatFrame.module.scss";
 
