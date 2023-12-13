@@ -3,13 +3,16 @@ import { api } from "../utils/api";
 import { useContext } from "react";
 import { AuthenticationContext } from "../context/AuthenticationContext/AuthenticationContext";
 import { useNavigate } from "react-router-dom";
+import { ChatGroupContext } from "../context/ChatGroupContext/ChatGroupContext";
 
 export default function LogoutIcon() {
-	const { authentication, dispatchAuthentication } = useContext(AuthenticationContext);
+	const { setGroup } = useContext(ChatGroupContext);
+	const { dispatchAuthentication } = useContext(AuthenticationContext);
 	const navigate = useNavigate();
 
 	function logout() {
 		api.logout();
+		setGroup(null);
 		dispatchAuthentication({ type: "logout" });
 		navigate("/");
 	}

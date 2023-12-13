@@ -10,13 +10,13 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
 	<React.StrictMode>
 		<NotificationControls>
-			<AuthenticationControls>
-				<ImageUploader>
-					<ChatProvider>
+			<ChatProvider>
+				<AuthenticationControls>
+					<ImageUploader>
 						<App />
-					</ChatProvider>
-				</ImageUploader>
-			</AuthenticationControls>
+					</ImageUploader>
+				</AuthenticationControls>
+			</ChatProvider>
 		</NotificationControls>
 	</React.StrictMode>
 );

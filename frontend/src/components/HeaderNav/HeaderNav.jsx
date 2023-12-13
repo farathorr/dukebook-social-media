@@ -10,8 +10,10 @@ import ChatIcon from "../../svg/ChatIcon";
 import PostIcon from "../../svg/PostIcon";
 import LikeIcon from "../../svg/LikeIcon";
 import LogoutIcon from "../../svg/LogoutIcon";
+import { ChatGroupContext } from "../../context/ChatGroupContext/ChatGroupContext";
 
 export default function HeaderNav() {
+	const { group } = useContext(ChatGroupContext);
 	const { authentication } = useContext(AuthenticationContext);
 
 	return (
@@ -36,9 +38,11 @@ export default function HeaderNav() {
 					<NavButton to={`/user/${authentication.user.userTag}`}>
 						<LikeIcon />
 					</NavButton>
-					<NavButton to="/chat">
-						<ChatIcon />
-					</NavButton>
+					{group && (
+						<NavButton to="/chat">
+							<ChatIcon />
+						</NavButton>
+					)}
 					<NavButton to={"/login"}>
 						<LogoutIcon />
 					</NavButton>
