@@ -27,7 +27,7 @@ export default function Settings() {
 	}, [authentication]);
 
 	const callback = async () => {
-		let userData = { username, userTag, bio: "", profilePicture };
+		let userData = { username, userTag, bio, profilePicture };
 
 		if (username.length < 3 || username.length > 20)
 			return addNotification({
@@ -47,6 +47,10 @@ export default function Settings() {
 
 		if (bio.length > 200)
 			return addNotification({ type: "error", message: "Bio must be less than 200 characters", title: "Invalid bio", duration: 5000 });
+
+		if (!bio) {
+			userData.bio = "";
+		}
 
 		const { status } = await api.updateAuthUser(userData);
 
