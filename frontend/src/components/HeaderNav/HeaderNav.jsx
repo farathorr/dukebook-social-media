@@ -19,14 +19,6 @@ export default function HeaderNav() {
 
 	return (
 		<nav className={style["header-nav"]}>
-			{/* <img src={logo} alt="logo" />
-			<div className={style.CustomButtons}>
-				<CustomButton className={style["nav-button"]} to="/">home</CustomButton>
-				{authentication.isAuthenticated && <CustomButton className={style["nav-button"]} to={`/user/${authentication.user?.userTag}`}>profile</CustomButton>}
-				<CustomButton className={style["nav-button"]} to="/feed">feed</CustomButton>
-				{authentication.isAuthenticated && <CustomButton className={style["nav-button"]} to={`/chat`}>chat</CustomButton>}
-			</div>
-			<ProfileIcon /> */}
 			{authentication.isAuthenticated ? (
 				<NavButton to={`user/${authentication.user?.userTag}`}>
 					<UserPicture src={authentication.user?.profilePicture} />
@@ -36,27 +28,28 @@ export default function HeaderNav() {
 					<UserIcon />
 				</NavButton>
 			)}
-			<NavButton to="/">
-				<HomeIcon />
-			</NavButton>
-			<NavButton to="/feed">
-				<PostIcon />
-			</NavButton>
-			<NavButton to="/search">
-				<SearchIcon />
-			</NavButton>
-			<NavButton to="/likes">
-				<LikeIcon />
-			</NavButton>
-
 			{authentication.isAuthenticated && (
-				<NavButton to="/chat">
-					<ChatIcon />
-				</NavButton>
+				<>
+					<NavButton to="/">
+						<HomeIcon />
+					</NavButton>
+					<NavButton to="/feed">
+						<PostIcon />
+					</NavButton>
+					<NavButton to="/search">
+						<SearchIcon />
+					</NavButton>
+					<NavButton to="/likes">
+						<LikeIcon />
+					</NavButton>
+					<NavButton to="/chat">
+						<ChatIcon />
+					</NavButton>
+					<NavButton to={"/login"}>
+						<LogoutIcon />
+					</NavButton>
+				</>
 			)}
-			<NavButton to={"/login"}>
-				<LogoutIcon />
-			</NavButton>
 		</nav>
 	);
 }
