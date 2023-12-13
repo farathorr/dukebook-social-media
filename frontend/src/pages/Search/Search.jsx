@@ -7,6 +7,7 @@ import { useSearchParams } from "react-router-dom";
 import { api } from "../../utils/api";
 import PostFiltering from "./PostFiltering/PostFiltering";
 import PostForm from "../../components/PostForm/PostForm";
+import ScrollTopButton from "../../components/CustomButton/ScrollTopButton/ScrollTopButton";
 
 export default function Search() {
 	const { authentication } = useContext(AuthenticationContext);
@@ -35,6 +36,7 @@ export default function Search() {
 					<PostComponent key={post._id} post={post} onUpdate={setPosts} />
 				))}
 			</section>
+			<ScrollTopButton />
 		</div>
 	);
 }

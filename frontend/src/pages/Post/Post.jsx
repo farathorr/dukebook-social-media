@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { api } from "../../utils/api";
 import PostForm from "../../components/PostForm/PostForm";
+import ScrollTopButton from "../../components/CustomButton/ScrollTopButton/ScrollTopButton";
 
 export default function Post() {
 	const params = useParams();
@@ -43,6 +44,7 @@ export default function Post() {
 					<CommentPosts replies={repliesData} loadMore={2} />
 				</div>
 			</main>
+			<ScrollTopButton />
 		</div>
 	);
 
