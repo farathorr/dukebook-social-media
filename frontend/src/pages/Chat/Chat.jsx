@@ -39,7 +39,8 @@ export default function Chat() {
 		if (!group) return;
 		const fetchServices = async () => {
 			const { status, data } = await api.getMessages(group._id);
-			if (status !== 200) return addNotification({ type: "error", title: "Error", message: "Failed to fetch messages" });
+			if (status === 406) return console.log("No message groups");
+			else if (status !== 200) return addNotification({ type: "error", title: "Error", message: "Failed to fetch messages" });
 			setMessages(data.reduce(groupMessage, []));
 			scrollInfo.firstRender = true;
 			changeGroup(group._id);
