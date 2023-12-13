@@ -15,26 +15,30 @@ import ImageUploader from "./components/ImageUploader/ImageUploader";
 import "./App.scss";
 import { useContext } from "react";
 import Search from "./pages/Search/Search";
+import FriendList from "./components/FriendList/FriendList";
 
 export default function App() {
 	const { authentication } = useContext(AuthenticationContext);
 	return (
 		<BrowserRouter>
-			<HeaderNav />
 			<NotificationContainer />
-			<Routes>
-				<Route path="/" element={<Home />} />
-				<Route path="/user/:userTag" element={<Profile />} />
-				<Route path="/authentication" element={authentication.isAuthenticated ? <Authentication /> : <Navigate to="/login" />} />
-				<Route path="/settings" element={<Settings />} />
-				<Route path="/feed" element={authentication.isAuthenticated ? <Feed /> : <Navigate to="/search" />} />
-				<Route path="/search" element={<Search />} />
-				<Route path="/login" element={!authentication.isAuthenticated ? <Login /> : <Navigate to="/" />} />
-				<Route path="/register" element={!authentication.isAuthenticated ? <Register /> : <Navigate to="/" />} />
-				<Route path="/post" element={<Post />} />
-				<Route path="/chat" element={authentication.isAuthenticated ? <Chat /> : <Navigate to="/login" />} />
-				<Route path="/post/:id" element={<Post />} />
-			</Routes>
+			<div className="app">
+				<HeaderNav />
+				<Routes>
+					<Route path="/" element={<Home />} />
+					<Route path="/user/:userTag" element={<Profile />} />
+					<Route path="/authentication" element={authentication.isAuthenticated ? <Authentication /> : <Navigate to="/login" />} />
+					<Route path="/settings" element={<Settings />} />
+					<Route path="/feed" element={authentication.isAuthenticated ? <Feed /> : <Navigate to="/search" />} />
+					<Route path="/search" element={<Search />} />
+					<Route path="/login" element={!authentication.isAuthenticated ? <Login /> : <Navigate to="/" />} />
+					<Route path="/register" element={!authentication.isAuthenticated ? <Register /> : <Navigate to="/" />} />
+					<Route path="/post" element={<Post />} />
+					<Route path="/chat" element={authentication.isAuthenticated ? <Chat /> : <Navigate to="/login" />} />
+					<Route path="/post/:id" element={<Post />} />
+				</Routes>
+				<FriendList />
+			</div>
 		</BrowserRouter>
 	);
 }

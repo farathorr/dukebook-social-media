@@ -5,6 +5,7 @@ import ProfileUserHeader from "./ProfileUserHeader/ProfileUserHeader";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { api } from "../../utils/api";
+import FriendList from "../../components/FriendList/FriendList";
 
 export default function Profile() {
 	const params = useParams();

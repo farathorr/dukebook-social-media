@@ -25,7 +25,7 @@ export default function Search() {
 	}, [searchParams, authentication]);
 
 	return (
-		<>
+		<div className={style["search-page"]}>
 			<PostSearch />
 			<h1 className={style["title"]}>Search</h1>
 			<section className={style["main-content"]}>
@@ -35,6 +35,6 @@ export default function Search() {
 					<PostComponent key={post._id} post={post} onUpdate={setPosts} />
 				))}
 			</section>
-		</>
+		</div>
 	);
 }

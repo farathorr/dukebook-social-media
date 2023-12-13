@@ -1,0 +1,18 @@
+.friend-list {
+	position: sticky;
+	grid-column: right-content;
+	background-color: var(--clr-primary-500);
+	display: grid;
+	top: 10px;
+	gap: 5px;
+	margin-top: 200px;
+	height: max-content;
+	padding: 25px;
+	border-radius: 10px;
+
+	p {
+		margin: 0px;
+		background-color: var(--clr-primary-600);
+		padding: 10px;
+	}
+}
