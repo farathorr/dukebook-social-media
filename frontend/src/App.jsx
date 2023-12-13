@@ -11,34 +11,33 @@ import NotificationContainer from "./components/NotificationContainer/Notificati
 import { AuthenticationContext } from "./context/AuthenticationContext/AuthenticationContext";
 import Home from "./pages/Home/Home";
 import Authentication from "./pages/Authentication/Authentication";
-import ImageUploader from "./components/ImageUploader/ImageUploader";
 import "./App.scss";
 import { useContext } from "react";
 import Search from "./pages/Search/Search";
-import FriendList from "./components/FriendList/FriendList";
+import Layout from "./pages/Layout/Layout";
 
 export default function App() {
 	const { authentication } = useContext(AuthenticationContext);
 	return (
 		<BrowserRouter>
 			<NotificationContainer />
-			<div className="app">
-				<HeaderNav />
-				<Routes>
-					<Route path="/" element={<Home />} />
+			<Routes>
+				<Route path="/login" element={!authentication.isAuthenticated ? <Login /> : <Navigate to="/" />} />
+				<Route path="/register" element={!authentication.isAuthenticated ? <Register /> : <Navigate to="/" />} />
+
+				<Route path="/" element={<Layout />}>
+					<Route index element={<Home />} />
 					<Route path="/user/:userTag" element={<Profile />} />
-					<Route path="/authentication" element={authentication.isAuthenticated ? <Authentication /> : <Navigate to="/login" />} />
+					<Route path="/authentication" element={<Authentication />} />
 					<Route path="/settings" element={<Settings />} />
-					<Route path="/feed" element={authentication.isAuthenticated ? <Feed /> : <Navigate to="/search" />} />
+					<Route path="/feed" element={<Feed />} />
 					<Route path="/search" element={<Search />} />
-					<Route path="/login" element={!authentication.isAuthenticated ? <Login /> : <Navigate to="/" />} />
-					<Route path="/register" element={!authentication.isAuthenticated ? <Register /> : <Navigate to="/" />} />
 					<Route path="/post" element={<Post />} />
-					<Route path="/chat" element={authentication.isAuthenticated ? <Chat /> : <Navigate to="/login" />} />
+					<Route path="/chat" element={<Chat />} />
 					<Route path="/post/:id" element={<Post />} />
-				</Routes>
-				<FriendList />
-			</div>
+					<Route path="*" element={<h1>404 Page not found</h1>} />
+				</Route>
+			</Routes>
 		</BrowserRouter>
 	);
 }

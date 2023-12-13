@@ -1,14 +1,14 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import style from "./Chat.module.scss";
-// import image from "../../images/Duke3D.png";
-// import FriendRow from "./FriendRow/FriendRow";
 import { AuthenticationContext } from "../../context/AuthenticationContext/AuthenticationContext";
 import { api } from "../../utils/api";
 import { formatDate } from "../../utils/formatDate";
 import { createContext } from "react";
-import ChatFrame from "./ChatFrame/ChatFrame";
 import { NotificationContext } from "../../context/NotificationControls/NotificationControls";
 import { ChatGroupContext } from "../../context/ChatGroupContext/ChatGroupContext";
+import ChatField from "./ChatField/ChatField";
+import ChatHeader from "./ChatHeader/ChatHeader";
+import Messages from "./Messages/Messages";
 
 export const ChatContext = createContext(null);
 
@@ -21,11 +21,8 @@ export default function Chat() {
 	const [addNotification] = useContext(NotificationContext);
 	const { authentication } = useContext(AuthenticationContext);
 	const { group } = useContext(ChatGroupContext);
-	const [messageGroups, setMessageGroups] = useState([]);
 	const [messages, setMessages] = useState([]);
-	// const [group, setGroup] = useState(JSON.parse(sessionStorage.getItem("lastGroup")) || null);
 	const [newMessage, changeGroup] = api.useMessage(group?._id);
-	const messagesBoxRef = useRef(null);
 
 	const addNewMessage = (message) => {
 		if (!group || message.groupId !== group._id) return;
@@ -34,16 +31,9 @@ export default function Chat() {
 		setMessages(groupMessage([...messages], message));
 	};
 
-	useEffect(() => {
-		if (!authentication.isAuthenticated) return;
-		const fetchServices = async () => {
-			const { status, data } = await api.getMessageGroups();
-			if (status !== 200) return addNotification({ type: "error", title: "Error", message: "Failed to fetch message groups" });
-			setMessageGroups(data);
-		};
-
-		fetchServices();
-	}, [authentication]);
+	document.body.parentElement.onscroll = (event) => {
+		scrollInfo.scrolledAtBottom = event.target.scrollHeight < event.target.scrollTop + event.target.clientHeight + 10;
+	};
 
 	useEffect(() => {
 		if (!group) return;
@@ -68,19 +58,19 @@ export default function Chat() {
 	}, [newMessage]);
 
 	const scrollToBottom = () => {
-		if (messagesBoxRef.current && (scrollInfo.firstRender || scrollInfo.scrolledAtBottom))
-			messagesBoxRef.current.scrollTop = messagesBoxRef.current.scrollHeight;
+		if (scrollInfo.firstRender || scrollInfo.scrolledAtBottom)
+			window.document.body.parentNode.scrollTop = window.document.body.parentNode.scrollHeight;
 	};
 
 	useEffect(() => scrollToBottom());
 
 	if (!authentication.isAuthenticated) return null;
 	return (
-		<ChatContext.Provider value={{ scrollToBottom, addNewMessage, scrollInfo, messagesBoxRef }}>
+		<ChatContext.Provider value={{ scrollToBottom, addNewMessage, scrollInfo }}>
 			<div className={style["chat-page"]}>
-				<main className={style["page-content"]}>
-					<ChatFrame group={group} messages={messages} />
-				</main>
+				{group && <ChatHeader group={group} />}
+				<Messages messages={messages} />
+				{group && <ChatField groupId={group?._id} />}
 			</div>
 		</ChatContext.Provider>
 	);

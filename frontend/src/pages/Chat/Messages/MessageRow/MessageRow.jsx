@@ -1,8 +1,8 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import style from "./MessageRow.module.scss";
-import { ChatContext } from "../../../Chat";
-import UserPicture from "../../../../../components/UserPicture/UserPicture";
-import UserTag from "../../../../../components/UserTag/UserTag";
+import { ChatContext } from "../../Chat";
+import UserPicture from "../../../../components/UserPicture/UserPicture";
+import UserTag from "../../../../components/UserTag/UserTag";
 
 export default function MessageRow({ message }) {
 	const memorizedMessageRow = useMemo(() => {

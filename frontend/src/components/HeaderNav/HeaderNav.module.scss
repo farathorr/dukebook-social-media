@@ -1,6 +1,6 @@
 .header-nav {
 	position: sticky;
-	top: 10px;
+	top: 100px;
 	height: fit-content;
 	width: fit-content;
 	padding: 10px;
@@ -12,14 +12,7 @@
 	background-color: var(--clr-primary-500);
 	font-size: var(--fs-400);
 	grid-column: left-content;
-	margin-top: 200px;
-	// padding-block: 6px;
-	// flex-shrink: 0;
-	// display: flex;
-	// justify-content: space-between;
-	// align-items: center;
-	// padding-inline: 10px;
-	// grid-template-columns: 1fr 1fr 1fr;
+
 	svg {
 		fill: white;
 		width: 35px;
