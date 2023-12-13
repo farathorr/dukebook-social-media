@@ -22,15 +22,23 @@ const getMessageGroups = async (req, res) => {
 	const { userId } = req.user;
 
 	try {
-		const groups = await MessageGroup.find({ participants: userId }).lean().populate("participants", "userTag profilePicture");
-		groups.forEach((group) => {
+		const user = await User.findById(userId).populate({
+			path: "messageGroups",
+			populate: {
+				path: "participants",
+				select: "userTag profilePicture",
+			},
+		});
+
+		user.messageGroups.forEach((group) => {
 			if (group.type == "chat") {
 				group.name = group.participants.find((user) => user._id != userId)?.userTag ?? "Removed private chat";
 				group.image = group.participants.find((user) => user._id != userId)?.profilePicture;
 			}
 		});
-		res.status(200).json(groups);
+		res.status(200).json(user.messageGroups);
 	} catch (err) {
+		console.log(err);
 		res.status(500).json({ message: err.message });
 	}
 };

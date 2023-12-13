@@ -18,6 +18,15 @@ const userSchema = new mongoose.Schema(
 			min: 3,
 			max: 20,
 		},
+		messageGroups: {
+			type: [
+				{
+					type: mongoose.Schema.Types.ObjectId,
+					ref: "MessageGroup",
+				},
+			],
+			default: [],
+		},
 		profilePicture: {
 			type: String,
 			default: "https://i.imgur.com/XY5aZDk.png",

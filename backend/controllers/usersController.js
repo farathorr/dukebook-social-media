@@ -184,8 +184,11 @@ const addFriendByUserTag = async (req, res) => {
 			return res.status(404).json({ message: `User ${req.user.userTag} is already friends with user ${friendUserTag}.` });
 		}
 		user.friendList.push(friendUser._id);
-		const group = await MessageGroup.findOne({ participants: { $all: [user, friendUser] } });
-		if (!group) await MessageGroup.create({ participants: [user, friendUser] });
+		const group = await MessageGroup.findOne({ type: "chat", participants: { $all: [user, friendUser] } });
+		if (!group) {
+			const newGroup = await MessageGroup.create({ participants: [user, friendUser] });
+			user.messageGroups.push(newGroup._id);
+		} else user.messageGroups.push(group._id);
 		await user.save();
 		res.status(200).json(user);
 	} catch (err) {
@@ -209,6 +212,8 @@ const removeFriendByUserTag = async (req, res) => {
 		}
 
 		await user.friendList.pull(friendUser._id);
+		const group = await MessageGroup.findOne({ type: "chat", participants: { $all: [user, friendUser] } });
+		if (group) user.messageGroups.pull(group._id);
 		await user.save();
 		res.status(200).json(user);
 	} catch (err) {
