@@ -4,12 +4,13 @@ import { api } from "../../utils/api";
 import { AuthenticationContext } from "../../context/AuthenticationContext/AuthenticationContext";
 import { NotificationContext } from "../../context/NotificationControls/NotificationControls";
 import FriendRow from "./FriendRow/FriendRow";
+import CustomButton from "../CustomButton/CustomButton";
 
 export default function FriendList() {
 	const [addNotification] = useContext(NotificationContext);
 	const { authentication } = useContext(AuthenticationContext);
+	const [type, setType] = useState("chat");
 	const [messageGroups, setMessageGroups] = useState([]);
-	const [group, setGroup] = useState(JSON.parse(sessionStorage.getItem("lastGroup")) || null);
 
 	useEffect(() => {
 		if (!authentication.isAuthenticated) return;
@@ -24,9 +25,19 @@ export default function FriendList() {
 
 	return (
 		<div className={style["friend-list"]}>
-			{messageGroups.map((group) => (
-				<FriendRow key={group._id} setGroup={setGroup} group={group} />
-			))}
+			<div className={style["buttons"]}>
+				<CustomButton purpose="action" onClick={(e) => setType("chat")}>
+					Friends
+				</CustomButton>
+				<CustomButton purpose="action" onClick={(e) => setType("group")}>
+					Groups
+				</CustomButton>
+			</div>
+			{messageGroups
+				.filter((g) => g.type === type)
+				.map((group) => (
+					<FriendRow key={group._id} group={group} />
+				))}
 		</div>
 	);
 }
