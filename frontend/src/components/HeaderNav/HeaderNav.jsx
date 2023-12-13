@@ -12,6 +12,7 @@ import SearchIcon from "../../svg/SearchIcon";
 import ChatIcon from "../../svg/ChatIcon";
 import PostIcon from "../../svg/PostIcon";
 import LikeIcon from "../../svg/LikeIcon";
+import LogoutIcon from "../../svg/LogoutIcon";
 
 export default function HeaderNav() {
 	const { authentication } = useContext(AuthenticationContext);
@@ -53,6 +54,9 @@ export default function HeaderNav() {
 					<ChatIcon />
 				</NavButton>
 			)}
+			<NavButton to={"/login"}>
+				<LogoutIcon />
+			</NavButton>
 		</nav>
 	);
 }
