@@ -50,7 +50,7 @@ const sendMessage = async (req, res) => {
 		if (!group) return res.status(400).json({ message: "Message group does not exist." });
 
 		const message = await Message.create({ sender: userId, text, groupId });
-		await message.populate("sender", "userTag");
+		await message.populate("sender", "userTag profilePicture");
 		socketIO.emit(`message/${groupId}`, message);
 		res.status(201).json(message);
 	} catch (err) {
