@@ -12,8 +12,10 @@ function reducer(state, action) {
 	switch (action.type) {
 		case "login":
 			return { ...state, isAuthenticated: true, user: action.user, rememberPassword: action.rememberPassword ?? false };
-		case "logout":
+		case "logout": {
+			sessionStorage.clear();
 			return { ...state, isAuthenticated: false, user: null };
+		}
 		case "update":
 			return { ...state, user: action.user };
 		case "callback":
