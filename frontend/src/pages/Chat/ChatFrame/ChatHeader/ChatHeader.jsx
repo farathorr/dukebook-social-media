@@ -7,8 +7,7 @@ export default function ChatHeader({ image, name, type }) {
 		<div className={style["chat-bar"]}>
 			<UserPicture src={image} size="small" />
 			<div className={style["bar-user-info-container"]}>
-				{type === "group" ? <UserTag tag={name} /> : <span className={style["user-name"]}>{name}</span>	}
-				<UserTag tag={name} isLink={true} />
+				{type === "group" ? <UserTag tag={name} /> : <UserTag tag={name} isLink={true} />}
 				<div className={style["user-status-indicator"]} />
 				<span className={style["user-status"]}>Online</span>
 			</div>
