@@ -11,7 +11,7 @@ export default function ImageForm({ images = [], setImages }) {
 			{images?.length > 0 && (
 				<div className={style["image-container"]}>
 					{images.map((image, index) => (
-						<div className={style["image-wrapper"]}>
+						<div className={style["image-wrapper"]} key={image + index}>
 							<SettingsIcon
 								className={style["settings-svg"]}
 								onClick={() => {
