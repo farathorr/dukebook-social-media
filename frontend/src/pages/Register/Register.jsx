@@ -27,6 +27,8 @@ export default function Register() {
 		}
 		if (!numbersRegex.test(password)) return addNotification({ ...errorMessage, message: "Password needs to contain at least 1 number" });
 
+		if (!userTag) return addNotification({ ...errorMessage, message: "Username cannot be empty" });
+
 		const { status } = await api.createUser({ userTag, email, password });
 
 		if (status === 409) addNotification({ ...errorMessage, message: "User already exists" });
