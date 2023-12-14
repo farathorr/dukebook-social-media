@@ -11,7 +11,7 @@ import SpeechBubble from "../../../svg/SpeechBubble";
 import TrashSvg from "../../../svg/TrashSvg";
 import ImageForm from "../../ImageForm/ImageForm";
 
-export default function PostFooter({ onUpdate, post }) {
+export default function PostFooter({ onUpdate, post, className = "" }) {
 	const postId = post._id;
 	const { authentication } = useContext(AuthenticationContext);
 	const [addNotification] = useContext(NotificationContext);
@@ -73,7 +73,7 @@ export default function PostFooter({ onUpdate, post }) {
 
 	return (
 		<>
-			<div className={style["post-stats"]}>
+			<div className={style["post-stats"] + ` ${className}`}>
 				<CustomButton className={style["like-button"]} onClick={like}>
 					<ArrowUp />
 					<span>{stats.likes}</span>

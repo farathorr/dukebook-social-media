@@ -1,26 +1,20 @@
 .post-stats {
 	display: flex;
 	gap: 10px;
-	padding: 5px;
 	margin-left: 5px;
 
 	.like-button {
 		fill: green;
+		font-weight: var(--fw-500);
 	}
 	.dislike-button {
 		fill: red;
+		font-weight: var(--fw-500);
 	}
 
 	.comment-button {
-		display: flex;
-		gap: 5px;
-		align-items: center;
-		text-decoration: none;
-		color: var(--clr-accent-400);
-		font-size: var(--fs-300);
-		border-bottom: 3px solid var(--clr-accent-400);
-		border-radius: 3px;
 		fill: var(--clr-accent-400);
+		font-weight: var(--fw-500);
 	}
 
 	.remove-button {
