@@ -69,6 +69,7 @@ export default function PostForm({ title, updateInterface, disabled, type }) {
 				}}
 				style={{ height: "52px" }}
 			/>
+			<p className={style["post-text-counter"]}>{postText.length} / 400</p>
 			{showTags && (
 				<>
 					<p>Tags</p>

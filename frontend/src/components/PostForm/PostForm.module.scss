@@ -4,6 +4,14 @@
 	padding-inline: 50px;
 	display: grid;
 
+	.post-text-counter {
+		margin-top: -25px;
+		text-align: right;
+		margin-right: 5px;
+		pointer-events: none;
+		user-select: none;
+	}
+
 	&.disabled {
 		filter: grayscale(1);
 
