@@ -41,6 +41,7 @@
 		border-radius: 0px 10px 10px 0px;
 		border-left: 5px solid var(--clr-primary-400);
 		padding: 10px;
+		gap: 10px;
 
 		&.removed {
 			background-color: var(--clr-primary-700);
@@ -59,6 +60,8 @@
 			.post-text-container {
 				padding-top: 2px;
 				width: 100%;
+				display: grid;
+				gap: 10px;
 			}
 
 			.profile-pic {
@@ -69,6 +72,10 @@
 				margin: 5px;
 				object-fit: cover;
 			}
+		}
+		.content {
+			display: grid;
+			gap: 10px;
 		}
 	}
 }
