@@ -7,7 +7,7 @@ import { useSearchParams } from "react-router-dom";
 import { api } from "../../utils/api";
 import PostForm from "../../components/PostForm/PostForm";
 import CustomButton from "../../components/CustomButton/CustomButton";
-import ScrollTopButton from "../../components/CustomButton/ScrollTopButton/ScrollTopButton";
+import ScrollTopButton from "../../components//ScrollTopButton/ScrollTopButton";
 
 export default function Feed() {
 	const { authentication } = useContext(AuthenticationContext);

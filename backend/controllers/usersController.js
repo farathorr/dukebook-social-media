@@ -27,8 +27,13 @@ const getUserById = async (req, res) => {
 // get user by userTag
 const getUserByUserTag = async (req, res) => {
 	const { userTag } = req.params;
-	const user = await User.findOne({ userTag: userTag });
-	res.json(user);
+	try {
+		const user = await User.findOne({ userTag: userTag });
+		if (!user) return res.status(404).json({ message: `User ${userTag} not found.` });
+		res.json(user);
+	} catch (err) {
+		res.status(404).json({ message: err.message });
+	}
 };
 
 // create user

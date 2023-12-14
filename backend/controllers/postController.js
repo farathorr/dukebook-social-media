@@ -6,15 +6,19 @@ const customFind = require("../utils/customFind");
 
 // get all posts
 const getPosts = async (req, res) => {
-	const { filter, search, tags, liked } = req.query;
+	const { filter, search, tags, liked, author, comments } = req.query;
 	const userId = req.user?.userId;
-	const options = { search, isOriginalPost: true, removed: false };
+	const options = { search, removed: false };
+
 	if (tags) options.tags = [tags].flat();
+	if (author) options.author = author;
+	if (comments) options.isComment = true;
 	if (userId) {
 		const user = await User.findById(userId);
 		if (filter?.includes("followed")) options.followedByUser = user;
 		if (filter?.includes("friends")) options.friendsWithUser = user;
 		if (liked) options.filterLiked = liked;
+		options.hasLiked = userId;
 	}
 
 	try {
