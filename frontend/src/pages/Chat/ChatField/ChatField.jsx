@@ -2,8 +2,10 @@ import { useContext, useEffect, useRef, useState } from "react";
 import style from "./ChatField.module.scss";
 import { api } from "../../../utils/api";
 import { ChatContext } from "../Chat";
+import { ImageUploaderContext } from "../../../components/ImageUploader/ImageUploader";
 
 export default function ChatField({ groupId }) {
+	const { imageUploader } = useContext(ImageUploaderContext);
 	const { addNewMessage } = useContext(ChatContext);
 	const [fieldText, setFieldText] = useState("");
 	const textArea = useRef(null);
@@ -12,7 +14,7 @@ export default function ChatField({ groupId }) {
 		event.preventDefault();
 		if (!fieldText || !groupId) return;
 		try {
-			const { data, status } = await api.sendMessage({ groupId: groupId, text: fieldText });
+			const { data, status } = await api.sendMessage({ groupId, text: fieldText });
 			setFieldText("");
 			if (status === 201) addNewMessage(data);
 		} catch (err) {}
@@ -55,7 +57,18 @@ export default function ChatField({ groupId }) {
 				<button className={style["send-button"]} type="submit">
 					Send
 				</button>
-				<button className={style["attach-button"]}>Attach</button>
+				<button
+					className={style["attach-button"]}
+					type="button"
+					onClick={() => {
+						imageUploader(async (url) => {
+							const { data, status } = await api.sendMessage({ groupId, text: url });
+							if (status === 201) addNewMessage(data);
+						});
+					}}
+				>
+					Attach
+				</button>
 			</form>
 		</div>
 	);
