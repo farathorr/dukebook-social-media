@@ -63,8 +63,8 @@ const apiObject = {
 			return err.response;
 		}
 	},
-	updatePost: requiresAuth(async ({ postId, postText, tags }) => {
-		const response = await axios.patch(`http://localhost:4000/posts/${postId}`, { postText, tags });
+	updatePost: requiresAuth(async ({ postId, postText, tags, images }) => {
+		const response = await axios.patch(`http://localhost:4000/posts/${postId}`, { postText, tags, images });
 		return response;
 	}),
 

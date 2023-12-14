@@ -9,6 +9,8 @@ import style from "./PostForm.module.scss";
 import Tags from "../TagsField/TagsField";
 import LinkIcon from "../../svg/linkIcon";
 import { ImageUploaderContext } from "../ImageUploader/ImageUploader";
+import TrashSvg from "../../svg/TrashSvg";
+import ImageForm from "../ImageForm/ImageForm";
 
 const postError = { type: "error", title: "Post failed" };
 
@@ -46,15 +48,8 @@ export default function PostForm({ title, updateInterface, disabled, type }) {
 		} catch (err) {}
 	};
 
-	const handleImageUpload = async (file) => {
-		imageUploader((url) => {
-			setImages((state) => [...state, url]);
-		});
-		// const { status, data } = await api.uploadImage(file);
-
-		// if (status === 400) return addNotification({ ...postError, message: data.message });
-
-		// setImages((state) => [...state, data.url]);
+	const handleImageUpload = async () => {
+		imageUploader((url) => setImages((state) => [...state, url]));
 	};
 
 	return (
@@ -80,13 +75,7 @@ export default function PostForm({ title, updateInterface, disabled, type }) {
 					<Tags tags={tags} setTags={setTags} disabled={disabled} />
 				</>
 			)}
-			{images.length > 0 && (
-				<div className={style["image-container"]}>
-					{images.map((image, index) => (
-						<img key={index} src={image} alt="post" />
-					))}
-				</div>
-			)}
+			<ImageForm images={images} setImages={setImages} />
 			<div className={style["button-container"]}>
 				<CustomButton purpose="dark" type="submit" disabled={disabled}>
 					Post
