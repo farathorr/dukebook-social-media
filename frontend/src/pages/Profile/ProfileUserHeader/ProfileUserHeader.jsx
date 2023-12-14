@@ -8,6 +8,8 @@ import UserProfileData from "../UserProfileData/UserProfileData";
 import UserPicture from "../../../components/UserPicture/UserPicture";
 import CustomButton from "../../../components/CustomButton/CustomButton";
 import EditIcon from "../../../svg/EditIcon";
+import FriendButton from "../../../svg/FriendButton";
+import RemoveFriend from "../../../svg/RemoveFriend";
 
 export default function ProfileUserHeader({ userData, showLikedPosts, showPosts, showComments }) {
 	const [isFollowing, setIsFollowing] = useState(false);
@@ -126,14 +128,14 @@ export default function ProfileUserHeader({ userData, showLikedPosts, showPosts,
 				<UserPicture src={userData?.profilePicture} size={"big"} />
 				<div className={style["buttons"]}>
 					{isButtonVisible && (
-						<button className={style["follow-button"]} onClick={handleFollow}>
+						<CustomButton className={style["follow-button"]} onClick={handleFollow}>
 							{followButtonText}
-						</button>
+						</CustomButton>
 					)}
 					{isButtonVisible && (
-						<button className={style["add-to-friend"]} onClick={handleFriend}>
-							{friendButtonText}
-						</button>
+						<CustomButton className={style["add-to-friend"]} onClick={handleFriend}>
+							{isFriend ? <RemoveFriend className={style["edit-svg"]} /> : <FriendButton className={style["edit-svg"]} />}
+						</CustomButton>
 					)}
 					{!isButtonVisible && (
 						<CustomButton to="/settings">
