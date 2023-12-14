@@ -44,7 +44,7 @@ export default function ImageUploader(props) {
 	const [uploader, dispatch] = useReducer(reducer, initialFile);
 	const myDialog = createRef();
 
-	const open = (callback) => {
+	const imageUploader = (callback) => {
 		myDialog.current.showModal();
 		dispatch({ type: "reset" });
 		dispatch({ type: "callback", payload: callback });
@@ -95,7 +95,7 @@ export default function ImageUploader(props) {
 	};
 
 	return (
-		<ImageUploaderContext.Provider value={{ open, close, myDialog }}>
+		<ImageUploaderContext.Provider value={{ imageUploader, close, myDialog }}>
 			<dialog ref={myDialog} className={style["image-uploader-dialog"]} onPaste={onPaste}>
 				<div className={style["image-uploader-container"]}>
 					{" "}

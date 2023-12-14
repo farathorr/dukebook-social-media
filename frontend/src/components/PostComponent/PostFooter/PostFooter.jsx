@@ -8,6 +8,8 @@ import CustomButton from "../../CustomButton/CustomButton";
 import ArrowUp from "../../../svg/ArrowUp";
 import ArrowDown from "../../../svg/ArrowDown";
 import SpeechBubble from "../../../svg/SpeechBubble";
+import TrashSvg from "../../../svg/TrashSvg";
+import ImageForm from "../../ImageForm/ImageForm";
 
 export default function PostFooter({ onUpdate, post }) {
 	const postId = post._id;
@@ -16,6 +18,7 @@ export default function PostFooter({ onUpdate, post }) {
 	const [editable, setEditable] = useState(false);
 	const stats = api.usePostStats(postId, { likes: post.likes.length, dislikes: post.dislikes.length, comments: post.comments?.length });
 	const [tagsArray, setTagsArray] = useState(post.tags);
+	const [imagesArray, setImagesArray] = useState(post.images);
 
 	const optionConstructor = (option, apiFetch) => async () => {
 		if (post.removed)
@@ -58,6 +61,7 @@ export default function PostFooter({ onUpdate, post }) {
 			postId: postId,
 			postText: event.target["edit-area"].value,
 			tags: tagsArray,
+			images: imagesArray,
 		};
 		const { status } = await api.updatePost(post);
 		if (status !== 200) return addNotification({ type: "error", message: "Failed to edit post", title: "Post edit failed" });
@@ -106,7 +110,7 @@ export default function PostFooter({ onUpdate, post }) {
 							defaultValue={post.postText}
 						></textarea>
 						<TagsField tags={tagsArray} setTags={setTagsArray} disabled={false} />
-
+						<ImageForm images={imagesArray} setImages={setImagesArray} />
 						<CustomButton purpose="action" className={style["save-button"]} type="submit">
 							Save
 						</CustomButton>
