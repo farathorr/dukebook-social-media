@@ -28,6 +28,7 @@ export default function PostForm({ title, updateInterface, disabled, type }) {
 
 		if (!authentication.isAuthenticated) return addNotification({ ...postError, message: "You must be logged in to post" });
 		if (postText.length < 1) return addNotification({ ...postError, message: "Post can't be empty" });
+		if (postText.length > 400) return addNotification({ ...postError, message: "Post can't be longer than 400 characters" });
 
 		try {
 			const formatedTags = [...new Set(tags.filter((tag) => tag.trim().replaceAll(" ", "")))];
