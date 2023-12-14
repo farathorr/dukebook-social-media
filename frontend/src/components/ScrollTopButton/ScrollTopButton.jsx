@@ -1,23 +1,19 @@
 import React from "react";
 import style from "./ScrollTopButton.module.scss";
 import { useState, useEffect } from "react";
-import CustomButton from "../CustomButton";
+import CustomButton from "../CustomButton/CustomButton";
 
 export default function ScrollTopButton() {
 	const [isButtonVisible, setIsButtonVisible] = useState(false);
-	const [positionY, setPositionY] = useState(0);
 
 	useEffect(() => {
 		const handleScroll = () => {
-			setPositionY(window.scrollY);
+			if (window.scrollY > 600) setIsButtonVisible(true);
+			else setIsButtonVisible(false);
 		};
-		window.addEventListener("scroll", handleScroll);
-		if (positionY > 600) {
-			setIsButtonVisible(true);
-		} else {
-			setIsButtonVisible(false);
-		}
-	}, [window.scrollY]);
+		window.addEventListener("scroll", handleScroll, { passive: true });
+		return () => window.removeEventListener("scroll", handleScroll);
+	}, []);
 
 	return (
 		<>

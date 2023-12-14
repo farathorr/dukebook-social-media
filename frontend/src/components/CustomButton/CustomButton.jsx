@@ -10,18 +10,21 @@ export default function Button({ to, children, className, purpose, ...props }) {
 		warning: style["warning"],
 		dark: style["dark"],
 	};
-	const purposeClass = purposeSwitch[purpose] || "";
+
+	const classes = [style["button"]];
+	if (className) classes.push(className);
+	if (purpose in purposeSwitch) classes.push(purposeSwitch[purpose]);
 
 	if (to) {
 		return (
-			<Link className={`${style["button"]} ${purposeClass} ${className}`} to={to} {...props}>
+			<Link className={classes.join(" ")} to={to} {...props}>
 				{children}
 			</Link>
 		);
 	}
 
 	return (
-		<button className={`${style["button"]} ${purposeClass} ${className}`} {...props}>
+		<button className={classes.join(" ")} {...props}>
 			{children}
 		</button>
 	);

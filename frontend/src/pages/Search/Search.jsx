@@ -7,7 +7,7 @@ import { useSearchParams } from "react-router-dom";
 import { api } from "../../utils/api";
 import PostFiltering from "./PostFiltering/PostFiltering";
 import PostForm from "../../components/PostForm/PostForm";
-import ScrollTopButton from "../../components/CustomButton/ScrollTopButton/ScrollTopButton";
+import ScrollTopButton from "../../components//ScrollTopButton/ScrollTopButton";
 
 export default function Search() {
 	const { authentication } = useContext(AuthenticationContext);

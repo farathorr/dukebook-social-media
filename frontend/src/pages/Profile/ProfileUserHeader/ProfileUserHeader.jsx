@@ -4,13 +4,12 @@ import { useState, useEffect, useContext } from "react";
 import { AuthenticationContext } from "../../../context/AuthenticationContext/AuthenticationContext";
 import { NotificationContext } from "../../../context/NotificationControls/NotificationControls";
 import { api } from "../../../utils/api";
-import { Link } from "react-router-dom";
 import UserProfileData from "../UserProfileData/UserProfileData";
 import UserPicture from "../../../components/UserPicture/UserPicture";
 import CustomButton from "../../../components/CustomButton/CustomButton";
 import EditProfile from "../../../svg/EditProfile";
 
-export default function ProfileUserHeader({ userData, showLikedPosts }) {
+export default function ProfileUserHeader({ userData, showLikedPosts, showPosts, showComments }) {
 	const [isFollowing, setIsFollowing] = useState(false);
 	const [followers, setFollowers] = useState(userData?.followerIds);
 	const [followButtonText, setFollowButtonText] = useState("Follow");
@@ -146,11 +145,24 @@ export default function ProfileUserHeader({ userData, showLikedPosts }) {
 			<div className={style["left-content"]}>
 				<UserProfileData userData={userData} followers={followers} />
 				<div className={style["filter-buttons"]}>
-					<button className={style["selected"]}>Feed</button>
-					<button onClick={showLikedPosts}>Likes</button>
-					<button>Something</button>
+					<FilterButton onClick={showPosts} defaultChecked={true}>
+						Feed
+					</FilterButton>
+					<FilterButton onClick={showLikedPosts}>Likes</FilterButton>
+					<FilterButton onClick={showComments}>Replies</FilterButton>
 				</div>
 			</div>
 		</div>
 	);
 }
+
+const FilterButton = ({ children, onClick, ...props }) => {
+	return (
+		<label className={style["filter-button"]}>
+			<input type="radio" name="filtering" {...props} />
+			<div className={style["button-content"]} onClick={onClick}>
+				{children}
+			</div>
+		</label>
+	);
+};
