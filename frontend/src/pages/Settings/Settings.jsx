@@ -6,6 +6,7 @@ import { AuthenticationContext } from "../../context/AuthenticationContext/Authe
 import { api } from "../../utils/api";
 import CustomButton from "../../components/CustomButton/CustomButton";
 import { ImageUploaderContext } from "../../components/ImageUploader/ImageUploader";
+import UserPicture from "../../components/UserPicture/UserPicture";
 
 export default function Settings() {
 	const { imageUploader } = useContext(ImageUploaderContext);
@@ -84,31 +85,40 @@ export default function Settings() {
 	};
 
 	return (
-		<form className={style["header-edit-form"]} onSubmit={handleSubmit}>
-			<label>
-				Username:
-				<input type="text" name="username" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
-			</label>
-			<label>
-				User Tag:
-				<input type="text" name="userTag" placeholder="UserTag" value={userTag} onChange={(e) => setUserTag(e.target.value)} />
-			</label>
-			<CustomButton
-				purpose="action"
-				type="button"
-				onClick={() => {
-					imageUploader((url) => setProfilePicture(url));
-				}}
-			>
-				Change profile picture
-			</CustomButton>
-			<label>
-				Bio:
-				<textarea name="bio" placeholder="Bio" value={bio} onChange={(e) => setBio(e.target.value)} />
-			</label>
-			<CustomButton className={style["save-button"]} type="submit">
-				Save Changes
-			</CustomButton>
-		</form>
+		<div>
+			<h1>Settings</h1>
+			<form className={style["header-edit-form"]} onSubmit={handleSubmit}>
+				<CustomButton
+					purpose="action"
+					type="button"
+					className={style["change-profile-picture-button"]}
+					onClick={() => {
+						imageUploader((url) => setProfilePicture(url));
+					}}
+				>
+					<UserPicture src={authentication.user.profilePicture} /> Change profile picture
+				</CustomButton>
+				<br />
+				<label>
+					Username
+					<input type="text" name="username" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
+				</label>
+				<br />
+				<label>
+					User Tag
+					<input type="text" name="userTag" placeholder="UserTag" value={userTag} onChange={(e) => setUserTag(e.target.value)} />
+				</label>
+
+				<br />
+				<label>
+					Bio
+					<textarea name="bio" placeholder="Bio" value={bio} onChange={(e) => setBio(e.target.value)} />
+				</label>
+				<br />
+				<CustomButton className={style["save-button"]} type="submit">
+					Save Changes
+				</CustomButton>
+			</form>
+		</div>
 	);
 }

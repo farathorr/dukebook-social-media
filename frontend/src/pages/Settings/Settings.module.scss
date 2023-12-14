@@ -1,28 +1,48 @@
 .header-edit-form {
 	display: flex;
 	flex-direction: column;
-	max-width: 400px;
-	margin: auto;
-	border: 2px solid #ccc;
 	padding: 20px;
+	border-radius: 10px;
+	background-color: var(--clr-primary-600);
 
 	label {
 		margin-bottom: 10px;
+		font-size: var(--fs-400);
+		font-weight: var(--fw-700);
 
 		input,
 		textarea {
 			width: 100%;
-			padding: 8px;
-			margin-top: 4px;
+			padding: 10px 15px;
 			box-sizing: border-box;
 			border: 1px solid #ccc;
-			border-radius: 4px;
+			border-radius: 5px;
+			margin-top: 10px;
 			resize: vertical;
+			background-color: var(--clr-primary-500);
+			border: 1px solid var(--clr-primary-400);
+			outline: none;
+			font-size: var(--fs-400);
+		}
+
+		textarea {
+			height: 170px;
 		}
 	}
 
+	.change-profile-picture-button {
+		font-size: var(--fs-500);
+		font-weight: var(--fw-500);
+		place-items: center;
+		justify-content: center;
+	}
+
 	.save-button {
+		font-size: var(--fs-500);
+		font-weight: var(--fw-700);
 		background-color: #007bff;
+		place-items: center;
+		justify-content: center;
 
 		&:hover {
 			background-color: #0056b3;

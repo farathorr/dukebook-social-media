@@ -4,6 +4,8 @@ import { api } from "../../utils/api";
 import style from "./Authentication.module.scss";
 import { NotificationContext } from "../../context/NotificationControls/NotificationControls";
 import UserPicture from "../../components/UserPicture/UserPicture";
+import CustomButton from "../../components/CustomButton/CustomButton";
+import UserTag from "../../components/UserTag/UserTag";
 
 export default function Authentication() {
 	const [addNotification] = useContext(NotificationContext);
@@ -40,11 +42,11 @@ export default function Authentication() {
 			<div className={style["profile-info"]}>
 				<UserPicture src={authentication.user?.profilePicture} size="small" />
 				<span className={style.username}>{authentication.user?.username}</span>
-				<span className={style.usertag}>{authentication.user?.userTag}</span>
+				<UserTag tag={authentication.user?.userTag} className={style.usertag} />
 			</div>
 			<div className={style["footer"]}>
 				<input type="password" placeholder="Password" value={password} onInput={(e) => setPassword(e.target.value)} />
-				<button>Done</button>
+				<CustomButton purpose="action">Done</CustomButton>
 			</div>
 		</form>
 	);
