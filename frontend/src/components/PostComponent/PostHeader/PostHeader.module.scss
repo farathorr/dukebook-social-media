@@ -32,3 +32,18 @@
 	align-items: center;
 	height: max-content;
 }
+
+.reply-link {
+	margin-left: 10px;
+	margin-right: 10px;
+	color: var(--clr-accent-300);
+	font-weight: var(--fw-300);
+	font-size: var(--fs-300);
+	text-decoration: none;
+	font-style: italic;
+	transition: color 0.2s;
+
+	&:hover {
+		color: var(--clr-accent-500);
+	}
+}
