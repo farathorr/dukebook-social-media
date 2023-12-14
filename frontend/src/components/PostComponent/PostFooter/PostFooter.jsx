@@ -45,11 +45,12 @@ export default function PostFooter({ onUpdate, post, className = "" }) {
 	const like = optionConstructor("Like", api.likePost);
 
 	const removePost = async () => {
-		const { status } = await api.removePost(postId);
+		const { data, status } = await api.removePost(postId);
 		if (status !== 200) return addNotification({ type: "error", message: "Failed to remove post", title: "Post removal failed" });
-
+		console.log(data);
 		addNotification({ type: "success", message: "Post removed", title: "Post removed" });
-		onUpdate?.((posts) => posts.filter((post) => post._id !== postId));
+		if (data._id === postId) onUpdate?.((posts) => posts.map((post) => (post._id === postId ? data : post)));
+		else onUpdate?.((posts) => posts.filter((post) => post._id !== postId));
 	};
 
 	const editPost = async () => {

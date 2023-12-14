@@ -150,9 +150,8 @@ const deletePost = async (req, res) => {
 		return res.status(404).send(`No post with id: ${id}`);
 	}
 	try {
-		const post = await Post.findByIdAndUpdate(id, { user: null, postText: "Post removed", removed: true, tags: [], images: [] }).populate(
-			"replyParentId"
-		);
+		const baseRemoved = { user: null, postText: "Post removed", removed: true, tags: [], images: [] };
+		const post = await Post.findByIdAndUpdate(id, baseRemoved).populate("replyParentId");
 		const parent = post.replyParentId;
 		if (!post.comments?.length) {
 			await Post.findByIdAndDelete(id);
@@ -162,9 +161,11 @@ const deletePost = async (req, res) => {
 				parent.save();
 				socketIO.emit("post/" + parent._id, { comments: parent.comments.length });
 			}
+			return res.json({ message: "Post deleted successfully." });
 		}
 
-		res.json({ message: "Post deleted successfully." });
+		Object.assign(post, baseRemoved);
+		res.json(post);
 	} catch (err) {
 		res.status(500).json({ message: err.message });
 	}
