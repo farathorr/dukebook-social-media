@@ -12,8 +12,9 @@ const postSchema = new mongoose.Schema(
 			max: 500,
 			index: "text",
 		},
-		image: {
-			type: String,
+		images: {
+			type: Array,
+			default: [],
 		},
 		likes: {
 			type: Array,

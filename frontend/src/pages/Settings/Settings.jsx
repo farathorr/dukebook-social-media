@@ -8,7 +8,7 @@ import CustomButton from "../../components/CustomButton/CustomButton";
 import { ImageUploaderContext } from "../../components/ImageUploader/ImageUploader";
 
 export default function Settings() {
-	const { open } = useContext(ImageUploaderContext);
+	const { imageUploader } = useContext(ImageUploaderContext);
 	const [addNotification] = useContext(NotificationContext);
 	const { authentication, dispatchAuthentication } = useContext(AuthenticationContext);
 	const [username, setUsername] = useState("");
@@ -97,7 +97,7 @@ export default function Settings() {
 				purpose="action"
 				type="button"
 				onClick={() => {
-					open((url) => setProfilePicture(url));
+					imageUploader((url) => setProfilePicture(url));
 				}}
 			>
 				Change profile picture

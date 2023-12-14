@@ -8,16 +8,19 @@ import CustomButton from "../CustomButton/CustomButton";
 import style from "./PostForm.module.scss";
 import Tags from "../TagsField/TagsField";
 import LinkIcon from "../../svg/linkIcon";
+import { ImageUploaderContext } from "../ImageUploader/ImageUploader";
 
 const postError = { type: "error", title: "Post failed" };
 
-export default function NewPostForm({ title, updateInterface, disabled, type }) {
+export default function PostForm({ title, updateInterface, disabled, type }) {
+	const { imageUploader } = useContext(ImageUploaderContext);
 	const [addNotification] = useContext(NotificationContext);
 	const { authentication } = useContext(AuthenticationContext);
 	const params = useParams();
 	const [postText, setPostText] = useState("");
 	const [tags, setTags] = useState([]);
 	const [showTags, setShowTags] = useState(false);
+	const [images, setImages] = useState([]);
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
@@ -27,7 +30,7 @@ export default function NewPostForm({ title, updateInterface, disabled, type }) 
 
 		try {
 			const formatedTags = [...new Set(tags.filter((tag) => tag.trim().replaceAll(" ", "")))];
-			const postData = { postText, tags: formatedTags, postId: params?.id };
+			const postData = { postText, tags: formatedTags, postId: params?.id, images };
 			const sendFetch = type === "post" ? api.createPost : api.replyToPost;
 
 			const { status, data } = await sendFetch(postData);
@@ -37,9 +40,21 @@ export default function NewPostForm({ title, updateInterface, disabled, type }) 
 			updateInterface((state) => !state);
 			setPostText("");
 			setTags([]);
+			setImages([]);
 
 			addNotification({ type: "success", title: "Post successful", message: "Your post has been posted", duration: 3000 });
 		} catch (err) {}
+	};
+
+	const handleImageUpload = async (file) => {
+		imageUploader((url) => {
+			setImages((state) => [...state, url]);
+		});
+		// const { status, data } = await api.uploadImage(file);
+
+		// if (status === 400) return addNotification({ ...postError, message: data.message });
+
+		// setImages((state) => [...state, data.url]);
 	};
 
 	return (
@@ -65,11 +80,18 @@ export default function NewPostForm({ title, updateInterface, disabled, type }) 
 					<Tags tags={tags} setTags={setTags} disabled={disabled} />
 				</>
 			)}
+			{images.length > 0 && (
+				<div className={style["image-container"]}>
+					{images.map((image, index) => (
+						<img key={index} src={image} alt="post" />
+					))}
+				</div>
+			)}
 			<div className={style["button-container"]}>
 				<CustomButton purpose="dark" type="submit" disabled={disabled}>
 					Post
 				</CustomButton>
-				<CustomButton purpose="dark" type="button" disabled={disabled}>
+				<CustomButton purpose="dark" type="button" disabled={disabled} onClick={handleImageUpload}>
 					<LinkIcon />
 				</CustomButton>
 				<CustomButton purpose="dark" type="button" disabled={disabled} onClick={() => setShowTags((s) => !s)}>

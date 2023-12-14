@@ -18,6 +18,15 @@ export default function PostContent({ post, ...props }) {
 					))}
 				</div>
 			) : null}
+
+			{post.images.length > 0 ? (
+				<div className={style["post-images"]}>
+					{post.images.map((image, index) => (
+						<img className={style["post-image"]} src={image} key={index} alt="Picture" />
+					))}
+				</div>
+			) : null}
+
 			{post.edited ? <span className={style["edited"]}>(Edited)</span> : null}
 		</>
 	);

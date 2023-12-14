@@ -68,8 +68,8 @@ const apiObject = {
 		return response;
 	}),
 
-	createPost: requiresAuth(async ({ postText, tags }) => {
-		const response = await axios.post("http://localhost:4000/posts", { postText, tags });
+	createPost: requiresAuth(async ({ postText, tags, images }) => {
+		const response = await axios.post("http://localhost:4000/posts", { postText, tags, images });
 		return response;
 	}),
 	getPosts: requiresAuth(async (query = "") => {
@@ -96,8 +96,8 @@ const apiObject = {
 		const response = await axios.get(`http://localhost:4000/posts/${postId}/parents?nesting=${nesting ?? 3}`);
 		return response;
 	},
-	replyToPost: requiresAuth(async ({ postId, postText, tags }) => {
-		const response = await axios.patch(`http://localhost:4000/posts/${postId}/reply`, { postText, tags });
+	replyToPost: requiresAuth(async ({ postId, postText, tags, images }) => {
+		const response = await axios.patch(`http://localhost:4000/posts/${postId}/reply`, { postText, tags, images });
 		return response;
 	}),
 	dislikePost: requiresAuth(async (postId) => {
