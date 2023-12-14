@@ -5,6 +5,7 @@ import { useState, useContext } from "react";
 import { NotificationContext } from "../../context/NotificationControls/NotificationControls";
 import { AuthenticationContext } from "../../context/AuthenticationContext/AuthenticationContext";
 import { api } from "../../utils/api";
+import CustomButton from "../../components/CustomButton/CustomButton";
 
 export default function Login() {
 	const [addNotification] = useContext(NotificationContext);
@@ -62,15 +63,15 @@ export default function Login() {
 					checked={rememberPassword}
 					onChange={(e) => setRememberPassword(e.target.checked)}
 				/>
-				<button type="submit" defaultValue="login">
+				<CustomButton type="submit" defaultValue="login">
 					Login
-				</button>
+				</CustomButton>
 			</form>
 			<div className={style["register-login-container"]}>
 				<label htmlFor="register">New user? Register here:</label>
-				<Link className={style["register-button"]} to="/register">
-					<button role="link">Register</button>
-				</Link>
+				<CustomButton className={style["register-button"]} to="/register">
+					Register
+				</CustomButton>
 			</div>
 		</div>
 	);

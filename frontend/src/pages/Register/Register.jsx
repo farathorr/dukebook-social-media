@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState, useContext } from "react";
 import { NotificationContext } from "../../context/NotificationControls/NotificationControls";
 import { api } from "../../utils/api";
+import CustomButton from "../../components/CustomButton/CustomButton";
 
 const errorMessage = { type: "error", title: "Registration failed" };
 
@@ -75,13 +76,13 @@ export default function Register() {
 					onChange={(e) => setConfirmPassword(e.target.value)}
 				/>
 
-				<button type="submit">Register</button>
+				<CustomButton type="submit">Register</CustomButton>
 			</form>
 			<div className={style["register-login-container"]}>
 				<label htmlFor="login">Existing user? Login here:</label>
-				<Link className={style["login-button"]} to="/login">
-					<button role="link">Login</button>
-				</Link>
+				<CustomButton className={style["login-button"]} to="/login">
+					Login
+				</CustomButton>
 			</div>
 		</div>
 	);
