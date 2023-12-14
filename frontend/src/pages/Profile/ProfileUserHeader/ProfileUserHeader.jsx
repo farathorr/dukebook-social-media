@@ -7,7 +7,7 @@ import { api } from "../../../utils/api";
 import UserProfileData from "../UserProfileData/UserProfileData";
 import UserPicture from "../../../components/UserPicture/UserPicture";
 import CustomButton from "../../../components/CustomButton/CustomButton";
-import EditProfile from "../../../svg/EditProfile";
+import EditIcon from "../../../svg/EditIcon";
 
 export default function ProfileUserHeader({ userData, showLikedPosts, showPosts, showComments }) {
 	const [isFollowing, setIsFollowing] = useState(false);
@@ -137,7 +137,7 @@ export default function ProfileUserHeader({ userData, showLikedPosts, showPosts,
 					)}
 					{!isButtonVisible && (
 						<CustomButton to="/settings">
-							<EditProfile className={style["edit-svg"]} /> Edit
+							<EditIcon className={style["edit-svg"]} /> Edit
 						</CustomButton>
 					)}
 				</div>

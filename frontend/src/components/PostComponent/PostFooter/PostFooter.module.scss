@@ -1,6 +1,7 @@
 .post-stats {
 	display: flex;
 	gap: 10px;
+	flex-wrap: wrap;
 	margin-left: 5px;
 
 	.like-button {
@@ -19,6 +20,11 @@
 
 	.remove-button {
 		margin-left: auto;
+		fill: white;
+	}
+
+	.edit-button {
+		fill: white;
 	}
 }
 .edit-form {

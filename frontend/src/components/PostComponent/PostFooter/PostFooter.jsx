@@ -10,6 +10,7 @@ import ArrowDown from "../../../svg/ArrowDown";
 import SpeechBubble from "../../../svg/SpeechBubble";
 import TrashSvg from "../../../svg/TrashSvg";
 import ImageForm from "../../ImageForm/ImageForm";
+import EditIcon from "../../../svg/EditIcon";
 
 export default function PostFooter({ onUpdate, post, className = "" }) {
 	const postId = post._id;
@@ -91,11 +92,13 @@ export default function PostFooter({ onUpdate, post, className = "" }) {
 
 				{authentication.isAuthenticated && authentication.user.userTag === post.user?.userTag && onUpdate ? (
 					<CustomButton purpose="warning" className={style["remove-button"]} onClick={removePost}>
-						Remove
+						<TrashSvg /> Remove
 					</CustomButton>
 				) : null}
 				{authentication.isAuthenticated && authentication.user.userTag === post.user?.userTag && onUpdate ? (
-					<CustomButton onClick={editPost}>Edit</CustomButton>
+					<CustomButton onClick={editPost} className={style["edit-button"]}>
+						<EditIcon /> Edit
+					</CustomButton>
 				) : null}
 			</div>
 			{editable ? (

@@ -34,11 +34,11 @@
 }
 
 :where(.warning) {
-	background-color: rgb(94, 0, 0);
+	background-color: #9f1239;
 
 	&:where(:not([disabled])) {
 		&:hover {
-			background-color: rgb(105, 10, 10);
+			background-color: #4c0519;
 		}
 	}
 }
