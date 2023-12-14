@@ -45,6 +45,10 @@ const messageGroupSchema = new mongoose.Schema(
 			type: String,
 			max: 50,
 		},
+		userTag: {
+			type: String,
+			max: 50,
+		},
 		image: {
 			type: String,
 			max: 500,

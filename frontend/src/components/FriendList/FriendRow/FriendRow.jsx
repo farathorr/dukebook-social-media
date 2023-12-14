@@ -14,7 +14,7 @@ export default function FriendList({ group }) {
 			<UserPicture className={style["profile-pic"]} src={group.image} size="small" />
 			<div className={style["friend-info-container"]}>
 				<span className={style["user-name"]}>{group.name}</span>
-				{group.type === "chat" && <UserTag tag={group.name} isLink={false} />}
+				{group.type === "chat" && <UserTag tag={group.userTag} isLink={false} />}
 			</div>
 		</CustomButton>
 	);

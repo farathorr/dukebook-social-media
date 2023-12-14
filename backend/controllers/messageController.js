@@ -26,14 +26,16 @@ const getMessageGroups = async (req, res) => {
 			path: "messageGroups",
 			populate: {
 				path: "participants",
-				select: "userTag profilePicture",
+				select: "userTag username profilePicture",
 			},
 		});
 
 		user.messageGroups.forEach((group) => {
 			if (group.type == "chat") {
-				group.name = group.participants.find((user) => user._id != userId)?.userTag ?? "Removed private chat";
-				group.image = group.participants.find((user) => user._id != userId)?.profilePicture;
+				const curUser = group.participants.find((user) => user._id != userId);
+				group.userTag = curUser?.userTag ?? "Removed private chat";
+				group.name = curUser?.username ?? "Removed private chat";
+				group.image = curUser?.profilePicture;
 			}
 		});
 		res.status(200).json(user.messageGroups);
