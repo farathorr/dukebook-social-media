@@ -14,11 +14,6 @@
 	width: 100%;
 	margin-inline: auto;
 
-	&[custom-image-count="1"] {
-		.post-image {
-			aspect-ratio: 1/1;
-		}
-	}
 	&[custom-image-count="2"] {
 		grid-template-columns: 1fr 1fr;
 		.post-image {
