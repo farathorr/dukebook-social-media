@@ -54,9 +54,9 @@ export default function Feed() {
 }
 
 const NestPosts = ({ post, onUpdate }) => {
-	if (!post.originalPostParentId) {
-		return <PostComponent post={post} onUpdate={onUpdate} />;
-	}
+	// if (!post.originalPostParentId) {
+	return <PostComponent post={post} onUpdate={onUpdate} />;
+	// }
 
 	if (post.originalPostParentId._id == post.replyParentId._id) {
 		return (
