@@ -74,7 +74,7 @@ export default function Settings() {
 			return addNotification({ type: "error", message: "Failed to get user info", title: "Failed to get user info", duration: 5000 });
 
 		dispatchAuthentication({ type: "update", user: data });
-		navigate("/settings");
+		navigate(`/user/${userTag}`);
 	};
 
 	const handleSubmit = async (event) => {
