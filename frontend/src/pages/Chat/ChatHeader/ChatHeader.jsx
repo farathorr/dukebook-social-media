@@ -11,7 +11,7 @@ export default function ChatHeader({ group }) {
 					{group.type === "group" ? (
 						<p className={style["name"]}>{group.name}</p>
 					) : (
-						<UserTag tag={group.name} className={style["name"]} isLink={true} />
+						<UserTag tag={group.userTag} className={style["name"]} isLink={true} />
 					)}
 					{group.type === "group" && <p className={style["user-status"]}>{group.participants.length} Members</p>}
 					{group.type === "chat" && (
