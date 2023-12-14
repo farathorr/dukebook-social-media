@@ -2,9 +2,9 @@ import React from "react";
 import style from "./PostContent.module.scss";
 import { Link } from "react-router-dom";
 
-export default function PostContent({ post, ...props }) {
+export default function PostContent({ post, className = "", ...props }) {
 	return (
-		<>
+		<div className={className}>
 			<pre className={style["post-text"]}>{post.postText}</pre>
 			{props.images?.map((image, index) => (
 				<img className={style["post-image"]} src={image} key={index} alt="Picture" />
@@ -28,6 +28,6 @@ export default function PostContent({ post, ...props }) {
 			) : null}
 
 			{post.edited ? <span className={style["edited"]}>(Edited)</span> : null}
-		</>
+		</div>
 	);
 }

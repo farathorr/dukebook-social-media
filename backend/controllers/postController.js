@@ -150,7 +150,9 @@ const deletePost = async (req, res) => {
 		return res.status(404).send(`No post with id: ${id}`);
 	}
 	try {
-		const post = await Post.findByIdAndUpdate(id, { user: null, postText: "Post removed", removed: true }).populate("replyParentId");
+		const post = await Post.findByIdAndUpdate(id, { user: null, postText: "Post removed", removed: true, tags: [], images: [] }).populate(
+			"replyParentId"
+		);
 		const parent = post.replyParentId;
 		if (!post.comments?.length) {
 			await Post.findByIdAndDelete(id);

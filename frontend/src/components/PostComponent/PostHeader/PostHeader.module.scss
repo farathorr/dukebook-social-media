@@ -7,3 +7,27 @@
 	content: "•";
 	padding: 0px 5px 0px 0px;
 }
+
+.arrow {
+	position: relative;
+	margin-left: auto;
+
+	svg {
+		fill: white;
+		width: 25px;
+		height: 25px;
+		transition: rotate 0.2s;
+	}
+
+	&.active {
+		svg {
+			rotate: 180deg;
+		}
+		background-color: var(--clr-primary-400);
+	}
+}
+
+.header-container {
+	display: flex;
+	align-items: center;
+}
