@@ -54,6 +54,7 @@
 	.button-container {
 		display: flex;
 		justify-content: flex-end;
+		height: max-content;
 
 		button {
 			background-color: var(--clr-secondary-600);
@@ -65,6 +66,11 @@
 		svg {
 			fill: var(--clr-accent-400);
 		}
+	}
+
+	.footer {
+		display: grid;
+		grid-template-columns: 1fr auto;
 	}
 
 	.image-container {

@@ -9,7 +9,6 @@ import style from "./PostForm.module.scss";
 import Tags from "../TagsField/TagsField";
 import LinkIcon from "../../svg/linkIcon";
 import { ImageUploaderContext } from "../ImageUploader/ImageUploader";
-import TrashSvg from "../../svg/TrashSvg";
 import ImageForm from "../ImageForm/ImageForm";
 
 const postError = { type: "error", title: "Post failed" };
@@ -75,17 +74,19 @@ export default function PostForm({ title, updateInterface, disabled, type }) {
 					<Tags tags={tags} setTags={setTags} disabled={disabled} />
 				</>
 			)}
-			<ImageForm images={images} setImages={setImages} />
-			<div className={style["button-container"]}>
-				<CustomButton purpose="dark" type="submit" disabled={disabled}>
-					Post
-				</CustomButton>
-				<CustomButton purpose="dark" type="button" disabled={disabled} onClick={handleImageUpload}>
-					<LinkIcon />
-				</CustomButton>
-				<CustomButton purpose="dark" type="button" disabled={disabled} onClick={() => setShowTags((s) => !s)}>
-					Tags
-				</CustomButton>
+			<div className={style["footer"]}>
+				<ImageForm images={images} setImages={setImages} />
+				<div className={style["button-container"]}>
+					<CustomButton purpose="dark" type="submit" disabled={disabled}>
+						Post
+					</CustomButton>
+					<CustomButton purpose="dark" type="button" disabled={disabled} onClick={handleImageUpload}>
+						<LinkIcon />
+					</CustomButton>
+					<CustomButton purpose="dark" type="button" disabled={disabled} onClick={() => setShowTags((s) => !s)}>
+						Tags
+					</CustomButton>
+				</div>
 			</div>
 		</form>
 	);
