@@ -6,12 +6,52 @@
 	word-break: break-all;
 }
 
-.post-image {
-	border-radius: 10px;
-	max-width: 100%;
-	aspect-ratio: 16/9;
-	height: auto;
-	object-fit: cover;
+.post-images {
+	position: relative;
+	display: grid;
+	gap: 5px;
+	margin-bottom: 10px;
+	place-items: center;
+	width: 100%;
+	margin-inline: auto;
+
+	&[custom-image-count="1"] {
+		.post-image {
+			aspect-ratio: 1/1;
+		}
+	}
+	&[custom-image-count="2"] {
+		grid-template-columns: 1fr 1fr;
+		.post-image {
+			aspect-ratio: 1/1;
+		}
+	}
+	&[custom-image-count="3"] {
+		grid-template-columns: 1fr 1fr;
+		.post-image {
+			aspect-ratio: 1/1;
+		}
+		.post-image:nth-child(3) {
+			grid-column: 1 / span 2;
+			aspect-ratio: 16/9;
+		}
+	}
+
+	&[custom-image-count="4"] {
+		grid-template-columns: 1fr 1fr;
+
+		.post-image {
+			aspect-ratio: 16/9;
+		}
+	}
+
+	.post-image {
+		width: 100%;
+		height: auto;
+		object-fit: cover;
+		border-radius: 10px;
+		max-height: 500px;
+	}
 }
 
 .post-tags {

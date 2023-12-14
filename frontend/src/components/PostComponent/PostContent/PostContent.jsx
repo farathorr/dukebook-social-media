@@ -20,7 +20,7 @@ export default function PostContent({ post, ...props }) {
 			) : null}
 
 			{post.images.length > 0 ? (
-				<div className={style["post-images"]}>
+				<div className={style["post-images"]} custom-image-count={Math.min(post.images.length, 4)}>
 					{post.images.map((image, index) => (
 						<img className={style["post-image"]} src={image} key={index} alt="Picture" />
 					))}
