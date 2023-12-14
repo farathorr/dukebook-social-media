@@ -73,11 +73,11 @@
 				object-fit: cover;
 			}
 		}
-		.content {
-			display: grid;
-			gap: 10px;
-		}
 	}
+}
+.content {
+	display: grid;
+	gap: 10px;
 }
 
 .replies {
