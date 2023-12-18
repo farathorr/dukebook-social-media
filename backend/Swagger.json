@@ -1,9 +1,9 @@
 {
 	"openapi": "3.0.0",
 	"info": {
-		"title": "User API",
-		"description": "API for managing users, followers, following, and friends.",
-		"version": "1.0.0"
+		"title": "Social media API",
+		"description": "API for managing users, posts, messages, authentication, and images.",
+		"version": "1.0.1"
 	},
 	"servers": [
 		{
