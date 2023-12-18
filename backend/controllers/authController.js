@@ -15,7 +15,7 @@ const login = async (req, res) => {
 
 		const tokenUser = { userId: user._id, type: "login" };
 
-		const accessToken = jwt.sign(tokenUser, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "20s" });
+		const accessToken = jwt.sign(tokenUser, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "1h" });
 		const refreshToken = jwt.sign({ ...tokenUser, type: "refresh" }, process.env.REFRESH_TOKEN_SECRET);
 		await RefreshToken.deleteOne({ userId: user._id });
 		await RefreshToken.create({ userId: user._id, token: refreshToken });

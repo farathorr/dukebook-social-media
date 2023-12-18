@@ -473,6 +473,421 @@
 					}
 				}
 			}
+		},
+		"/posts": {
+			"get": {
+				"tags": ["Posts"],
+				"summary": "Get all posts",
+				"parameters": [
+					{
+						"name": "filter",
+						"in": "query",
+						"description": "Filter posts",
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "search",
+						"in": "query",
+						"description": "Search posts",
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "tags",
+						"in": "query",
+						"description": "Filter by tags",
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "liked",
+						"in": "query",
+						"description": "Filter liked posts",
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"name": "author",
+						"in": "query",
+						"description": "Filter by author",
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "comments",
+						"in": "query",
+						"description": "Filter by comments",
+						"schema": {
+							"type": "boolean"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "List of posts",
+						"content": {
+							"application/json": {
+								"example": []
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": ["Posts"],
+				"summary": "Create a new post",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"example": {
+								"postText": "Example post",
+								"tags": ["tag1", "tag2"],
+								"images": ["image1.jpg", "image2.jpg"]
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"responses": {
+					"201": {
+						"description": "Post created successfully",
+						"content": {
+							"application/json": {
+								"example": {}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request - Invalid input data"
+					},
+					"409": {
+						"description": "Conflict - Post creation failed"
+					}
+				}
+			}
+		},
+		"/posts/{id}": {
+			"get": {
+				"tags": ["Posts"],
+				"summary": "Get post by ID",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Post found",
+						"content": {
+							"application/json": {
+								"example": {}
+							}
+						}
+					},
+					"404": {
+						"description": "Post not found"
+					}
+				}
+			},
+			"patch": {
+				"tags": ["Posts"],
+				"summary": "Update post by ID",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"example": {
+								"postText": "Updated post text",
+								"tags": ["updatedTag"]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Post updated successfully",
+						"content": {
+							"application/json": {
+								"example": {}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request - Invalid input data"
+					},
+					"404": {
+						"description": "Post not found"
+					}
+				}
+			},
+			"delete": {
+				"tags": ["Posts"],
+				"summary": "Delete post by ID",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Post deleted successfully"
+					},
+					"404": {
+						"description": "Post not found"
+					}
+				}
+			}
+		},
+		"/posts/{id}/like": {
+			"put": {
+				"tags": ["Posts"],
+				"summary": "Like a post by ID",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Post liked successfully",
+						"content": {
+							"application/json": {
+								"example": {}
+							}
+						}
+					},
+					"404": {
+						"description": "Post not found or user not authorized to like"
+					}
+				}
+			}
+		},
+		"/posts/{id}/dislike": {
+			"put": {
+				"tags": ["Posts"],
+				"summary": "Dislike a post by ID",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Post disliked successfully",
+						"content": {
+							"application/json": {
+								"example": {}
+							}
+						}
+					},
+					"404": {
+						"description": "Post not found or user not authorized to dislike"
+					}
+				}
+			}
+		},
+		"/posts/{id}/reply": {
+			"patch": {
+				"tags": ["Posts"],
+				"summary": "Reply to a post by ID",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"example": {
+								"postText": "Reply to the post"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Post replied successfully",
+						"content": {
+							"application/json": {
+								"example": {}
+							}
+						}
+					},
+					"404": {
+						"description": "Post not found or user not authorized to reply"
+					}
+				}
+			}
+		},
+		"/posts/{id}/replies": {
+			"get": {
+				"tags": ["Posts"],
+				"summary": "Get replies to a post by ID",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "List of replies",
+						"content": {
+							"application/json": {
+								"example": []
+							}
+						}
+					},
+					"404": {
+						"description": "Post not found"
+					}
+				}
+			}
+		},
+		"/posts/{id}/parents": {
+			"get": {
+				"tags": ["Posts"],
+				"summary": "Get parent posts of a post by ID",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "List of parent posts",
+						"content": {
+							"application/json": {
+								"example": []
+							}
+						}
+					},
+					"404": {
+						"description": "Post not found"
+					}
+				}
+			}
+		},
+		"/posts/feed": {
+			"get": {
+				"tags": ["Posts"],
+				"summary": "Get feed posts",
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "List of feed posts",
+						"content": {
+							"application/json": {
+								"example": []
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request - Authentication is required"
+					}
+				}
+			}
+		},
+		"/posts/trending": {
+			"get": {
+				"tags": ["Posts"],
+				"summary": "Get trending posts",
+				"responses": {
+					"200": {
+						"description": "List of trending posts",
+						"content": {
+							"application/json": {
+								"example": []
+							}
+						}
+					}
+				}
+			}
 		}
 	},
 	"components": {
@@ -668,6 +1083,10 @@
 		{
 			"name": "Users",
 			"description": "Endpoints for managing users"
+		},
+		{
+			"name": "Posts",
+			"description": "Endpoints for managing posts"
 		}
 	]
 }
