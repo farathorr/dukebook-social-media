@@ -1032,6 +1032,103 @@
 					}
 				}
 			}
+		},
+		"/images": {
+			"post": {
+				"tags": ["Images"],
+				"summary": "Upload an image",
+				"security": [
+					{
+						"weakAuthentication": []
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"image": {
+										"type": "string"
+									}
+								},
+								"required": ["image"]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Image uploaded successfully",
+						"content": {
+							"application/json": {
+								"example": {
+									"id": "imageId",
+									"user": "userId",
+									"url": "imageUrl",
+									"deleteHash": "deleteHash"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request - Invalid input data"
+					},
+					"401": {
+						"description": "Unauthorized - Weak authentication failed"
+					},
+					"500": {
+						"description": "Internal server error"
+					}
+				}
+			}
+		},
+		"/images/{deleteHash}": {
+			"delete": {
+				"tags": ["Images"],
+				"summary": "Delete an image",
+				"security": [
+					{
+						"weakAuthentication": []
+					}
+				],
+				"parameters": [
+					{
+						"name": "deleteHash",
+						"in": "path",
+						"required": true,
+						"description": "Delete hash of the image",
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Image deleted successfully",
+						"content": {
+							"application/json": {
+								"example": {
+									"id": "imageId",
+									"user": "userId",
+									"url": "imageUrl",
+									"deleteHash": "deleteHash"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request - Invalid input data"
+					},
+					"401": {
+						"description": "Unauthorized - Weak authentication failed"
+					},
+					"500": {
+						"description": "Internal server error"
+					}
+				}
+			}
 		}
 	},
 	"components": {
@@ -1235,6 +1332,10 @@
 		{
 			"name": "Messages",
 			"description": "Endpoints for managing messages"
+		},
+		{
+			"name": "Images",
+			"description": "Endpoints for managing images"
 		}
 	]
 }
