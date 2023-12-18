@@ -7,6 +7,8 @@ const http = require("http").createServer(app);
 const socketIO = require("socket.io")(http, { cors: { origin: "http://localhost:5000" } });
 module.exports = { socketIO };
 const errorHandler = require("./middleware/errorMiddleware");
+const swaggerUI = require("swagger-ui-express");
+const swaggerSpec = require("./swagger.json");
 
 connectDB();
 
@@ -15,13 +17,15 @@ app.use(cors);
 
 socketIO.on("connection", require("./routes/socketRouter"));
 
-app.get("/", (req, res) => res.json({ message: "Welcome to the application." }));
+app.use("/api/messages", require("./routes/messagesRouter"));
+app.use("/api/users", require("./routes/usersRouter"));
+app.use("/api/posts", require("./routes/postsRouter"));
+app.use("/api/profile", require("./routes/profileRouter"));
+app.use("/api/image", require("./routes/imageRoutes"));
 
-app.use("/messages", require("./routes/messagesRouter"));
-app.use("/users", require("./routes/usersRouter"));
-app.use("/posts", require("./routes/postsRouter"));
-app.use("/profile", require("./routes/profileRouter"));
-app.use("/image", require("./routes/imageRoutes"));
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
+
+app.get("/", (req, res) => res.json({ message: "Welcome to the application." }));
 
 app.use(errorHandler.errorHandler);
 app.use(errorHandler.unknownEndpoint);

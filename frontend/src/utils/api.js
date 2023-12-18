@@ -64,112 +64,113 @@ const apiObject = {
 		}
 	},
 	updatePost: requiresAuth(async ({ postId, postText, tags, images }) => {
-		const response = await axios.patch(`http://localhost:4000/posts/${postId}`, { postText, tags, images });
+		const response = await axios.patch(`http://localhost:4000/api/posts/${postId}`, { postText, tags, images });
 		return response;
 	}),
 
 	createPost: requiresAuth(async ({ postText, tags, images }) => {
-		const response = await axios.post("http://localhost:4000/posts", { postText, tags, images });
+		const response = await axios.post("http://localhost:4000/api/posts", { postText, tags, images });
 		return response;
 	}),
 	getPosts: requiresAuth(async (query = "") => {
-		const response = await axios.get(`http://localhost:4000/posts?${query}`);
+		const response = await axios.get(`http://localhost:4000/api/posts?${query}`);
 		return response;
 	}),
 	getUserFeedPosts: requiresAuth(async () => {
-		const response = await axios.get(`http://localhost:4000/posts/feed?`);
+		const response = await axios.get(`http://localhost:4000/api/posts/feed?`);
 		return response;
 	}),
 	getPostById: async (postId) => {
-		const response = await axios.get(`http://localhost:4000/posts/${postId}`);
+		const response = await axios.get(`http://localhost:4000/api/posts/${postId}`);
 		return response;
 	},
 	getPostsByAuthor: async (userTag) => {
-		const response = await axios.get(`http://localhost:4000/posts/author/${userTag}`);
+		const response = await axios.get(`http://localhost:4000/api/posts/author/${userTag}`);
 		return response;
 	},
 	getPostReplies: async (postId, nesting) => {
-		const response = await axios.get(`http://localhost:4000/posts/${postId}/replies?nesting=${nesting ?? 3}`);
+		const response = await axios.get(`http://localhost:4000/api/posts/${postId}/replies?nesting=${nesting ?? 3}`);
 		return response;
 	},
 	getPostParent: async (postId, nesting) => {
-		const response = await axios.get(`http://localhost:4000/posts/${postId}/parents?nesting=${nesting ?? 3}`);
+		const response = await axios.get(`http://localhost:4000/api/posts/${postId}/parents?nesting=${nesting ?? 3}`);
 		return response;
 	},
 	replyToPost: requiresAuth(async ({ postId, postText, tags, images }) => {
-		const response = await axios.patch(`http://localhost:4000/posts/${postId}/reply`, { postText, tags, images });
+		const response = await axios.patch(`http://localhost:4000/api/posts/${postId}/reply`, { postText, tags, images });
 		return response;
 	}),
 	dislikePost: requiresAuth(async (postId) => {
-		const response = await axios.put(`http://localhost:4000/posts/${postId}/dislike`, {});
+		const response = await axios.put(`http://localhost:4000/api/posts/${postId}/dislike`, {});
 		return response;
 	}),
 	likePost: requiresAuth(async (postId) => {
-		const response = await axios.put(`http://localhost:4000/posts/${postId}/like`, {});
+		const response = await axios.put(`http://localhost:4000/api/posts/${postId}/like`, {});
 		return response;
 	}),
 	removePost: requiresAuth(async (postId) => {
-		const response = await axios.delete(`http://localhost:4000/posts/${postId}`);
+		const response = await axios.delete(`http://localhost:4000/api/posts/${postId}`);
 		return response;
 	}),
 
 	createUser: async ({ userTag, email, password }) => {
-		const response = await axios.post("http://localhost:4000/users", { userTag, email, password });
+		const response = await axios.post("http://localhost:4000/api/users", { userTag, email, password });
 		return response;
 	},
 	users: async () => {
-		const response = await axios.get("http://localhost:4000/users");
+		const response = await axios.get("http://localhost:4000/api/users");
 		return response;
 	},
 	getUserById: async (userId) => {
-		const response = await axios.get(`http://localhost:4000/users/${userId}`);
+		const response = await axios.get(`http://localhost:4000/api/users/${userId}`);
 		return response;
 	},
 	getUserByUserTag: async (userTag) => {
-		const response = await axios.get(`http://localhost:4000/users/userTag/${userTag}`);
+		const response = await axios.get(`http://localhost:4000/api/users/userTag/${userTag}`);
 		return response;
 	},
 	followUser: requiresAuth(async (userTag) => {
-		const response = await axios.put(`http://localhost:4000/users/follow/${userTag}`, {});
+		const response = await axios.put(`http://localhost:4000/api/users/follow/${userTag}`, {});
 		return response;
 	}),
 	unfollowUser: requiresAuth(async (userTag) => {
-		const response = await axios.put(`http://localhost:4000/users/unfollow/${userTag}`, {});
+		const response = await axios.put(`http://localhost:4000/api/users/unfollow/${userTag}`, {});
 		return response;
 	}),
 	addFriend: requiresAuth(async (userTag) => {
-		const response = await axios.put(`http://localhost:4000/users/addFriend/${userTag}`, {});
+		const response = await axios.put(`http://localhost:4000/api/users/addFriend/${userTag}`, {});
 		return response;
 	}),
 	removeFriend: requiresAuth(async (userTag) => {
-		const response = await axios.put(`http://localhost:4000/users/removeFriend/${userTag}`, {});
+		const response = await axios.put(`http://localhost:4000/api/users/removeFriend/${userTag}`, {});
 		return response;
 	}),
 	getFriends: async (userTag) => {
-		const response = await axios.get(`http://localhost:4000/users/friends/${userTag}`);
+		const response = await axios.get(`http://localhost:4000/api/users/friends/${userTag}`);
 		return response;
 	},
 
 	getMessageGroups: requiresAuth(async () => {
-		const response = await axios.get("http://localhost:4000/messages/groups");
+		const response = await axios.get("http://localhost:4000/api/messages/groups");
 		return response;
 	}),
 
 	getMessages: requiresAuth(async (groupId) => {
-		const response = await axios.get(`http://localhost:4000/messages?groupId=${groupId}`);
+		console.log(groupId);
+		const response = await axios.get(`http://localhost:4000/api/messages/group/${groupId}`);
 		return response;
 	}),
 	sendMessage: requiresAuth(async ({ groupId, text }) => {
-		const response = await axios.post(`http://localhost:4000/messages`, { groupId, text });
+		const response = await axios.post(`http://localhost:4000/api/messages/group/${groupId}`, { text });
 		return response;
 	}),
 
 	getAuthUserInfo: requiresAuth(async () => {
-		const response = await axios.get("http://localhost:4000/profile");
+		const response = await axios.get("http://localhost:4000/api/profile");
 		return response;
 	}),
 	updateAuthUser: requiresAuth(async ({ username, userTag, email, password, profilePicture, bio }) => {
-		const response = await axios.patch("http://localhost:4000/profile", {
+		const response = await axios.patch("http://localhost:4000/api/profile", {
 			username,
 			userTag,
 			email,
@@ -181,16 +182,16 @@ const apiObject = {
 	}),
 
 	uploadImage: requiresAuth(async (image) => {
-		const response = await axios.post("http://localhost:4000/image", { image });
+		const response = await axios.post("http://localhost:4000/api/image", { image });
 		return response;
 	}),
 	deleteImage: requiresAuth(async (deleteHash) => {
-		const response = await axios.delete(`http://localhost:4000/image/${deleteHash}`);
+		const response = await axios.delete(`http://localhost:4000/api/image/${deleteHash}`);
 		return response;
 	}),
 
 	getTrendingPosts: async () => {
-		const response = await axios.get("http://localhost:4000/posts/trending");
+		const response = await axios.get("http://localhost:4000/api/posts/trending");
 		return response;
 	},
 

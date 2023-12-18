@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const { User, SensitiveData } = require("../models/users");
 const { MessageGroup } = require("../models/message");
+const RefreshToken = require("../models/refreshToken");
 const Post = require("../models/posts");
 const bcrypt = require("bcryptjs");
 
@@ -62,19 +63,20 @@ const createUser = async (req, res) => {
 };
 
 // delete user by id
-const deleteUserById = async (req, res) => {
-	const { id } = req.params;
+const deleteUserByAuth = async (req, res) => {
+	const { userId } = req.user;
 	try {
-		console.log("Deleting user with ID:", id);
-		if (!mongoose.Types.ObjectId.isValid(id)) {
-			return res.status(404).send(`No user with id: ${id}`);
+		console.log("Deleting user with ID:", userId);
+		if (!mongoose.Types.ObjectId.isValid(userId)) {
+			return res.status(404).send(`No user with id: ${userId}`);
 		}
-		const user = await User.findById(id);
+		const user = await User.findById(userId);
 
-		if (!user) return res.status(404).json({ message: `User with id ${id} not found.` });
+		if (!user) return res.status(404).json({ message: `User with id ${userId} not found.` });
 		await Post.deleteMany({ user: user._id });
-		await User.findByIdAndDelete(id);
+		await User.findByIdAndDelete(userId);
 		await SensitiveData.findByIdAndDelete(user.sensitiveData);
+		await RefreshToken.findOneAndDelete({ userId: userId });
 
 		res.status(200).json({ message: "User and their posts deleted successfully." });
 	} catch (err) {
@@ -230,7 +232,7 @@ module.exports = {
 	getUsers,
 	getUserById,
 	createUser,
-	deleteUserById,
+	deleteUserByAuth,
 	getFollowersByUserTag,
 	getFollowingByUserTag,
 	followUserByUserTag,

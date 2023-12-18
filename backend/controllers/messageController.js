@@ -47,7 +47,8 @@ const getMessageGroups = async (req, res) => {
 
 const sendMessage = async (req, res) => {
 	const { userId } = req.user;
-	const { groupId, text } = req.body;
+	const { groupId } = req.params;
+	const { text } = req.body;
 	if (!userId) return res.status(400).json({ message: "UserTag is required." });
 	if (!groupId) return res.status(400).json({ message: "Message group is required." });
 	if (!text) return res.status(400).json({ message: "Message text is required." });
@@ -70,7 +71,8 @@ const sendMessage = async (req, res) => {
 
 const getMessages = async (req, res) => {
 	const { userId } = req.user;
-	const { groupId } = req.query;
+	const { groupId } = req.params;
+
 	if (!userId) return res.status(400).json({ message: "UserTag is required." });
 	if (!groupId) return res.status(400).json({ message: "Message group is required." });
 
