@@ -1,0 +1,540 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"title": "User API",
+		"description": "API for managing users, followers, following, and friends.",
+		"version": "1.0.0"
+	},
+	"servers": [
+		{
+			"url": "http://localhost:4000/api",
+			"variables": {}
+		}
+	],
+	"paths": {
+		"/users": {
+			"get": {
+				"summary": "Get all users",
+				"responses": {
+					"200": {
+						"description": "List of users",
+						"content": {
+							"application/json": {
+								"example": []
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"summary": "Create a new user",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"example": {
+								"userTag": "exampleUser",
+								"email": "user@example.com",
+								"password": "password123"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "User created successfully",
+						"content": {
+							"application/json": {
+								"example": {}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request - Username, email, and password are required"
+					},
+					"409": {
+						"description": "Conflict - Username or email already exists"
+					}
+				}
+			}
+		},
+		"/users/{id}": {
+			"get": {
+				"summary": "Get user by ID",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "User found",
+						"content": {
+							"application/json": {
+								"example": {}
+							}
+						}
+					},
+					"404": {
+						"description": "User not found"
+					}
+				}
+			},
+			"delete": {
+				"summary": "Delete user by ID",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "User and their posts deleted successfully"
+					},
+					"404": {
+						"description": "User not found"
+					}
+				}
+			}
+		},
+		"/users/userTag/{userTag}": {
+			"get": {
+				"summary": "Get user by userTag",
+				"parameters": [
+					{
+						"name": "userTag",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "User found",
+						"content": {
+							"application/json": {
+								"example": {}
+							}
+						}
+					},
+					"404": {
+						"description": "User not found"
+					}
+				}
+			}
+		},
+		"/users/followers/{userTag}": {
+			"get": {
+				"summary": "Get followers by userTag",
+				"parameters": [
+					{
+						"name": "userTag",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "List of followers",
+						"content": {
+							"application/json": {
+								"example": []
+							}
+						}
+					},
+					"404": {
+						"description": "User not found"
+					}
+				}
+			}
+		},
+		"/users/following/{userTag}": {
+			"get": {
+				"summary": "Get users followed by userTag",
+				"parameters": [
+					{
+						"name": "userTag",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "List of followed users",
+						"content": {
+							"application/json": {
+								"example": []
+							}
+						}
+					},
+					"404": {
+						"description": "User not found"
+					}
+				}
+			}
+		},
+		"/users/follow/{userTag}": {
+			"put": {
+				"summary": "Follow a user by userTag",
+				"parameters": [
+					{
+						"name": "userTag",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "User followed successfully",
+						"content": {
+							"application/json": {
+								"example": {}
+							}
+						}
+					},
+					"404": {
+						"description": "User not found or already being followed"
+					}
+				}
+			}
+		},
+		"/users/unfollow/{userTag}": {
+			"put": {
+				"summary": "Unfollow a user by userTag",
+				"parameters": [
+					{
+						"name": "userTag",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "User unfollowed successfully",
+						"content": {
+							"application/json": {
+								"example": {}
+							}
+						}
+					},
+					"404": {
+						"description": "User not found or not being followed"
+					}
+				}
+			}
+		},
+		"/users/friends/{userTag}": {
+			"get": {
+				"summary": "Get friends by userTag",
+				"parameters": [
+					{
+						"name": "userTag",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "List of friends",
+						"content": {
+							"application/json": {
+								"example": []
+							}
+						}
+					},
+					"404": {
+						"description": "User not found"
+					}
+				}
+			}
+		},
+		"/users/addFriend/{userTag}": {
+			"put": {
+				"summary": "Add a user as a friend by userTag",
+				"parameters": [
+					{
+						"name": "userTag",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "User added as a friend successfully",
+						"content": {
+							"application/json": {
+								"example": {}
+							}
+						}
+					},
+					"404": {
+						"description": "User not found or already a friend"
+					}
+				}
+			}
+		},
+		"/users/removeFriend/{userTag}": {
+			"put": {
+				"summary": "Remove a user from friends by userTag",
+				"parameters": [
+					{
+						"name": "userTag",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "User removed from friends successfully",
+						"content": {
+							"application/json": {
+								"example": {}
+							}
+						}
+					},
+					"404": {
+						"description": "User not found or not a friend"
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"securitySchemes": {
+			"bearerAuth": {
+				"type": "http",
+				"scheme": "bearer",
+				"bearerFormat": "JWT"
+			}
+		},
+		"schemas": {
+			"Image": {
+				"type": "object",
+				"properties": {
+					"_id": { "type": "string" },
+					"user": { "$ref": "#/components/schemas/User" },
+					"url": { "type": "string", "maxLength": 100 },
+					"deleteHash": { "type": "string", "maxLength": 100 },
+					"createdAt": { "type": "string", "format": "date-time" },
+					"updatedAt": { "type": "string", "format": "date-time" }
+				},
+				"required": ["user", "url", "deleteHash"],
+				"example": {
+					"_id": "image_id",
+					"user": { "$ref": "#/components/schemas/User" },
+					"url": "https://example.com/image.jpg",
+					"deleteHash": "abc123",
+					"createdAt": "2023-01-01T12:00:00Z",
+					"updatedAt": "2023-01-02T12:30:00Z"
+				}
+			},
+			"Message": {
+				"type": "object",
+				"properties": {
+					"_id": { "type": "string" },
+					"sender": { "$ref": "#/components/schemas/User" },
+					"text": { "type": "string", "maxLength": 500 },
+					"seen": { "type": "boolean", "default": false },
+					"groupId": { "$ref": "#/components/schemas/MessageGroup" },
+					"createdAt": { "type": "string", "format": "date-time" },
+					"updatedAt": { "type": "string", "format": "date-time" }
+				},
+				"required": ["sender", "text"],
+				"example": {
+					"_id": "message_id",
+					"sender": { "$ref": "#/components/schemas/User" },
+					"text": "Hello, how are you?",
+					"seen": false,
+					"groupId": { "$ref": "#/components/schemas/MessageGroup" },
+					"createdAt": "2023-01-01T12:00:00Z",
+					"updatedAt": "2023-01-01T12:10:00Z"
+				}
+			},
+			"MessageGroup": {
+				"type": "object",
+				"properties": {
+					"_id": { "type": "string" },
+					"type": { "type": "string", "enum": ["chat", "group"], "default": "chat" },
+					"participants": { "type": "array", "items": { "$ref": "#/components/schemas/User" } },
+					"name": { "type": "string", "maxLength": 50 },
+					"userTag": { "type": "string", "maxLength": 50 },
+					"image": { "type": "string", "maxLength": 500 },
+					"createdAt": { "type": "string", "format": "date-time" },
+					"updatedAt": { "type": "string", "format": "date-time" }
+				},
+				"required": ["type", "participants"],
+				"example": {
+					"_id": "group_id",
+					"type": "chat",
+					"participants": [{ "$ref": "#/components/schemas/User" }],
+					"name": "Group Name",
+					"userTag": "group_tag",
+					"image": "https://example.com/group-image.jpg",
+					"createdAt": "2023-01-01T12:00:00Z",
+					"updatedAt": "2023-01-01T12:10:00Z"
+				}
+			},
+			"Post": {
+				"type": "object",
+				"properties": {
+					"_id": { "type": "string" },
+					"user": { "$ref": "#/components/schemas/User" },
+					"postText": { "type": "string", "maxLength": 500 },
+					"images": { "type": "array", "items": { "$ref": "#/components/schemas/Image" } },
+					"likes": { "type": "array", "items": { "$ref": "#/components/schemas/User" } },
+					"dislikes": { "type": "array", "items": { "$ref": "#/components/schemas/User" } },
+					"comments": { "type": "array", "items": { "$ref": "#/components/schemas/Post" } },
+					"originalPostParentId": { "$ref": "#/components/schemas/Post" },
+					"replyParentId": { "$ref": "#/components/schemas/Post" },
+					"nestingLevel": { "type": "number", "default": 0 },
+					"removed": { "type": "boolean", "default": false },
+					"edited": { "type": "boolean", "default": false },
+					"tags": { "type": "array", "items": { "type": "string" } },
+					"createdAt": { "type": "string", "format": "date-time" },
+					"updatedAt": { "type": "string", "format": "date-time" }
+				},
+				"required": ["user", "postText"],
+				"example": {
+					"_id": "post_id",
+					"user": { "$ref": "#/components/schemas/User" },
+					"postText": "This is a post.",
+					"images": [{ "$ref": "#/components/schemas/Image" }],
+					"likes": [{ "$ref": "#/components/schemas/User" }],
+					"dislikes": [{ "$ref": "#/components/schemas/User" }],
+					"comments": [{ "$ref": "#/components/schemas/Post" }],
+					"originalPostParentId": { "$ref": "#/components/schemas/Post" },
+					"replyParentId": { "$ref": "#/components/schemas/Post" },
+					"nestingLevel": 1,
+					"removed": false,
+					"edited": true,
+					"tags": ["tag1", "tag2"],
+					"createdAt": "2023-01-01T12:00:00Z",
+					"updatedAt": "2023-01-01T12:10:00Z"
+				}
+			},
+			"RefreshToken": {
+				"type": "object",
+				"properties": {
+					"_id": { "type": "string" },
+					"userId": { "type": "string", "required": true },
+					"token": { "type": "string", "required": true },
+					"createdAt": { "type": "string", "format": "date-time" },
+					"updatedAt": { "type": "string", "format": "date-time" }
+				},
+				"required": ["userId", "token"],
+				"example": {
+					"_id": "refreshToken_id",
+					"userId": "user_id",
+					"token": "refresh_token_string",
+					"createdAt": "2023-01-01T12:00:00Z",
+					"updatedAt": "2023-01-01T12:10:00Z"
+				}
+			},
+			"User": {
+				"type": "object",
+				"properties": {
+					"_id": { "type": "string" },
+					"userTag": { "type": "string", "required": true, "unique": true, "minLength": 3, "maxLength": 20 },
+					"sensitiveData": { "$ref": "#/components/schemas/SensitiveData" },
+					"username": { "type": "string", "minLength": 3, "maxLength": 20 },
+					"messageGroups": { "type": "array", "items": { "$ref": "#/components/schemas/MessageGroup" }, "default": [] },
+					"profilePicture": { "type": "string", "default": "https://i.imgur.com/XY5aZDk.png" },
+					"likedPosts": { "type": "array", "items": { "$ref": "#/components/schemas/Post" }, "default": [] },
+					"dislikedPosts": { "type": "array", "items": { "$ref": "#/components/schemas/Post" }, "default": [] },
+					"sharedPosts": { "type": "array", "items": { "$ref": "#/components/schemas/Post" }, "default": [] },
+					"followerIds": { "type": "array", "items": { "$ref": "#/components/schemas/User" }, "default": [] },
+					"followedIds": { "type": "array", "items": { "$ref": "#/components/schemas/User" }, "default": [] },
+					"friendList": { "type": "array", "items": { "$ref": "#/components/schemas/User" }, "default": [] },
+					"bio": { "type": "string", "maxLength": 500, "default": "" },
+					"createdAt": { "type": "string", "format": "date-time" },
+					"updatedAt": { "type": "string", "format": "date-time" }
+				},
+				"required": ["userTag"],
+				"example": {
+					"_id": "user_id",
+					"userTag": "exampleUser",
+					"sensitiveData": { "$ref": "#/components/schemas/SensitiveData" },
+					"username": "Example User",
+					"messageGroups": [{ "$ref": "#/components/schemas/MessageGroup" }],
+					"profilePicture": "https://i.imgur.com/XY5aZDk.png",
+					"likedPosts": [{ "$ref": "#/components/schemas/Post" }],
+					"dislikedPosts": [{ "$ref": "#/components/schemas/Post" }],
+					"sharedPosts": [{ "$ref": "#/components/schemas/Post" }],
+					"followerIds": [{ "$ref": "#/components/schemas/User" }],
+					"followedIds": [{ "$ref": "#/components/schemas/User" }],
+					"friendList": [{ "$ref": "#/components/schemas/User" }],
+					"bio": "User bio",
+					"createdAt": "2023-01-01T12:00:00Z",
+					"updatedAt": "2023-01-01T12:10:00Z"
+				}
+			},
+			"SensitiveData": {
+				"type": "object",
+				"properties": {
+					"_id": { "type": "string" },
+					"email": { "type": "string", "required": true, "unique": true, "maxLength": 50 },
+					"password": { "type": "string", "required": true, "minLength": 6 }
+				},
+				"required": ["email", "password"],
+				"example": {
+					"_id": "sensitive_data_id",
+					"email": "user@example.com",
+					"password": "hashed_password"
+				}
+			}
+		}
+	}
+}
