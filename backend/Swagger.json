@@ -7,13 +7,120 @@
 	},
 	"servers": [
 		{
-			"url": "http://localhost:4000/api",
-			"variables": {}
+			"url": "http://localhost:4000/api"
+		},
+		{
+			"url": "http://localhost:4001/auth"
 		}
 	],
 	"paths": {
+		"/login": {
+			"post": {
+				"summary": "Authenticate user",
+				"tags": ["Authentication"],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"userTag": { "type": "string" },
+									"password": { "type": "string" },
+									"rememberPassword": { "type": "boolean" }
+								},
+								"required": ["userTag", "password"]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Successful authentication",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"accessToken": { "type": "string" },
+										"refreshToken": { "type": "string" },
+										"user": { "type": "object" }
+									}
+								}
+							}
+						}
+					},
+					"400": { "description": "Invalid credentials" },
+					"404": { "description": "User not found" }
+				}
+			}
+		},
+		"/refresh": {
+			"post": {
+				"tags": ["Authentication"],
+				"summary": "Refresh access token",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"token": { "type": "string" }
+								},
+								"required": ["token"]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Access token refreshed successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"accessToken": { "type": "string" },
+										"user": { "type": "object" }
+									}
+								}
+							}
+						}
+					},
+					"401": { "description": "Unauthorized" },
+					"403": { "description": "Invalid refresh token" }
+				}
+			}
+		},
+		"/logout": {
+			"post": {
+				"tags": ["Authentication"],
+				"summary": "Logout user",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"token": { "type": "string" }
+								},
+								"required": ["token"]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": { "description": "Logout successful" },
+					"401": { "description": "Unauthorized" },
+					"404": { "description": "Refresh token not found" }
+				}
+			}
+		},
 		"/users": {
 			"get": {
+				"tags": ["Users"],
 				"summary": "Get all users",
 				"responses": {
 					"200": {
@@ -27,6 +134,7 @@
 				}
 			},
 			"post": {
+				"tags": ["Users"],
 				"summary": "Create a new user",
 				"requestBody": {
 					"required": true,
@@ -56,10 +164,38 @@
 						"description": "Conflict - Username or email already exists"
 					}
 				}
+			},
+			"delete": {
+				"tags": ["Users"],
+				"summary": "Delete authenticated user",
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "User and their posts deleted successfully"
+					},
+					"404": {
+						"description": "User not found"
+					}
+				}
 			}
 		},
 		"/users/{id}": {
 			"get": {
+				"tags": ["Users"],
 				"summary": "Get user by ID",
 				"parameters": [
 					{
@@ -84,31 +220,11 @@
 						"description": "User not found"
 					}
 				}
-			},
-			"delete": {
-				"summary": "Delete user by ID",
-				"parameters": [
-					{
-						"name": "id",
-						"in": "path",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "User and their posts deleted successfully"
-					},
-					"404": {
-						"description": "User not found"
-					}
-				}
 			}
 		},
 		"/users/userTag/{userTag}": {
 			"get": {
+				"tags": ["Users"],
 				"summary": "Get user by userTag",
 				"parameters": [
 					{
@@ -137,6 +253,7 @@
 		},
 		"/users/followers/{userTag}": {
 			"get": {
+				"tags": ["Users"],
 				"summary": "Get followers by userTag",
 				"parameters": [
 					{
@@ -165,6 +282,7 @@
 		},
 		"/users/following/{userTag}": {
 			"get": {
+				"tags": ["Users"],
 				"summary": "Get users followed by userTag",
 				"parameters": [
 					{
@@ -193,6 +311,7 @@
 		},
 		"/users/follow/{userTag}": {
 			"put": {
+				"tags": ["Users"],
 				"summary": "Follow a user by userTag",
 				"parameters": [
 					{
@@ -226,6 +345,7 @@
 		},
 		"/users/unfollow/{userTag}": {
 			"put": {
+				"tags": ["Users"],
 				"summary": "Unfollow a user by userTag",
 				"parameters": [
 					{
@@ -259,6 +379,7 @@
 		},
 		"/users/friends/{userTag}": {
 			"get": {
+				"tags": ["Users"],
 				"summary": "Get friends by userTag",
 				"parameters": [
 					{
@@ -287,6 +408,7 @@
 		},
 		"/users/addFriend/{userTag}": {
 			"put": {
+				"tags": ["Users"],
 				"summary": "Add a user as a friend by userTag",
 				"parameters": [
 					{
@@ -320,6 +442,7 @@
 		},
 		"/users/removeFriend/{userTag}": {
 			"put": {
+				"tags": ["Users"],
 				"summary": "Remove a user from friends by userTag",
 				"parameters": [
 					{
@@ -536,5 +659,15 @@
 				}
 			}
 		}
-	}
+	},
+	"tags": [
+		{
+			"name": "Authentication",
+			"description": "Endpoints for authenticating users (USE PORT 4001)"
+		},
+		{
+			"name": "Users",
+			"description": "Endpoints for managing users"
+		}
+	]
 }

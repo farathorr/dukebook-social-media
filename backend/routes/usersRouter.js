@@ -5,9 +5,9 @@ const router = express.Router();
 
 router.get("/", usersController.getUsers);
 router.post("/", usersController.createUser);
+router.delete("/", strongAuthentication, usersController.deleteUserByAuth);
 
 router.get("/:id", usersController.getUserById);
-router.delete("/:id", usersController.deleteUserById);
 
 router.get("/userTag/:userTag", usersController.getUserByUserTag);
 
