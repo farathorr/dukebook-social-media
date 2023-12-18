@@ -156,11 +156,12 @@ const apiObject = {
 	}),
 
 	getMessages: requiresAuth(async (groupId) => {
-		const response = await axios.get(`http://localhost:4000/api/messages?groupId=${groupId}`);
+		console.log(groupId);
+		const response = await axios.get(`http://localhost:4000/api/messages/group/${groupId}`);
 		return response;
 	}),
 	sendMessage: requiresAuth(async ({ groupId, text }) => {
-		const response = await axios.post(`http://localhost:4000/api/messages`, { groupId, text });
+		const response = await axios.post(`http://localhost:4000/api/messages/group/${groupId}`, { text });
 		return response;
 	}),
 
