@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Post = require("../models/posts");
 const { User } = require("../models/users");
-const { socketIO } = require("../server");
+const { socketIO } = require("../app");
 const customFind = require("../utils/customFind");
 
 // get all posts

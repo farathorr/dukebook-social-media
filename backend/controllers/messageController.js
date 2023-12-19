@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const { User } = require("../models/users");
 const { Message, MessageGroup } = require("../models/message");
 const customFind = require("../utils/customFind");
-const { socketIO } = require("../server");
+const { socketIO } = require("../app");
 
 const createMessageGroup = async (req, res) => {
 	const { participants } = req.body;

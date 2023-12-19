@@ -24,7 +24,12 @@
 		"server": "node server.js",
 		"authServer": "node authServer.js",
 		"dev-authServer": "nodemon authServer.js",
-		"all": "concurrently \"npm run dev-server\" \"npm run dev-authServer\""
+		"all": "concurrently \"npm run dev-server\" \"npm run dev-authServer\"",
+		"test": "cross-env NODE_ENV=test jest --verbose --coverage --runInBand"
+	},
+	"jest": {
+		"testEnvironment": "node",
+		"globalTeardown": "./tests/teardown.js"
 	},
 	"eslintConfig": {
 		"extends": [
@@ -46,6 +51,7 @@
 	},
 	"devDependencies": {
 		"concurrently": "^7.0.0",
+		"jest": "^29.7.0",
 		"nodemon": "^3.0.1",
 		"npm-run-all": "^4.1.5"
 	}
