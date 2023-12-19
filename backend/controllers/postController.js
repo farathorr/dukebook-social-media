@@ -112,6 +112,9 @@ const createPost = async (req, res) => {
 	if (!userId) return res.status(400).json({ message: "UserTag is required." });
 	if (!postText) return res.status(400).json({ message: "Post text is required." });
 
+	if (tags && !Array.isArray(tags)) return res.status(400).json({ message: "Tags must be an array." });
+	if (images && !Array.isArray(images)) return res.status(400).json({ message: "Images must be an array." });
+
 	try {
 		const user = await User.findById(userId);
 		if (!user) return res.status(400).json({ message: "User does not exist." });
