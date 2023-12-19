@@ -66,7 +66,6 @@ const createUser = async (req, res) => {
 const deleteUserByAuth = async (req, res) => {
 	const { userId } = req.user;
 	try {
-		console.log("Deleting user with ID:", userId);
 		if (!mongoose.Types.ObjectId.isValid(userId)) {
 			return res.status(404).send(`No user with id: ${userId}`);
 		}
@@ -115,14 +114,9 @@ const followUserByUserTag = async (req, res) => {
 	const { userTag: followedUserTag } = req.params;
 	const { userId: followerUserId, userTag: followerUserTag } = req.user;
 	try {
-		console.log(`Followed User Tag: ${followedUserTag}`);
-		console.log(`Follower User Tag: ${followerUserTag}`);
-
 		const followedUser = await User.findOne({ userTag: followedUserTag });
 		const followerUser = await User.findById(followerUserId);
 
-		console.log(`Followed User: ${followedUser}`);
-		console.log(`Follower User: ${followerUser}`);
 		if (!followedUser) return res.status(404).json({ message: `User ${followedUserTag} not found.` });
 		if (!followerUser) return res.status(404).json({ message: `User ${followerUserTag} not found.` });
 
