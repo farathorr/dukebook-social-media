@@ -23,7 +23,7 @@ const getPosts = async (req, res) => {
 
 	try {
 		const posts = await customFind(Post, options).populate("user");
-		res.json(posts);
+		res.status(200).json(posts);
 	} catch (err) {
 		res.status(500).json({ message: err.message });
 	}
@@ -84,11 +84,8 @@ const getFeedPosts = async (req, res) => {
 // get post by id
 const getPostById = async (req, res) => {
 	const { id } = req.params;
-	if (!mongoose.Types.ObjectId.isValid(id)) {
-		return res.status(404).send(`No post with id: ${id}`);
-	}
 	const post = await Post.findById(id).populate("user");
-	console.log(post);
+	if (!post) return res.status(404).json({ message: `Post with id ${id} not found.` });
 	res.status(200).json(post);
 };
 
@@ -134,27 +131,28 @@ const createPost = async (req, res) => {
 const updatePost = async (req, res) => {
 	const { userId } = req.user;
 	const { id } = req.params;
-	const { postText, tags } = req.body;
-	if (!mongoose.Types.ObjectId.isValid(id)) {
-		return res.status(404).send(`No post with id: ${id}`);
-	}
+	const { postText, tags, images } = req.body;
+	if (!postText) return res.status(400).json({ message: "Post text is required." });
+	if (tags && !Array.isArray(tags)) return res.status(400).json({ message: "Tags must be an array." });
+	if (images && !Array.isArray(images)) return res.status(400).json({ message: "Images must be an array." });
+
 	try {
-		const updatedPost = await Post.findOneAndUpdate({ _id: id, user: userId }, { postText, edited: true, tags }, { new: true });
+		const updatedPost = await Post.findOneAndUpdate({ _id: id, user: userId }, { postText, edited: true, tags, images }, { new: true });
 		if (!updatedPost) return res.status(400).json({ message: "Post does not exist." });
-		res.json(updatedPost);
+		res.status(200).json(updatedPost);
 	} catch (err) {
 		res.status(500).json({ message: err.message });
 	}
 };
 
 const deletePost = async (req, res) => {
+	const { userId } = req.user;
 	const { id } = req.params;
-	if (!mongoose.Types.ObjectId.isValid(id)) {
-		return res.status(404).send(`No post with id: ${id}`);
-	}
+
 	try {
 		const baseRemoved = { user: null, postText: "Post removed", removed: true, tags: [], images: [] };
-		const post = await Post.findByIdAndUpdate(id, baseRemoved).populate("replyParentId");
+		const post = await Post.findOneAndUpdate({ _id: id, user: userId }, baseRemoved).populate("replyParentId");
+		if (!post) return res.status(400).json({ message: "Post does not exist." });
 		const parent = post.replyParentId;
 		if (!post.comments?.length) {
 			await Post.findByIdAndDelete(id);
@@ -178,12 +176,10 @@ const likePost = async (req, res) => {
 	const { id } = req.params;
 	const { userId } = req.user;
 
-	if (!mongoose.Types.ObjectId.isValid(id)) {
-		return res.status(404).send(`No post with id: ${id}`);
-	}
 	try {
 		const user = await User.findById(userId).populate("likedPosts");
 		const post = await Post.findById(id);
+		if (!post) return res.status(404).json({ message: "Post does not exist." });
 		if (post.likes.includes(userId)) {
 			post.likes.pull(userId);
 			user.likedPosts.pull(post);
@@ -205,12 +201,12 @@ const likePost = async (req, res) => {
 const dislikePost = async (req, res) => {
 	const { id } = req.params;
 	const { userId } = req.user;
-	if (!mongoose.Types.ObjectId.isValid(id)) {
-		return res.status(404).send(`No post with id: ${id}`);
-	}
+
 	try {
 		const user = await User.findById(userId).populate("dislikedPosts");
 		const post = await Post.findById(id);
+		if (!post) return res.status(404).json({ message: "Post does not exist." });
+
 		if (post.dislikes.includes(userId)) {
 			post.dislikes.pull(userId);
 			user.dislikedPosts.pull(post);
@@ -230,14 +226,12 @@ const dislikePost = async (req, res) => {
 const replyToPost = async (req, res) => {
 	const { id } = req.params;
 	const { userId } = req.user;
-	if (!mongoose.Types.ObjectId.isValid(id)) {
-		return res.status(404).send(`No post with id: ${id}`);
-	}
 
 	try {
 		const user = await User.findById(userId);
 		if (!user) return res.status(400).json({ message: "User does not exist." });
 		const post = await Post.findById(id);
+		if (!post) return res.status(400).json({ message: "Post does not exist." });
 		const newPost = new Post({ ...req.body, user });
 		newPost.originalPostParentId = post.originalPostParentId ?? id;
 		newPost.replyParentId = id;
@@ -260,7 +254,6 @@ const replyToPost = async (req, res) => {
 const getComments = async (req, res) => {
 	const nestingLevel = Math.min(Math.max(req.query?.nesting ?? 0, 0), 10);
 	const { id } = req.params;
-	if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No post with id: ${id}`);
 
 	try {
 		const nesting = deepPopulate(nestingLevel, {});
@@ -275,6 +268,7 @@ const getComments = async (req, res) => {
 		}
 
 		const post = await Post.findById(id).populate(nesting);
+		if (!post) return res.status(404).json({ message: `Post with id ${id} not found.` });
 		res.status(200).json(post.comments);
 	} catch (err) {
 		res.status(500).json({ message: err.message });
@@ -284,7 +278,6 @@ const getComments = async (req, res) => {
 const getParentPosts = async (req, res) => {
 	const nestingLevel = Math.min(Math.max(req.query?.nesting ?? 0, 0), 10);
 	const { id } = req.params;
-	if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No post with id: ${id}`);
 
 	try {
 		const nesting = deepPopulate(nestingLevel, {});
@@ -299,6 +292,7 @@ const getParentPosts = async (req, res) => {
 		}
 
 		const post = await Post.findById(id).populate(nesting).populate("user");
+		if (!post) return res.status(404).json({ message: `Post with id ${id} not found.` });
 		const parentArray = [];
 		removeNesting(post);
 
