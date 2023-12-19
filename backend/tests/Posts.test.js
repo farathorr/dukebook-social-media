@@ -26,22 +26,22 @@ beforeAll(async () => {
 });
 
 describe("Test Posts", () => {
-	const goalsId = [];
+	const postId = [];
 
 	beforeEach(async () => {
 		await Post.deleteMany({});
-		goalsId.length = 0;
-		const goal1 = await api
+		postId.length = 0;
+		const post1 = await api
 			.post("/api/posts")
 			.set("Authorization", "bearer " + token1)
 			.send({ postText: "test post 1", tags: ["test1"] });
 
-		const goal2 = await api
+		const post2 = await api
 			.post("/api/posts")
 			.set("Authorization", "bearer " + token2)
 			.send({ postText: "test post 2", tags: ["test2"] });
 
-		goalsId.push(goal1.body._id, goal2.body._id);
+		postId.push(post1.body._id, post2.body._id);
 	});
 
 	describe("GET /api/posts", () => {
@@ -220,7 +220,7 @@ describe("Test Posts", () => {
 
 		describe("When id is found", () => {
 			it("Should return 200", async () => {
-				const response = await api.get("/api/posts/" + goalsId[0]);
+				const response = await api.get("/api/posts/" + postId[0]);
 				expect(response.status).toBe(200);
 			});
 		});
@@ -335,7 +335,7 @@ describe("Test Posts", () => {
 	describe("PATCH /api/posts/:id", () => {
 		describe("When user is not logged in", () => {
 			it("Should return 401", async () => {
-				const response = await api.patch("/api/posts/" + goalsId[0]).send({ postText: "Updated post" });
+				const response = await api.patch("/api/posts/" + postId[0]).send({ postText: "Updated post" });
 				expect(response.status).toBe(401);
 			});
 		});
@@ -344,7 +344,7 @@ describe("Test Posts", () => {
 			describe("When user is not author", () => {
 				it("Should return 403", async () => {
 					const response = await api
-						.patch("/api/posts/" + goalsId[0])
+						.patch("/api/posts/" + postId[0])
 						.set("Authorization", "bearer " + token2)
 						.send({ postText: "Updated post" });
 					expect(response.status).toBe(400);
@@ -354,7 +354,7 @@ describe("Test Posts", () => {
 			describe("When user is author", () => {
 				it("Should update post", async () => {
 					const response = await api
-						.patch("/api/posts/" + goalsId[0])
+						.patch("/api/posts/" + postId[0])
 						.set("Authorization", "bearer " + token1)
 						.send({ postText: "Updated post" });
 					expect(response.status).toBe(200);
@@ -366,7 +366,7 @@ describe("Test Posts", () => {
 		describe("When user is logged in and postText is empty", () => {
 			it("Should return 400", async () => {
 				const response = await api
-					.patch("/api/posts/" + goalsId[0])
+					.patch("/api/posts/" + postId[0])
 					.set("Authorization", "bearer " + token1)
 					.send({ postText: "" });
 				expect(response.status).toBe(400);
@@ -376,7 +376,7 @@ describe("Test Posts", () => {
 		describe("When user is logged in and tags is not an array", () => {
 			it("Should return 400", async () => {
 				const response = await api
-					.patch("/api/posts/" + goalsId[0])
+					.patch("/api/posts/" + postId[0])
 					.set("Authorization", "bearer " + token1)
 					.send({ tags: "test" });
 				expect(response.status).toBe(400);
@@ -386,7 +386,7 @@ describe("Test Posts", () => {
 		describe("When user is logged in and images is not an array", () => {
 			it("Should return 400", async () => {
 				const response = await api
-					.patch("/api/posts/" + goalsId[0])
+					.patch("/api/posts/" + postId[0])
 					.set("Authorization", "bearer " + token1)
 					.send({ images: "test" });
 				expect(response.status).toBe(400);
@@ -397,7 +397,7 @@ describe("Test Posts", () => {
 	describe("DELETE /api/posts/:id", () => {
 		describe("When user is not logged in", () => {
 			it("Should return 401", async () => {
-				const response = await api.delete("/api/posts/" + goalsId[0]);
+				const response = await api.delete("/api/posts/" + postId[0]);
 				expect(response.status).toBe(401);
 			});
 		});
@@ -405,14 +405,14 @@ describe("Test Posts", () => {
 		describe("When user is logged in", () => {
 			describe("When user is not author", () => {
 				it("Should return 403", async () => {
-					const response = await api.delete("/api/posts/" + goalsId[0]).set("Authorization", "bearer " + token2);
+					const response = await api.delete("/api/posts/" + postId[0]).set("Authorization", "bearer " + token2);
 					expect(response.status).toBe(400);
 				});
 			});
 
 			describe("When user is author", () => {
 				it("Should delete post", async () => {
-					const response = await api.delete("/api/posts/" + goalsId[0]).set("Authorization", "bearer " + token1);
+					const response = await api.delete("/api/posts/" + postId[0]).set("Authorization", "bearer " + token1);
 					expect(response.status).toBe(200);
 				});
 			});
@@ -422,27 +422,27 @@ describe("Test Posts", () => {
 	describe("PUT /api/posts/:id/like", () => {
 		describe("When user is not logged in", () => {
 			it("Should return 401", async () => {
-				const response = await api.put("/api/posts/" + goalsId[0] + "/like");
+				const response = await api.put("/api/posts/" + postId[0] + "/like");
 				expect(response.status).toBe(401);
 			});
 		});
 
 		describe("When user is logged in", () => {
 			it("Should like post", async () => {
-				const response = await api.put("/api/posts/" + goalsId[0] + "/like").set("Authorization", "bearer " + token1);
+				const response = await api.put("/api/posts/" + postId[0] + "/like").set("Authorization", "bearer " + token1);
 				expect(response.status).toBe(200);
 				expect(response.body.likes.length).toBe(1);
 			});
 
 			it("Should not like post twice", async () => {
-				await api.put("/api/posts/" + goalsId[0] + "/like").set("Authorization", "bearer " + token1);
-				const response = await api.put("/api/posts/" + goalsId[0] + "/like").set("Authorization", "bearer " + token1);
+				await api.put("/api/posts/" + postId[0] + "/like").set("Authorization", "bearer " + token1);
+				const response = await api.put("/api/posts/" + postId[0] + "/like").set("Authorization", "bearer " + token1);
 				expect(response.body.likes.length).toBe(0);
 			});
 
 			it("Should remove dislikes from post if liked", async () => {
-				await api.put("/api/posts/" + goalsId[0] + "/dislike").set("Authorization", "bearer " + token1);
-				const response = await api.put("/api/posts/" + goalsId[0] + "/like").set("Authorization", "bearer " + token1);
+				await api.put("/api/posts/" + postId[0] + "/dislike").set("Authorization", "bearer " + token1);
+				const response = await api.put("/api/posts/" + postId[0] + "/like").set("Authorization", "bearer " + token1);
 				expect(response.status).toBe(200);
 				expect(response.body.dislikes.length).toBe(0);
 				expect(response.body.likes.length).toBe(1);
@@ -453,27 +453,27 @@ describe("Test Posts", () => {
 	describe("PUT /api/posts/:id/dislike", () => {
 		describe("When user is not logged in", () => {
 			it("Should return 401", async () => {
-				const response = await api.put("/api/posts/" + goalsId[0] + "/dislike");
+				const response = await api.put("/api/posts/" + postId[0] + "/dislike");
 				expect(response.status).toBe(401);
 			});
 		});
 
 		describe("When user is logged in", () => {
 			it("Should dislike post", async () => {
-				const response = await api.put("/api/posts/" + goalsId[0] + "/dislike").set("Authorization", "bearer " + token1);
+				const response = await api.put("/api/posts/" + postId[0] + "/dislike").set("Authorization", "bearer " + token1);
 				expect(response.status).toBe(200);
 				expect(response.body.dislikes.length).toBe(1);
 			});
 
 			it("Should not dislike post twice", async () => {
-				await api.put("/api/posts/" + goalsId[0] + "/dislike").set("Authorization", "bearer " + token1);
-				const response = await api.put("/api/posts/" + goalsId[0] + "/dislike").set("Authorization", "bearer " + token1);
+				await api.put("/api/posts/" + postId[0] + "/dislike").set("Authorization", "bearer " + token1);
+				const response = await api.put("/api/posts/" + postId[0] + "/dislike").set("Authorization", "bearer " + token1);
 				expect(response.body.dislikes.length).toBe(0);
 			});
 
 			it("Should remove likes from post if disliked", async () => {
-				await api.put("/api/posts/" + goalsId[0] + "/like").set("Authorization", "bearer " + token1);
-				const response = await api.put("/api/posts/" + goalsId[0] + "/dislike").set("Authorization", "bearer " + token1);
+				await api.put("/api/posts/" + postId[0] + "/like").set("Authorization", "bearer " + token1);
+				const response = await api.put("/api/posts/" + postId[0] + "/dislike").set("Authorization", "bearer " + token1);
 				expect(response.status).toBe(200);
 				expect(response.body.likes.length).toBe(0);
 				expect(response.body.dislikes.length).toBe(1);
@@ -484,7 +484,7 @@ describe("Test Posts", () => {
 	describe("PATCH /api/posts/:id/reply", () => {
 		describe("When user is not logged in", () => {
 			it("Should return 401", async () => {
-				const response = await api.patch("/api/posts/" + goalsId[0] + "/reply").send({ postText: "Reply" });
+				const response = await api.patch("/api/posts/" + postId[0] + "/reply").send({ postText: "Reply" });
 				expect(response.status).toBe(401);
 			});
 		});
@@ -492,7 +492,7 @@ describe("Test Posts", () => {
 		describe("When user is logged in", () => {
 			it("Should reply to post", async () => {
 				const response = await api
-					.patch("/api/posts/" + goalsId[0] + "/reply")
+					.patch("/api/posts/" + postId[0] + "/reply")
 					.set("Authorization", "bearer " + token1)
 					.send({ postText: "Reply" });
 				expect(response.status).toBe(200);
@@ -503,7 +503,7 @@ describe("Test Posts", () => {
 		describe("When user is logged in and postText is empty", () => {
 			it("Should return 409", async () => {
 				const response = await api
-					.patch("/api/posts/" + goalsId[0] + "/reply")
+					.patch("/api/posts/" + postId[0] + "/reply")
 					.set("Authorization", "bearer " + token1)
 					.send({ postText: "" });
 				expect(response.status).toBe(409);
@@ -521,14 +521,14 @@ describe("Test Posts", () => {
 
 		describe("When id is found", () => {
 			it("Should return 200", async () => {
-				const response = await api.get("/api/posts/" + goalsId[0] + "/replies");
+				const response = await api.get("/api/posts/" + postId[0] + "/replies");
 				expect(response.status).toBe(200);
 			});
 		});
 
 		describe("When id is found and replies are empty", () => {
 			it("Should return 200", async () => {
-				const response = await api.get("/api/posts/" + goalsId[0] + "/replies");
+				const response = await api.get("/api/posts/" + postId[0] + "/replies");
 				expect(response.status).toBe(200);
 				expect(response.body.length).toBe(0);
 			});
@@ -537,10 +537,10 @@ describe("Test Posts", () => {
 		describe("When id is found and replies are not empty", () => {
 			it("Should return 200", async () => {
 				await api
-					.patch("/api/posts/" + goalsId[0] + "/reply")
+					.patch("/api/posts/" + postId[0] + "/reply")
 					.set("Authorization", "bearer " + token1)
 					.send({ postText: "Reply" });
-				const response = await api.get("/api/posts/" + goalsId[0] + "/replies");
+				const response = await api.get("/api/posts/" + postId[0] + "/replies");
 				expect(response.status).toBe(200);
 				expect(response.body.length).toBe(1);
 			});
@@ -557,14 +557,14 @@ describe("Test Posts", () => {
 
 		describe("When id is found", () => {
 			it("Should return 200", async () => {
-				const response = await api.get("/api/posts/" + goalsId[0] + "/parents");
+				const response = await api.get("/api/posts/" + postId[0] + "/parents");
 				expect(response.status).toBe(200);
 			});
 		});
 
 		describe("When id is found and parents are empty", () => {
 			it("Should return 200", async () => {
-				const response = await api.get("/api/posts/" + goalsId[0] + "/parents");
+				const response = await api.get("/api/posts/" + postId[0] + "/parents");
 				expect(response.status).toBe(200);
 				expect(response.body.length).toBe(1);
 			});
@@ -573,7 +573,7 @@ describe("Test Posts", () => {
 		describe("When id is found and parents are not empty", () => {
 			it("Should return 200", async () => {
 				const res = await api
-					.patch("/api/posts/" + goalsId[0] + "/reply")
+					.patch("/api/posts/" + postId[0] + "/reply")
 					.set("Authorization", "bearer " + token1)
 					.send({ postText: "Reply" });
 				const response = await api.get("/api/posts/" + res.body.comments.at(0)._id + "/parents");
