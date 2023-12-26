@@ -2,7 +2,9 @@ const mongoose = require("mongoose");
 const supertest = require("supertest");
 const app = require("../app");
 const api = supertest(app);
-const { User, Message, MessageGroup } = require("../models");
+const RefreshToken = require("../models/refreshToken");
+const { User, SensitiveData } = require("../models/users");
+const { Message, MessageGroup } = require("../models/message");
 
 let token = null;
 

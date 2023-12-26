@@ -4,7 +4,6 @@ const app = require("../app");
 const api = supertest(app);
 const { User, SensitiveData } = require("../models/users");
 const RefreshToken = require("../models/refreshToken");
-const Post = require("../models/posts");
 
 let token1 = null;
 let token2 = null;
