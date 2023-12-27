@@ -5,8 +5,20 @@ on:
     branches:
       - main # Change this to your main branch
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: 'pages'
+  cancel-in-progress: true
+
 jobs:
-  build:
+  deploy:
+    environment:
+        name: github-pages
+        url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
 
     steps:
