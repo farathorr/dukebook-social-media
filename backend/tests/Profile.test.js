@@ -12,33 +12,67 @@ beforeAll(async () => {
 	await User.deleteMany({});
 	await RefreshToken.deleteMany({});
 	await api.post("/api/users").send({ email: "test@mail.com", password: "R3g5T7#gh", userTag: "testUser" });
+	await api.post("/api/users").send({ email: "test2@mail.com", password: "R3g5T7#gh", userTag: "testUser2" });
 
 	const result = await api.post("/api/auth/login").send({ password: "R3g5T7#gh", userTag: "testUser" });
+	await api.post("/api/auth/login").send({ password: "R3g5T7#gh", userTag: "testUser2" });
 	token = result.body.accessToken;
-
-	await api.put("/api/users/follow/testUser").set("Authorization", `bearer ${token}`);
 });
 
-describe("Profile Controller", () => {
-	it("GET /api/profile should return the authenticated user's information", async () => {
-		const response = await api.get("/api/profile").set("Authorization", `bearer ${token}`);
-		expect(response.status).toBe(200);
-		expect(response.body).toHaveProperty("userTag", "testUser");
+describe("Test profile", () => {
+	describe("GET /api/profile", () => {
+		it("should return 401 with no authentication", async () => {
+			await api.get("/api/profile").expect(401);
+		});
+
+		it("should return profile info", async () => {
+			const response = await api.get("/api/profile").set("Authorization", `bearer ${token}`).expect(200);
+			expect(response.body).toHaveProperty("username");
+			expect(response.body).toHaveProperty("userTag");
+			expect(response.body.userTag).toBe("testUser");
+		});
 	});
 
-	it("PATCH /api/profile should update the authenticated user's profile", async () => {
-		const updatedProfile = { username: "newUsername", bio: "New bio" };
-		const response = await api.patch("/api/profile").set("Authorization", `bearer ${token}`).send(updatedProfile);
-		expect(response.status).toBe(200);
-		expect(response.body).toHaveProperty("username", "newUsername");
-		expect(response.body).toHaveProperty("bio", "New bio");
-	});
+	describe("PATCH /api/profile", () => {
+		it("should return 401 with no authentication", async () => {
+			await api.patch("/api/profile").expect(401);
+		});
 
-	it("PATCH /api/profile should handle conflicts when UserTag already exists", async () => {
-		const conflictingProfile = { userTag: "testUser" }; // Use an existing UserTag
-		const response = await api.patch("/api/profile").set("Authorization", `bearer ${token}`).send(conflictingProfile);
-		expect(response.status).toBe(409);
-		expect(response.body).toHaveProperty("message", "UserTag already exists.");
+		it("should return 400 with no data", async () => {
+			await api.patch("/api/profile").set("Authorization", `bearer ${token}`).expect(400);
+		});
+
+		it("should return 409 with existing userTag", async () => {
+			await api.patch("/api/profile").set("Authorization", `bearer ${token}`).send({ userTag: "testUser2" }).expect(409);
+		});
+
+		it("should return 200 with updated userTag", async () => {
+			const response = await api.patch("/api/profile").set("Authorization", `bearer ${token}`).send({ userTag: "testUser3" }).expect(200);
+			expect(response.body).toHaveProperty("userTag");
+			expect(response.body.userTag).toBe("testUser3");
+		});
+
+		it("should return 200 with updated username", async () => {
+			const response = await api.patch("/api/profile").set("Authorization", `bearer ${token}`).send({ username: "testUser3" }).expect(200);
+			expect(response.body).toHaveProperty("username");
+			expect(response.body.username).toBe("testUser3");
+		});
+
+		it("should return 200 with updated bio", async () => {
+			const response = await api.patch("/api/profile").set("Authorization", `bearer ${token}`).send({ bio: "testUser3" }).expect(200);
+			expect(response.body).toHaveProperty("bio");
+			expect(response.body.bio).toBe("testUser3");
+		});
+
+		it("should return 200 with updated profilePicture", async () => {
+			const response = await api
+				.patch("/api/profile")
+				.set("Authorization", `bearer ${token}`)
+				.send({ profilePicture: "testUser3" })
+				.expect(200);
+			expect(response.body).toHaveProperty("profilePicture");
+			expect(response.body.profilePicture).toBe("testUser3");
+		});
 	});
 });
 

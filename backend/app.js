@@ -29,6 +29,10 @@ app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 
 app.get("/", (req, res) => res.json({ message: "Welcome to the application." }));
 
+app.get("/error", (req, res) => {
+	throw new Error("Error!");
+});
+
 app.use(errorHandler.errorHandler);
 app.use(errorHandler.unknownEndpoint);
 

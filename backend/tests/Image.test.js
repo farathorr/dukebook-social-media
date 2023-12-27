@@ -12,6 +12,7 @@ let token2 = null;
 
 beforeAll(async () => {
 	await SensitiveData.deleteMany({});
+	await Image.deleteMany({});
 	await User.deleteMany({});
 	await RefreshToken.deleteMany({});
 	await api.post("/api/users").send({ email: "test@mail.com", password: "R3g5T7#gh", userTag: "testUser" });
@@ -81,6 +82,7 @@ describe("Test Images", () => {
 
 		it("Should return 404 with wrong credentials", async () => {
 			const images = await Image.find({});
+			expect(images.length).toBeGreaterThan(0);
 			for (const image of images) {
 				const deleteHash = image.deleteHash;
 				const deleteResult = await api.delete("/api/image/" + deleteHash).set("Authorization", "bearer " + token2);
@@ -98,6 +100,7 @@ describe("Test Images", () => {
 
 		it("Should return 200 with delete image successfully", async () => {
 			const images = await Image.find({});
+			expect(images.length).toBeGreaterThan(0);
 			for (const image of images) {
 				const deleteHash = image.deleteHash;
 				const deleteResult = await api.delete("/api/image/" + deleteHash).set("Authorization", "bearer " + token1);
