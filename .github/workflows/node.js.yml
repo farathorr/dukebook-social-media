@@ -37,6 +37,8 @@ jobs:
           cache: 'npm'
       - name: Go to frontend
         run: cd frontend
+      - name: Init
+        run: npm init
       - name: Install dependencies
         run: npm install
       - name: Build
