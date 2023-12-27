@@ -24,7 +24,7 @@
 	},
 	"scripts": {
 		"dev-server": "nodemon server.js",
-		"server": "node server.js",
+		"start": "node server.js",
 		"test": "cross-env NODE_ENV=test jest --verbose --coverage --runInBand"
 	},
 	"jest": {
