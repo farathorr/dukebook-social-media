@@ -2,6 +2,9 @@
 	"name": "web-project-group9",
 	"version": "0.1.0",
 	"private": true,
+	"devDependencies": {
+		"@babel/plugin-proposal-private-property-in-object": "^1.0.0"
+	},	
 	"dependencies": {
 		"@testing-library/jest-dom": "^5.17.0",
 		"@testing-library/react": "^13.4.0",
@@ -19,7 +22,7 @@
 	},
 	"scripts": {
 		"start": "set PORT=5000 && react-scripts start",
-		"build": "GENERATE_SOURCEMAP=false react-scripts build --warning-level warning",
+		"build": "react-scripts build --warning-level warning",
 		"test": "react-scripts test",
 		"eject": "react-scripts eject"
 	},
