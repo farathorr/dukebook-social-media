@@ -1,17 +1,25 @@
-const mongoose = require("mongoose");
 const { User } = require("../models/users");
 const { Message, MessageGroup } = require("../models/message");
-const customFind = require("../utils/customFind");
-const { socketIO } = require("../server");
+const { socketIO } = require("../app");
 
 const createMessageGroup = async (req, res) => {
+	const { userId } = req.user;
 	const { participants } = req.body;
-	if (!participants) return res.status(400).json({ message: "Participants are required." });
-
-	console.log(participants);
+	if (!participants || !Array.isArray(participants) || participants.length < 1)
+		return res.status(400).json({ message: "Participants are required." });
+	const participantsSet = [...new Set([...participants, userId])];
 
 	try {
-		const group = await MessageGroup.create({ participants });
+		const group = await MessageGroup({ participants: participantsSet });
+		for (const userId of participantsSet) {
+			const user = await User.findById(userId);
+			if (!user) return res.status(400).json({ message: "User does not exist." });
+
+			user.messageGroups.push(group._id);
+			await user.save();
+		}
+
+		await group.save();
 		res.status(201).json(group);
 	} catch (err) {
 		res.status(500).json({ message: err.message });
@@ -59,6 +67,7 @@ const sendMessage = async (req, res) => {
 
 		const group = await MessageGroup.findById(groupId);
 		if (!group) return res.status(400).json({ message: "Message group does not exist." });
+		if (!group.participants.includes(userId)) return res.status(406).json({ message: "User doesn't belong to the group" });
 
 		const message = await Message.create({ sender: userId, text, groupId });
 		await message.populate("sender", "userTag profilePicture");
@@ -78,7 +87,8 @@ const getMessages = async (req, res) => {
 
 	try {
 		const group = await MessageGroup.findById(groupId);
-		if (!group?.participants.includes(userId)) return res.status(406).json({ message: "User doesn't belong to the group" });
+		if (!group) return res.status(400).json({ message: "Message group does not exist." });
+		if (!group.participants.includes(userId)) return res.status(406).json({ message: "User doesn't belong to the group" });
 		const messages = await Message.find({ groupId }).populate("sender").sort({ createdAt: 1 });
 		res.status(200).json(messages);
 	} catch (err) {

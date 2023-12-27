@@ -8,13 +8,10 @@
 	"servers": [
 		{
 			"url": "http://localhost:4000/api"
-		},
-		{
-			"url": "http://localhost:4001/auth"
 		}
 	],
 	"paths": {
-		"/login": {
+		"/auth/login": {
 			"post": {
 				"summary": "Authenticate user",
 				"tags": ["Authentication"],
@@ -55,7 +52,7 @@
 				}
 			}
 		},
-		"/refresh": {
+		"/auth/refresh": {
 			"post": {
 				"tags": ["Authentication"],
 				"summary": "Refresh access token",
@@ -93,7 +90,7 @@
 				}
 			}
 		},
-		"/logout": {
+		"/auth/logout": {
 			"post": {
 				"tags": ["Authentication"],
 				"summary": "Logout user",
@@ -1400,7 +1397,7 @@
 	"tags": [
 		{
 			"name": "Authentication",
-			"description": "Endpoints for authenticating users (USE PORT 4001)"
+			"description": "Endpoints for authenticating users"
 		},
 		{
 			"name": "Users",

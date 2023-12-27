@@ -12,24 +12,25 @@ const uploadImage = async (req, res) => {
 
 	try {
 		const imageData = await postToImgur(image);
-		// console.log(imageData);
 		const imageObject = await ImageScheme.create({ user: userId, ...imageData });
 
-		res.json(imageObject);
+		res.status(200).json(imageObject);
 	} catch (err) {
-		console.log(err);
 		res.status(500).json({ error: "Error uploading image" });
 	}
 };
 
 const deleteImage = async (req, res) => {
 	const { deleteHash } = req.params;
+	const { userId } = req.user;
 
 	if (!deleteHash) {
 		return res.status(400).json({ error: "No deleteHash provided" });
 	}
 
 	try {
+		const imageObject = await ImageScheme.findOneAndDelete({ user: userId, deleteHash });
+		if (!imageObject) return res.status(404).json({ error: "Image not found" });
 		const imageData = await deleteFromImgur(deleteHash);
 		res.json(imageData);
 	} catch (err) {
@@ -42,11 +43,9 @@ async function postToImgur(base64Image) {
 
 	try {
 		const response = await axios.post("https://api.imgur.com/3/image", { image: base64Image, type: "base64" }, { headers });
-		console.log("Imgur API Response:", response.data.data);
 
 		return { url: response.data.data.link, deleteHash: response.data.data.deletehash };
 	} catch (error) {
-		console.error("Error uploading to Imgur:", error.response.data);
 		throw error;
 	}
 }
@@ -56,11 +55,9 @@ async function deleteFromImgur(deleteHash) {
 
 	try {
 		const response = await axios.delete("https://api.imgur.com/3/image/" + deleteHash + ".json", { headers });
-		console.log("Imgur API Response:", response.data.data);
 
 		return response.data.data;
 	} catch (error) {
-		console.error("Error uploading to Imgur:", error.response.data);
 		throw error;
 	}
 }

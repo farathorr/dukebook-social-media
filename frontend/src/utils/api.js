@@ -16,7 +16,7 @@ const apiObject = {
 	login: async ({ password, userTag, rememberPassword }, callback) => {
 		try {
 			const response = await axios.post(
-				"http://localhost:4001/auth/login",
+				"http://localhost:4000/api/auth/login",
 				{ password, userTag, rememberPassword },
 				{ withCredentials: true }
 			);
@@ -36,7 +36,7 @@ const apiObject = {
 	},
 	refreshToken: async () => {
 		try {
-			refreshPromise ??= axios.post("http://localhost:4001/auth/refresh", { token: refreshToken }, { withCredentials: true });
+			refreshPromise ??= axios.post("http://localhost:4000/api/auth/refresh", { token: refreshToken }, { withCredentials: true });
 			const response = await refreshPromise;
 
 			axios.defaults.headers.common["Authorization"] = `Bearer ${response.data.accessToken}`;
@@ -51,7 +51,7 @@ const apiObject = {
 	},
 	logout: async () => {
 		try {
-			const response = await axios.post("http://localhost:4001/auth/logout", { token: refreshToken }, { withCredentials: true });
+			const response = await axios.post("http://localhost:4000/api/auth/logout", { token: refreshToken }, { withCredentials: true });
 			delete axios.defaults.headers.common["Authorization"];
 			accessToken = refreshToken = null;
 			socket.disconnect();
@@ -156,7 +156,6 @@ const apiObject = {
 	}),
 
 	getMessages: requiresAuth(async (groupId) => {
-		console.log(groupId);
 		const response = await axios.get(`http://localhost:4000/api/messages/group/${groupId}`);
 		return response;
 	}),

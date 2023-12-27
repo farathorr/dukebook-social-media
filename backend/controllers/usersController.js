@@ -22,6 +22,8 @@ const getUserById = async (req, res) => {
 		return res.status(404).send(`No user with id: ${id}`);
 	}
 	const user = await User.findById(id);
+
+	if (!user) return res.status(404).json({ message: `User with id ${id} not found.` });
 	res.status(200).json(user);
 };
 
@@ -66,7 +68,6 @@ const createUser = async (req, res) => {
 const deleteUserByAuth = async (req, res) => {
 	const { userId } = req.user;
 	try {
-		console.log("Deleting user with ID:", userId);
 		if (!mongoose.Types.ObjectId.isValid(userId)) {
 			return res.status(404).send(`No user with id: ${userId}`);
 		}
@@ -113,21 +114,18 @@ const getFollowingByUserTag = async (req, res) => {
 // follow user by userTag
 const followUserByUserTag = async (req, res) => {
 	const { userTag: followedUserTag } = req.params;
-	const { userId: followerUserId, userTag: followerUserTag } = req.user;
+	const { userId: followerUserId } = req.user;
 	try {
-		console.log(`Followed User Tag: ${followedUserTag}`);
-		console.log(`Follower User Tag: ${followerUserTag}`);
-
 		const followedUser = await User.findOne({ userTag: followedUserTag });
 		const followerUser = await User.findById(followerUserId);
 
-		console.log(`Followed User: ${followedUser}`);
-		console.log(`Follower User: ${followerUser}`);
 		if (!followedUser) return res.status(404).json({ message: `User ${followedUserTag} not found.` });
-		if (!followerUser) return res.status(404).json({ message: `User ${followerUserTag} not found.` });
+		if (!followerUser) return res.status(404).json({ message: `User not found.` });
+		if (followedUser.userTag === followerUser.userTag)
+			return res.status(404).json({ message: `User ${followedUserTag} cannot follow themselves.` });
 
-		if (followedUser.followerIds.some((id) => id.toString() === followerUser._id.toString())) {
-			return res.status(404).json({ message: `User ${followerUserTag} is already following user ${followedUserTag}.` });
+		if (followedUser.followerIds.includes(followerUserId)) {
+			return res.status(404).json({ message: `User is already following user ${followedUserTag}.` });
 		}
 
 		followedUser.followerIds.push(followerUser._id);
@@ -151,7 +149,7 @@ const unfollowUserByUserTag = async (req, res) => {
 		if (!followedUser) return res.status(404).json({ message: `User ${followedUserTag} not found.` });
 		if (!followerUser) return res.status(404).json({ message: `User ${followerUserTag} not found.` });
 
-		if (!followedUser.followerIds.some((id) => id.toString() === followerUser._id.toString())) {
+		if (!followedUser.followerIds.includes(followerUserId)) {
 			return res.status(404).json({ message: `User ${followerUserTag} is not following user ${followedUserTag}.` });
 		}
 		followedUser.followerIds.pull(followerUser._id);
@@ -186,6 +184,9 @@ const addFriendByUserTag = async (req, res) => {
 
 		if (!friendUser) return res.status(404).json({ message: `User ${friendUser} not found.` });
 		if (!user) return res.status(404).json({ message: `User ${user} not found.` });
+
+		if (friendUser.userTag === user.userTag)
+			return res.status(404).json({ message: `User ${friendUserTag} cannot be friends with themselves.` });
 
 		if (user.friendList.includes(friendUser._id)) {
 			return res.status(404).json({ message: `User ${req.user.userTag} is already friends with user ${friendUserTag}.` });

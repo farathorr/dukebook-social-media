@@ -7,15 +7,20 @@ const getAuthUserInfo = async (req, res) => {
 };
 
 const updateAuthUser = async (req, res) => {
-	const { userId: id } = req.user;
-	const { username, userTag, email, password, profilePicture, bio } = req.body;
-	const updatedUser = { username, userTag, email, password, profilePicture, bio };
+	const { userId } = req.user;
+	const { username, userTag, profilePicture, bio } = req.body;
+	const updatedUser = { username, userTag, profilePicture, bio };
 
-	if (User.findOne(userTag)._id != req.user.id) return res.status(409).json({ message: "UserTag already exists." });
+	if (!username && !userTag && !profilePicture && !bio) return res.status(400).json({ message: "No data provided." });
 
-	const user = await User.findByIdAndUpdate(id, updatedUser, { new: true });
+	if (userTag) {
+		const existingName = await User.findOne({ userTag: userTag, _id: { $ne: userId } });
+		if (existingName) return res.status(409).json({ message: "UserTag already exists." });
+	}
 
-	if (!user) return res.status(404).send(`No user with id: ${id}`);
+	const user = await User.findByIdAndUpdate(userId, updatedUser, { new: true });
+
+	if (!user) return res.status(404).send(`No user with id: ${userId}`);
 
 	res.status(200).json(updatedUser);
 };

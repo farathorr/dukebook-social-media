@@ -3,9 +3,9 @@ const unknownEndpoint = (req, res) => {
 };
 
 const errorHandler = (err, req, res, next) => {
-	console.error(err.message);
+	console.error(err);
 
-	next(err);
+	res.status(500).send({ error: err.message });
 };
 
 module.exports = {

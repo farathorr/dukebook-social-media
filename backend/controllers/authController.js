@@ -24,7 +24,7 @@ const login = async (req, res) => {
 			const today = new Date();
 			res.cookie("__refreshToken__", refreshToken, {
 				httpOnly: true,
-				secure: process.env.MODE !== "dev",
+				secure: process.env.NODE_ENV !== "dev",
 				expires: new Date(today.setDate(today.getDate() + 30)),
 			});
 		}
